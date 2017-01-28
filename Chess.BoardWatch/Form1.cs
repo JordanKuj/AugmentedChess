@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using AForge.Imaging.Filters;
 using AForge.Imaging;
+using AForge;
+using AForge.Math.Geometry;
 
 namespace Chess.BoardWatch
 {
@@ -19,6 +21,7 @@ namespace Chess.BoardWatch
         Threshold thresfilter = new Threshold(40);
         DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
         BlobCounter blobCounter = new BlobCounter();
+        SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
         public Form1()
         {
             InitializeComponent();
@@ -58,13 +61,25 @@ namespace Chess.BoardWatch
             }
             edgefilter.ApplyInPlace(bmp);
             thresfilter.ApplyInPlace(bmp);
+
+
+            //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
             blobCounter.ProcessImage(bmp);
             Blob[] blobs = blobCounter.GetObjectsInformation();
-            using (Bitmap tm = bmp.ToManagedImage())
+            List<IntPoint> points = blobCounter.GetBlobsEdgePoints(blobs[0]);
+            if (shapeCheck.IsQuadrilateral(points))
             {
-                var g = panel1.CreateGraphics();
-                g.DrawImage(tm, 0, 0, w, h);
+
             }
+            //...............................................................................................
+
+
+            //using (Bitmap tm = bmp.ToManagedImage())
+            //{
+            Bitmap tm = bmp.ToManagedImage();
+            var g = panel1.CreateGraphics();
+            g.DrawImage(tm, 0, 0, w, h);
+            //}
         }
     }
 }

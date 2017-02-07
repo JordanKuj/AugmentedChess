@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Board.cs" />
+    <Compile Include="Models\Board2.cs" />
+    <Compile Include="Models\GameLogic.cs" />
     <Compile Include="Models\IPiece.cs" />
+    <Compile Include="Models\Piece2.cs" />
     <Compile Include="Models\PieceColor.cs" />
     <Compile Include="Models\Pieces.cs" />
     <Compile Include="Models\Vector2d.cs" />

@@ -19,9 +19,13 @@ namespace Chess.BoardWatch
         VideoCaptureDevice stream;
         byte last = 0;
         Threshold thresfilter = new Threshold(40);
+        OtsuThreshold othreshFilter = new OtsuThreshold();
         DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
         BlobCounter blobCounter = new BlobCounter();
         SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
+
+        Pen left = new Pen(Brushes.Yellow, 5);
+        Pen right = new Pen(Brushes.Green, 5);
         public Form1()
         {
             InitializeComponent();
@@ -48,38 +52,93 @@ namespace Chess.BoardWatch
         }
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
+            const int rowcol = 5;
             var tmp = UnmanagedImage.FromManagedImage(eventArgs.Frame);
             int h = tmp.Height;
             int w = tmp.Width;
-            UnmanagedImage bmp;
+            UnmanagedImage grayscaleimage;
             if (tmp.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
-                bmp = tmp;
+                grayscaleimage = tmp;
             else
             {
-                bmp = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                Grayscale.CommonAlgorithms.BT709.Apply(tmp, bmp);
+                grayscaleimage = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
             }
-            edgefilter.ApplyInPlace(bmp);
-            thresfilter.ApplyInPlace(bmp);
+            UnmanagedImage finalimage = grayscaleimage.Clone();
 
+            edgefilter.ApplyInPlace(finalimage);
+            thresfilter.ApplyInPlace(finalimage);
+
+            var g = panel1.CreateGraphics();
+            var g2 = ImgBwGlyph.CreateGraphics();
+            var gBwCalc = ImgBwCalc.CreateGraphics();
+            Bitmap tm = finalimage.ToManagedImage();
+            g.DrawImage(tm, 0, 0, w, h);
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
-            blobCounter.ProcessImage(bmp);
+            blobCounter.ProcessImage(finalimage);
             Blob[] blobs = blobCounter.GetObjectsInformation();
-            List<IntPoint> points = blobCounter.GetBlobsEdgePoints(blobs[0]);
-            if (shapeCheck.IsQuadrilateral(points))
+            var b = blobs.FirstOrDefault();
+            if (b != null)
             {
+                List<IntPoint> points = blobCounter.GetBlobsEdgePoints(b);
+                List<IntPoint> corners;
+                if (shapeCheck.IsQuadrilateral(points, out corners))
+                {
+                    List<IntPoint> leftedge;
+                    List<IntPoint> rightedge;
 
+                    List<System.Drawing.Point> intleftedge = new List<System.Drawing.Point>();
+                    List<System.Drawing.Point> intrightedge = new List<System.Drawing.Point>();
+                    blobCounter.GetBlobsLeftAndRightEdges(b, out leftedge, out rightedge);
+                    foreach (var p in leftedge)
+                    {
+                        intleftedge.Add(new System.Drawing.Point(p.X, p.Y));
+                    }
+                    foreach (var p in rightedge)
+                    {
+                        intrightedge.Add(new System.Drawing.Point(p.X, p.Y));
+                    }
+
+                    var qt = new QuadrilateralTransformation(corners, 100, 100);
+
+                    int minx = corners.Min(x => x.X);
+                    int miny = corners.Min(x => x.Y);
+                    int maxx = corners.Max(x => x.X) - minx;
+                    int maxy = corners.Max(x => x.Y) - miny;
+
+                    //BrightnessDiff();
+                    UnmanagedImage uBwImg = othreshFilter.Apply(qt.Apply(grayscaleimage));
+                    var res = GlyphTools.GetGlyphData(uBwImg, rowcol);
+                    const int heightwidth = 100;
+                    var hwsize = (int)((double)heightwidth / (double)rowcol);
+                    for (var x = 0; x < rowcol; x++)
+                        for (var y = 0; y < rowcol; y++)
+                        {
+                            var val = res[x, y];
+                            gBwCalc.FillRectangle(val == 1 ? Brushes.Black : Brushes.White, x * hwsize, y * hwsize, hwsize, hwsize);
+                        }
+
+                    var bwimg = uBwImg.ToManagedImage();
+                    g2.DrawImage(bwimg, 0, 0, bwimg.Width, bwimg.Height);
+                    var rect = new Rectangle(minx, miny, maxx, maxy);
+                    g.DrawRectangle(Pens.Red, rect);
+                    g.DrawLines(left, intleftedge.ToArray());
+                    g.DrawLines(right, intrightedge.ToArray());
+                }
             }
-            //...............................................................................................
+        }
 
 
-            //using (Bitmap tm = bmp.ToManagedImage())
-            //{
-            Bitmap tm = bmp.ToManagedImage();
-            var g = panel1.CreateGraphics();
-            g.DrawImage(tm, 0, 0, w, h);
-            //}
+        //TODO:calculate the average differeance of light inside the box and outside the box
+        private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
+        {
+            return 0;
+        }
+
+        private void panel1_SizeChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using AForge.Imaging;
+﻿using AForge;
+using AForge.Imaging;
+using AForge.Imaging.Filters;
+using AForge.Math.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,8 +12,67 @@ using System.Threading.Tasks;
 
 namespace Chess.BoardWatch
 {
-    public static class GlyphTools
+    public class GlyphTools
     {
+
+        private int Glypdivisions;
+        private readonly int MinBlobSize;
+        private readonly Threshold thresfilter = new Threshold(40);
+        private readonly OtsuThreshold othreshFilter = new OtsuThreshold();
+        private readonly DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
+        private readonly BlobCounter blobCounter = new BlobCounter();
+        private readonly SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
+
+
+        public GlyphTools(int minblobsize, int glypdivisions)
+        {
+            MinBlobSize = minblobsize;
+            Glypdivisions = glypdivisions;
+            blobCounter.MinHeight = MinBlobSize;
+            blobCounter.MinWidth = MinBlobSize;
+            blobCounter.FilterBlobs = true;
+            blobCounter.ObjectsOrder = ObjectsOrder.Size;
+        }
+
+        public UnmanagedImage ProcessEdgeFilter(UnmanagedImage img)
+        {
+            return thresfilter.Apply(edgefilter.Apply(img));
+        }
+
+        public Blob[] GetBlobs(UnmanagedImage img)
+        {
+            blobCounter.ProcessImage(img);
+            return blobCounter.GetObjectsInformation();
+        }
+
+        public Boolean QuadCheck(Blob b, out List<IntPoint> corners)
+        {
+            List<IntPoint> points = blobCounter.GetBlobsEdgePoints(b);
+            return shapeCheck.IsQuadrilateral(points, out corners);
+        }
+        public void GetEdges(Blob b, out List<System.Drawing.Point> leftEdge, out List<System.Drawing.Point> rightEdge)
+        {
+            List<IntPoint> leftedge;
+            List<IntPoint> rightedge;
+            blobCounter.GetBlobsLeftAndRightEdges(b, out leftedge, out rightedge);
+            leftEdge = new List<System.Drawing.Point>();
+            rightEdge = new List<System.Drawing.Point>();
+            foreach (var p in leftedge)
+            {
+                leftEdge.Add(new System.Drawing.Point(p.X, p.Y));
+            }
+            foreach (var p in rightedge)
+            {
+                rightEdge.Add(new System.Drawing.Point(p.X, p.Y));
+            }
+        }
+
+        public UnmanagedImage QuadralateralizeImage(UnmanagedImage img, List<IntPoint> corners, int newWidth, int newHeight)
+        {
+            var qt = new QuadrilateralTransformation(corners, 100, 100);
+            return othreshFilter.Apply(qt.Apply(img));
+        }
+
 
         /// <summary>
         /// This method will return an array of 1s and 0s that will represent the glyph
@@ -56,8 +118,21 @@ namespace Chess.BoardWatch
             return intvalues;
         }
 
+        public static UnmanagedImage GetGrascaleImage(Bitmap img)
+        {
+            var tmp = UnmanagedImage.FromManagedImage(img);
+            int h = tmp.Height;
+            int w = tmp.Width;
+            UnmanagedImage grayscaleimage = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+            Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
+            return grayscaleimage;
+            //UnmanagedImage grayscaleimage = UnmanagedImage.Create(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+            //Grayscale.CommonAlgorithms.BT709.Apply(img, grayscaleimage);
+            //UnmanagedImage finalimage = gt.ProcessEdgeFilter(grayscaleimage.Clone());
 
+        }
 
 
     }
+
 }

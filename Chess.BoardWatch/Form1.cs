@@ -1,15 +1,14 @@
-﻿using AForge.Video;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using AForge.Video.DirectShow;
 using System.Diagnostics;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using AForge.Imaging.Filters;
-using AForge.Imaging;
 using AForge;
-using AForge.Math.Geometry;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using AForge.Imaging;
+using AForge.Imaging.Filters;
 
 namespace Chess.BoardWatch
 {
@@ -17,13 +16,10 @@ namespace Chess.BoardWatch
     {
 
         VideoCaptureDevice stream;
-        byte last = 0;
-        Threshold thresfilter = new Threshold(40);
-        OtsuThreshold othreshFilter = new OtsuThreshold();
-        DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
-        BlobCounter blobCounter = new BlobCounter();
-        SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
-
+        const int GlyphDivs = 5;
+        const int QuadSize = 50;
+        private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
+        GlyphTools gt = new GlyphTools(32, GlyphDivs);
         Pen left = new Pen(Brushes.Yellow, 5);
         Pen right = new Pen(Brushes.Green, 5);
         public Form1()
@@ -31,14 +27,10 @@ namespace Chess.BoardWatch
             InitializeComponent();
         }
 
-        //Grayscale grayFilter = new Grayscale(0.2125, 0.7154, 0.0721);
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            blobCounter.MinHeight = 32;
-            blobCounter.MinWidth = 32;
-            blobCounter.FilterBlobs = true;
-            blobCounter.ObjectsOrder = ObjectsOrder.Size;
+
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             stream = new VideoCaptureDevice(devices[0].MonikerString);
@@ -52,76 +44,42 @@ namespace Chess.BoardWatch
         }
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            const int rowcol = 5;
-            var tmp = UnmanagedImage.FromManagedImage(eventArgs.Frame);
-            int h = tmp.Height;
-            int w = tmp.Width;
-            UnmanagedImage grayscaleimage;
-            if (tmp.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed)
-                grayscaleimage = tmp;
-            else
-            {
-                grayscaleimage = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
-            }
-            UnmanagedImage finalimage = grayscaleimage.Clone();
-
-            edgefilter.ApplyInPlace(finalimage);
-            thresfilter.ApplyInPlace(finalimage);
+            UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(eventArgs.Frame);
+            UnmanagedImage finalimage = gt.ProcessEdgeFilter(grayscaleimage.Clone());
 
             var g = panel1.CreateGraphics();
             var g2 = ImgBwGlyph.CreateGraphics();
             var gBwCalc = ImgBwCalc.CreateGraphics();
-            Bitmap tm = finalimage.ToManagedImage();
-            g.DrawImage(tm, 0, 0, w, h);
+            g.DrawImage(finalimage.ToManagedImage(), 0, 0, grayscaleimage.Width, grayscaleimage.Height);
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
-            blobCounter.ProcessImage(finalimage);
-            Blob[] blobs = blobCounter.GetObjectsInformation();
+            Blob[] blobs = gt.GetBlobs(finalimage);// blobCounter.GetObjectsInformation();
             var b = blobs.FirstOrDefault();
             if (b != null)
             {
-                List<IntPoint> points = blobCounter.GetBlobsEdgePoints(b);
                 List<IntPoint> corners;
-                if (shapeCheck.IsQuadrilateral(points, out corners))
+                if (gt.QuadCheck(b, out corners))
                 {
-                    List<IntPoint> leftedge;
-                    List<IntPoint> rightedge;
+                    List<System.Drawing.Point> intleftedge;
+                    List<System.Drawing.Point> intrightedge;
 
-                    List<System.Drawing.Point> intleftedge = new List<System.Drawing.Point>();
-                    List<System.Drawing.Point> intrightedge = new List<System.Drawing.Point>();
-                    blobCounter.GetBlobsLeftAndRightEdges(b, out leftedge, out rightedge);
-                    foreach (var p in leftedge)
-                    {
-                        intleftedge.Add(new System.Drawing.Point(p.X, p.Y));
-                    }
-                    foreach (var p in rightedge)
-                    {
-                        intrightedge.Add(new System.Drawing.Point(p.X, p.Y));
-                    }
+                    gt.GetEdges(b, out intleftedge, out intrightedge);
+                    UnmanagedImage uBwImg = gt.QuadralateralizeImage(grayscaleimage, corners, QuadSize, QuadSize);
 
-                    var qt = new QuadrilateralTransformation(corners, 100, 100);
+                    //BrightnessDiff();
+                    var res = GlyphTools.GetGlyphData(uBwImg, GlyphDivs);
 
+                    for (var x = 0; x < GlyphDivs; x++)
+                        for (var y = 0; y < GlyphDivs; y++)
+                            gBwCalc.FillRectangle(res[x, y] == 1 ? Brushes.Black : Brushes.White, x * hwsize, y * hwsize, hwsize, hwsize);
+
+                    var bwimg = uBwImg.ToManagedImage();
                     int minx = corners.Min(x => x.X);
                     int miny = corners.Min(x => x.Y);
                     int maxx = corners.Max(x => x.X) - minx;
                     int maxy = corners.Max(x => x.Y) - miny;
-
-                    //BrightnessDiff();
-                    UnmanagedImage uBwImg = othreshFilter.Apply(qt.Apply(grayscaleimage));
-                    var res = GlyphTools.GetGlyphData(uBwImg, rowcol);
-                    const int heightwidth = 100;
-                    var hwsize = (int)((double)heightwidth / (double)rowcol);
-                    for (var x = 0; x < rowcol; x++)
-                        for (var y = 0; y < rowcol; y++)
-                        {
-                            var val = res[x, y];
-                            gBwCalc.FillRectangle(val == 1 ? Brushes.Black : Brushes.White, x * hwsize, y * hwsize, hwsize, hwsize);
-                        }
-
-                    var bwimg = uBwImg.ToManagedImage();
-                    g2.DrawImage(bwimg, 0, 0, bwimg.Width, bwimg.Height);
                     var rect = new Rectangle(minx, miny, maxx, maxy);
+                    g2.DrawImage(bwimg, 0, 0, bwimg.Width, bwimg.Height);
                     g.DrawRectangle(Pens.Red, rect);
                     g.DrawLines(left, intleftedge.ToArray());
                     g.DrawLines(right, intrightedge.ToArray());
@@ -134,11 +92,6 @@ namespace Chess.BoardWatch
         private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
         {
             return 0;
-        }
-
-        private void panel1_SizeChanged(object sender, EventArgs e)
-        {
-
         }
     }
 }

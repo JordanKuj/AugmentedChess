@@ -13,7 +13,8 @@ namespace Chess.Core.Models
         public Piece[,] board;
 
         //initialize with all pieces in starting position
-        public Board() {
+        public Board()
+        {
             board[0, a] = new Piece("rook", true);
             board[0, a] = new Piece("knight", true);
             board[0, a] = new Piece("bishop", true);
@@ -22,7 +23,8 @@ namespace Chess.Core.Models
             board[0, a] = new Piece("bishop", true);
             board[0, a] = new Piece("knight", true);
             board[0, a] = new Piece("rook", true);
-            for (int i = a; i <= h; i++) {
+            for (int i = a; i <= h; i++)
+            {
                 board[1, i] = new Piece("pawn", true);
             }
             board[7, h] = new Piece("rook", false);
@@ -42,39 +44,47 @@ namespace Chess.Core.Models
 
 
 
-        public Piece getPiece(int x, int y) {
+        public Piece getPiece(int x, int y)
+        {
             return board[x, y];
         }
 
-        public bool move(int a, int b, int x, int y) {
+        public bool move(int a, int b, int x, int y)
+        {
             int moveX = a - x;
             int moveY = b - y;
             Piece p = board[a, b];
 
-            //knight direct jump to any square in range
-            if (p.getName() == "knight") {
-                if (a >= 0 && b >= 0 && a < 8 && b < 8 && x >= 0 && y >= 0 && x < 8 && y < 8) {
-                    return true;
-                }
-                return false;
+
+            if (p.getName() == "knight")
+            {
+                //TODO make function for knight movement
+                return true;
             }
             //if no move return false as state did not change
-            if (moveX == 0 && moveY == 0) {
+            if (moveX == 0 && moveY == 0)
+            {
                 return false;
             }
             //if piece is not moving in a straight line
-            if ((moveX != 0 && Math.Abs(moveX) != Math.Abs(moveY)) || (moveY != 0 && Math.Abs(moveX) != Math.Abs(moveY))) {
+            if ((moveX != 0 && Math.Abs(moveX) != Math.Abs(moveY)) || (moveY != 0 && Math.Abs(moveX) != Math.Abs(moveY)))
+            {
                 return false;
             }
 
-            return stepThrough(a,b,x,y);
+            stepThrough(a, b, x, y);
+
+
+            return true;
+
 
         }
-
-        public bool stepThrough(int a, int b, int x, int y) {
+        public bool stepThrough(int a, int b, int x, int y)
+        {
 
             //up and right
-            if (a < x && b < y) {
+            if (a < x && b < y)
+            {
                 for (int i = a; i < x; i++)
                 {
                     for (int j = b; j < y; j++)
@@ -134,13 +144,13 @@ namespace Chess.Core.Models
             //up 
             if (b < y)
             {
-               for (int j = b; j < y; j++)
-               {
-                     if (board[a, j] != null)
-                     {
-                       return false;
-                     }
-                
+                for (int j = b; j < y; j++)
+                {
+                    if (board[a, j] != null)
+                    {
+                        return false;
+                    }
+
                 }
                 return true;
             }
@@ -190,6 +200,13 @@ namespace Chess.Core.Models
             return false;
 
 
+        }
+        public static void Main()
+        {
+            Board b = new Board();
+            Console.Write("created board");
+            b.move(1, 1, 2, 2);
+            Console.Write("pawn moved");
         }
 
     }

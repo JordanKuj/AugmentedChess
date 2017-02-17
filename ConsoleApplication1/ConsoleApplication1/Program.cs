@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Core.Models
+namespace ConsoleApplication1
 {
-    public enum PieceColor
+    class Program
     {
-        Black = -1, White = 1
+        static void Main(string[] args)
+        {
+        }
     }
 }

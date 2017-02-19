@@ -14,7 +14,6 @@ namespace Chess.BoardWatch
 {
     public partial class Form1 : Form
     {
-
         VideoCaptureDevice stream;
         const int GlyphDivs = 5;
         const int QuadSize = 50;
@@ -37,15 +36,21 @@ namespace Chess.BoardWatch
             var c = new VideoCapabilities[stream.VideoCapabilities.Length];
             var capabilities = new List<VideoCapabilities>(c);
             stream.VideoCapabilities.CopyTo(c, 0);
-            stream.VideoResolution = c[7];
+            var vidres = c[0];
+            stream.VideoResolution = vidres;
             stream.NewFrame += Stream_NewFrame;
-            panel1.Size = new Size(c[7].FrameSize.Width, c[7].FrameSize.Height);
+            panel1.Size = new Size(vidres.FrameSize.Width, vidres.FrameSize.Height);
             stream.Start();
         }
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(eventArgs.Frame);
-            UnmanagedImage finalimage = gt.ProcessEdgeFilter(grayscaleimage.Clone());
+            UnmanagedImage originalimg = GlyphTools.GetUnmanagedImage(eventArgs.Frame);
+            UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(originalimg);
+            UnmanagedImage edgeimg = gt.DoEdgeFilter(grayscaleimage);
+            UnmanagedImage finalimage = gt.DoThreshFilter(edgeimg);
+
+
+
 
             var g = panel1.CreateGraphics();
             var g2 = ImgBwGlyph.CreateGraphics();

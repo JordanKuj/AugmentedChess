@@ -34,10 +34,6 @@ namespace Chess.BoardWatch
             blobCounter.ObjectsOrder = ObjectsOrder.Size;
         }
 
-        public UnmanagedImage ProcessEdgeFilter(UnmanagedImage img)
-        {
-            return thresfilter.Apply(edgefilter.Apply(img));
-        }
 
         public Blob[] GetBlobs(UnmanagedImage img)
         {
@@ -67,6 +63,22 @@ namespace Chess.BoardWatch
             }
         }
 
+
+
+        public UnmanagedImage DoThreshFilter(UnmanagedImage img)
+        {
+            return thresfilter.Apply(img);
+        }
+        public UnmanagedImage DoEdgeFilter(UnmanagedImage img)
+        {
+            return edgefilter.Apply(img);
+        }
+
+
+        public UnmanagedImage ProcessEdgeFilter(UnmanagedImage img)
+        {
+            return DoThreshFilter(DoEdgeFilter(img));
+        }
         public UnmanagedImage QuadralateralizeImage(UnmanagedImage img, List<IntPoint> corners, int newWidth, int newHeight)
         {
             var qt = new QuadrilateralTransformation(corners, 100, 100);
@@ -118,7 +130,7 @@ namespace Chess.BoardWatch
             return intvalues;
         }
 
-        public static UnmanagedImage GetGrascaleImage(Bitmap img)
+        public static UnmanagedImage GetGrascaleImage(UnmanagedImage img)
         {
             var tmp = UnmanagedImage.FromManagedImage(img);
             int h = tmp.Height;
@@ -130,6 +142,13 @@ namespace Chess.BoardWatch
             //Grayscale.CommonAlgorithms.BT709.Apply(img, grayscaleimage);
             //UnmanagedImage finalimage = gt.ProcessEdgeFilter(grayscaleimage.Clone());
 
+        }
+        public static UnmanagedImage GetUnmanagedImage(Bitmap img)
+        {
+            var tmp = UnmanagedImage.FromManagedImage(img);
+            int h = tmp.Height;
+            int w = tmp.Width;
+            return UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
         }
 
 

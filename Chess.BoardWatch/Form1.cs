@@ -44,8 +44,9 @@ namespace Chess.BoardWatch
         }
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            UnmanagedImage originalimg = GlyphTools.GetUnmanagedImage(eventArgs.Frame);
-            UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(originalimg);
+            Bitmap origional = eventArgs.Frame;
+            UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(origional);
+            //UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(originalimg);
             UnmanagedImage edgeimg = gt.DoEdgeFilter(grayscaleimage);
             UnmanagedImage finalimage = gt.DoThreshFilter(edgeimg);
 
@@ -55,7 +56,14 @@ namespace Chess.BoardWatch
             var g = panel1.CreateGraphics();
             var g2 = ImgBwGlyph.CreateGraphics();
             var gBwCalc = ImgBwCalc.CreateGraphics();
-            g.DrawImage(finalimage.ToManagedImage(), 0, 0, grayscaleimage.Width, grayscaleimage.Height);
+
+            var w1 = panel1.Width / 2;
+            var h1 = panel1.Height / 2;
+            g.DrawImage(origional, new Rectangle(0, 0, w1, h1));
+            g.DrawImage(grayscaleimage.ToManagedImage(), new Rectangle(w1, 0, w1, h1));
+            g.DrawImage(edgeimg.ToManagedImage(), new Rectangle(0, h1, w1, h1));
+            g.DrawImage(finalimage.ToManagedImage(), new Rectangle(w1, h1, w1, h1));
+            //g.DrawImage(finalimage.ToManagedImage(), 0, 0, grayscaleimage.Width, grayscaleimage.Height);
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
             Blob[] blobs = gt.GetBlobs(finalimage);// blobCounter.GetObjectsInformation();

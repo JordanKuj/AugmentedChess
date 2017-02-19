@@ -130,7 +130,7 @@ namespace Chess.BoardWatch
             return intvalues;
         }
 
-        public static UnmanagedImage GetGrascaleImage(UnmanagedImage img)
+        public static UnmanagedImage GetGrascaleImage(Bitmap img)
         {
             var tmp = UnmanagedImage.FromManagedImage(img);
             int h = tmp.Height;

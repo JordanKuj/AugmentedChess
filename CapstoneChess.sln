@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.Core.Tests", "Chess.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.BoardWatch", "Chess.BoardWatch\Chess.BoardWatch.csproj", "{A9821605-AC3C-4F6F-9517-588576D5A0DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chess.WebAPI", "Chess.WebAPI\Chess.WebAPI.csproj", "{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A9821605-AC3C-4F6F-9517-588576D5A0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9821605-AC3C-4F6F-9517-588576D5A0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9821605-AC3C-4F6F-9517-588576D5A0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

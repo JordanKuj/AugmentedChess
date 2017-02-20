@@ -20,6 +20,15 @@ namespace Chess.WebAPI.Controllers
         // GET: api/Games
         public IQueryable<Games> GetGames()
         {
+            // finalize in sprint 2
+            /*var game = from g in db.Games
+                       select new GamesDTO()
+                       {
+                           GameId = g.GameId,
+                           StartTime = g.StartTime,
+                           EndTime = g.EndTime
+                       };
+            return game;*/
             return db.Games;
         }
 
@@ -27,6 +36,13 @@ namespace Chess.WebAPI.Controllers
         [ResponseType(typeof(Games))]
         public async Task<IHttpActionResult> GetGames(int id)
         {
+            // finalize in sprint 2
+            /*var game = await db.Games.Include(g => g.GameId).Select(g => new GamesDTO()
+                {
+                    GameId = g.GameId,
+                    StartTime = g.StartTime,
+                    EndTime = g.EndTime
+                }).SingleOrDefaultAsync(g => g.GameId == id);*/
             Games games = await db.Games.FindAsync(id);
             if (games == null)
             {

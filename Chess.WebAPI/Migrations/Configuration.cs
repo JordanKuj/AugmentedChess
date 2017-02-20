@@ -28,18 +28,21 @@ namespace Chess.WebAPI.Migrations
             //    );
             //
 
-            // meaningless time and boardstate to seed database
-            DateTime time = new DateTime(1970, 1, 1, 1, 1, 1);
+            // meaningless times and boardstates to seed database
+            DateTime time1 = new DateTime(1970, 1, 1, 1, 1, 1);
+            DateTime time2 = DateTime.Now;
             Array[,] board = new Array[8,8];
 
             context.Games.AddOrUpdate(
                 x => x.GameId,
-                new Games() { GameId = 0000, StartTime = time, EndTime = time }
+                new Games() { GameId = 0001, StartTime = time1, EndTime = time1 },
+                new Games() { GameId = 0002, StartTime = time1, EndTime = time2 }
                 );
 
             context.Boardstates.AddOrUpdate(
                 x => x.StateId,
-                new Boardstates() { StateId = 0000, GameId = 0000, Timestamp = time, State = board }
+                new Boardstates() { StateId = 0001, GameId = 0000, Timestamp = time1, State = board },
+                new Boardstates() { StateId = 0002, GameId = 0001, Timestamp = time2, State = board }
                 );
         }
     }

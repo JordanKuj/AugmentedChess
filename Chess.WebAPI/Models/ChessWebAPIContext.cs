@@ -15,8 +15,9 @@ namespace Chess.WebAPI.Models
         // For more information refer to the documentation:
         // http://msdn.microsoft.com/en-us/data/jj591621.aspx
     
-        public ChessWebAPIContext() : base("name=ChessWebAPIContext")
+        public ChessWebAPIContext() : base("ChessWebAPIContext")
         {
+            Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
         }
 
         public System.Data.Entity.DbSet<Chess.WebAPI.Models.Games> Games { get; set; }

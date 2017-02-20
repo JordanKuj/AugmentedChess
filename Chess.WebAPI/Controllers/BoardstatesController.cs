@@ -20,13 +20,31 @@ namespace Chess.WebAPI.Controllers
         // GET: api/Boardstates
         public IQueryable<Boardstates> GetBoardstates()
         {
-            return db.Boardstates;
+            // finalize in sprint 2
+            /*var board = from b in db.Boardstates
+                        select new BoardstatesDTO()
+                        {
+                            StateId = b.StateId,
+                            Timestamp = b.Timestamp,
+                            State = b.State,
+                            GameId = b.Include(g => g.GameId)
+                        };
+            return board;*/
+            return db.Boardstates.Include(g => g.GameId);
         }
 
         // GET: api/Boardstates/5
         [ResponseType(typeof(Boardstates))]
         public async Task<IHttpActionResult> GetBoardstates(int id)
         {
+            // finalize in sprint 2
+            /*var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO()
+            {
+                StateId = b.StateId,
+                Timestamp = b.Timestamp,
+                State = b.State,
+                GameId = b.GameId
+            }).SingleOrDefaultAsync(b => b.StateId == id);*/
             Boardstates boardstates = await db.Boardstates.FindAsync(id);
             if (boardstates == null)
             {

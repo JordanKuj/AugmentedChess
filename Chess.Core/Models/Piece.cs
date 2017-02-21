@@ -8,37 +8,41 @@ namespace Chess.Core.Models
 {
     class Piece
     {
-        public string Name;
-        public bool Color;
-        public bool InPlay;
-        //team color is true for white, false for black
 
-        public Piece(string pieceName, bool team) {
-            Name = pieceName;
-            Color = team;
-            InPlay = true;
+        bool Team;
+        string Name;
+        bool HasMoved;
+
+        public Piece(bool t, string n)
+        {
+            Team = t;
+            Name = n;
+            HasMoved = false;
+        }
+        //getters for variables
+        public bool getTeam()
+        {
+            return Team;
         }
 
-        public string getName() {
+        public string getName()
+        {
             return Name;
         }
+        public bool getHasMoved()
+        {
+            return HasMoved;
+        }
 
-        public void setName(string x) {
-            Name = x;
-        }
-        public bool getColor() {
-            return Color;
-        }
-        public void setColor(bool x)
+        //when piece has moved set HasMoved to true
+        public void setHasMoved()
         {
-            Color = x;
+            HasMoved = true;
         }
-        public bool getInPlay() {
-            return InPlay;
-        }
-        public void setInPlay(bool x)
+        //make a copy of a piece
+        public Piece copy()
         {
-            InPlay = x;
+            return new Piece(Team, Name);
         }
     }
 }

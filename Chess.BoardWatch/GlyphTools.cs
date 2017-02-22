@@ -31,7 +31,7 @@ namespace Chess.BoardWatch
             blobCounter.MinHeight = MinBlobSize;
             blobCounter.MinWidth = MinBlobSize;
             blobCounter.FilterBlobs = true;
-            blobCounter.ObjectsOrder = ObjectsOrder.Size;
+            blobCounter.ObjectsOrder = ObjectsOrder.XY;
         }
 
 

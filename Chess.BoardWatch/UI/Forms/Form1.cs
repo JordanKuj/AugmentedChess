@@ -45,6 +45,8 @@ namespace Chess.BoardWatch
             stream.NewFrame += Stream_NewFrame;
             //panel1.Size = new Size(vidres.FrameSize.Width, vidres.FrameSize.Height);
             stream.Start();
+            var dilg = new SettingsForm(gt);
+            dilg.Show();
 
             //var w1 = panel1.Width / 2;
             //var h1 = panel1.Height / 2;
@@ -63,6 +65,7 @@ namespace Chess.BoardWatch
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap origional = eventArgs.Frame;
+            UnmanagedImage redImage = gt.GetRed(origional);
             UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(origional);
             //UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(originalimg);
             UnmanagedImage edgeimg = gt.DoEdgeFilter(grayscaleimage);
@@ -79,6 +82,7 @@ namespace Chess.BoardWatch
             BWPanel.DrawImage(grayscaleimage);
             EdgePanel.DrawImage(edgeimg);
             FinalPanel.DrawImage(finalimage);
+            PanelRed.DrawImage(redImage);
             //RawVid.DrawImage(origional, topleft);
             //RawVid.DrawImage(grayscaleimage.ToManagedImage(), topright);
             //RawVid.DrawImage(edgeimg.ToManagedImage(), bottomleft);
@@ -91,7 +95,7 @@ namespace Chess.BoardWatch
             foreach (var b in blobs.ToList())
             {
                 List<IntPoint> corners;
-                if (gt.QuadCheck(b, out corners))
+                if (gt.QuadCheck(b, out corners) && count < panels.Count)
                 {
                     List<System.Drawing.Point> intleftedge;
                     List<System.Drawing.Point> intrightedge;

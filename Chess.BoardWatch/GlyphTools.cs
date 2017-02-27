@@ -15,21 +15,93 @@ namespace Chess.BoardWatch
     public class GlyphTools
     {
 
+        EuclideanColorFiltering RedFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
+        EuclideanColorFiltering BlueFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
+        EuclideanColorFiltering GreenFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
+
         private int Glypdivisions;
-        private readonly int MinBlobSize;
         private readonly Threshold thresfilter = new Threshold(40);
         private readonly OtsuThreshold othreshFilter = new OtsuThreshold();
         private readonly DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
         private readonly BlobCounter blobCounter = new BlobCounter();
         private readonly SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
 
+        private int _minsize;
+
+        public int ThreshFilter
+        {
+            get { return thresfilter.ThresholdValue; }
+            set { thresfilter.ThresholdValue = value; }
+        }
+        public int MinSize
+        {
+            get { return _minsize; }
+            set
+            {
+                _minsize = value;
+                blobCounter.MinHeight = value;
+                blobCounter.MinWidth = value;
+            }
+        }
+
+        private float _blobSizeRatio;
+
+        public float BlobSizeRatio
+        {
+            get { return _blobSizeRatio; }
+            set
+            {
+                if (value > 1 || value < 0) throw new Exception();
+                _blobSizeRatio = value;
+            }
+        }
+
+        private ColorFilterSettings _red;
+        private ColorFilterSettings _blue;
+        private ColorFilterSettings _green;
+        public ColorFilterSettings Red
+        {
+            get { return _red; }
+            set
+            {
+                _red = value;
+                SetColorFilter(_red, RedFilter);
+            }
+        }
+        public ColorFilterSettings Blue
+        {
+            get { return _blue; }
+            set
+            {
+                _blue = value;
+                SetColorFilter(_blue, BlueFilter);
+            }
+        }
+        public ColorFilterSettings Green
+        {
+            get { return _green; }
+            set
+            {
+                _green = value;
+                SetColorFilter(_green, GreenFilter);
+            }
+        }
+
+        private static void SetColorFilter(ColorFilterSettings c, EuclideanColorFiltering filter)
+        {
+            filter.CenterColor = c.GetRgb;
+            filter.Radius = c.Radius;
+        }
+
+
+        public double Minfullness { get; set; }
 
         public GlyphTools(int minblobsize, int glypdivisions)
         {
-            MinBlobSize = minblobsize;
+            BlobSizeRatio = .9f;
+            Minfullness = .9f;
+            MinSize = minblobsize;
             Glypdivisions = glypdivisions;
-            blobCounter.MinHeight = MinBlobSize;
-            blobCounter.MinWidth = MinBlobSize;
             blobCounter.FilterBlobs = true;
             blobCounter.ObjectsOrder = ObjectsOrder.XY;
         }
@@ -38,7 +110,17 @@ namespace Chess.BoardWatch
         public Blob[] GetBlobs(UnmanagedImage img)
         {
             blobCounter.ProcessImage(img);
-            return blobCounter.GetObjectsInformation();
+            var filteredBlobs = new List<Blob>();
+            var blobs = blobCounter.GetObjectsInformation();
+            foreach (var b in blobs)
+            {
+                var ratio = ((float)b.Rectangle.Height) / ((float)b.Rectangle.Width);
+                if (ratio >= BlobSizeRatio)
+                    if (b.Fullness >= Minfullness)
+                        filteredBlobs.Add(b);
+            }
+
+            return filteredBlobs.ToArray();
         }
 
         public Boolean QuadCheck(Blob b, out List<IntPoint> corners)
@@ -129,12 +211,26 @@ namespace Chess.BoardWatch
             }
             return intvalues;
         }
+        public UnmanagedImage GetRed(Bitmap img)
+        {
+            return RedFilter.Apply(UnmanagedImage.FromManagedImage(img));
+        }
+        public UnmanagedImage GetBlue(Bitmap img)
+        {
+            return BlueFilter.Apply(UnmanagedImage.FromManagedImage(img));
+        }
+        public UnmanagedImage GetGreen(Bitmap img)
+        {
+            return GreenFilter.Apply(UnmanagedImage.FromManagedImage(img));
+        }
+
 
         public static UnmanagedImage GetGrascaleImage(Bitmap img)
         {
             var tmp = UnmanagedImage.FromManagedImage(img);
             int h = tmp.Height;
             int w = tmp.Width;
+
             UnmanagedImage grayscaleimage = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
             Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
             return grayscaleimage;

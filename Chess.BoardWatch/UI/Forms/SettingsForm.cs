@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Chess.BoardWatch.Models;
+using Chess.BoardWatch.Tools;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,46 +14,100 @@ namespace Chess.BoardWatch
 {
     public partial class SettingsForm : Form
     {
-        private readonly GlyphTools _gt;
-        public SettingsForm(GlyphTools gt)
+        private readonly IGlyphTools _gt;
+        private readonly ICfgTool<MasterCfg> _cfgtool;
+        public SettingsForm(IGlyphTools gt, ICfgTool<MasterCfg> cfgtool)
         {
             InitializeComponent();
             _gt = gt;
+            _cfgtool = cfgtool;
         }
 
         private void nudThresh_ValueChanged(object sender, EventArgs e)
         {
-            _gt.ThreshFilter = (int)nudThresh.Value;
+            _gt.ThreshFilter = ThreshholdVal;
         }
         private void nudMinSize_ValueChanged(object sender, EventArgs e)
         {
-            _gt.MinSize = (int)nudMinSize.Value;
+            _gt.MinSize = MinGlyphSize;
         }
 
+        int Glyphdivs => (int)NudGlyphDivs.Value;
+        int ThreshholdVal => (int)nudThresh.Value;
+        int MinGlyphSize => (int)nudMinSize.Value;
+        float BlobSizeRatio => trackBar1.Value / 100f;
+        float MinFullness => TrackFullness.Value / 100f;
+        //int GlyphDivisions => 
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
+            NudGlyphDivs.Value = _gt.Glypdivisions;
             nudMinSize.Value = _gt.MinSize;
             nudThresh.Value = _gt.ThreshFilter;
             trackBar1.Value = (int)(_gt.BlobSizeRatio * 100);
             TrackFullness.Value = (int)(_gt.Minfullness * 100);
-            //nudMinSize.Refresh();
-            //nudMinSize.Update();
-            
+            FilterCtrlGreen.Set(_gt.Green);
+            FilterCtrlBlue.Set(_gt.Blue);
+            FilterCtrlRed.Set(_gt.Red);
         }
 
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
-            var val = trackBar1.Value / 100f;
-            _gt.BlobSizeRatio = val;
-            LblVal.Text = val.ToString();
+            _gt.BlobSizeRatio = BlobSizeRatio;
+            LblVal.Text = BlobSizeRatio.ToString();
         }
 
         private void TrackFullness_ValueChanged(object sender, EventArgs e)
         {
-            var val = TrackFullness.Value / 100f;
-            _gt.Minfullness = val;
-            LblFullnessVal.Text = val.ToString();
+            _gt.Minfullness = MinFullness;
+            LblFullnessVal.Text = MinFullness.ToString();
+        }
+
+        private void FilterCtrlRed_ValueChanged(ColorFilterSettings obj)
+        {
+            _gt.Red = FilterCtrlRed.Get();
+        }
+
+        private void FilterCtrlBlue_ValueChanged(ColorFilterSettings obj)
+        {
+            _gt.Blue = FilterCtrlBlue.Get();
+        }
+
+        private void FilterCtrlGreen_ValueChanged(ColorFilterSettings obj)
+        {
+            _gt.Green = FilterCtrlGreen.Get();
+        }
+
+        private void SettingsForm_Activated(object sender, EventArgs e)
+        {
+            FilterCtrlRed.DrawColor();
+            FilterCtrlBlue.DrawColor();
+            FilterCtrlGreen.DrawColor();
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            _cfgtool.WriteCfg(new MasterCfg()
+            {
+                BlueFilter = FilterCtrlBlue.Get(),
+                RedFilter = FilterCtrlRed.Get(),
+                GreenFilter = FilterCtrlGreen.Get(),
+                Glypdivisions = Glyphdivs,
+                MinBlobSize = this.MinGlyphSize,
+                MinFullness = this.MinFullness,
+                MinBlobShapeRatio = this.BlobSizeRatio,
+                ThreshholdFilterValue = this.ThreshholdVal
+            });
+        }
+
+        private void BtnLoad_Click(object sender, EventArgs e)
+        {
+            _gt.SetCfg(_cfgtool.ReadCfg());
+        }
+
+        private void NudGlyphDivs_ValueChanged(object sender, EventArgs e)
+        {
+            _gt.Glypdivisions = Glyphdivs;
         }
     }
 }

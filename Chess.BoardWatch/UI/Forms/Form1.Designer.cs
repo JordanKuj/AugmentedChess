@@ -46,15 +46,19 @@
             this.betterPanel10 = new Chess.BoardWatch.BetterPanel();
             this.betterPanel11 = new Chess.BoardWatch.BetterPanel();
             this.betterPanel12 = new Chess.BoardWatch.BetterPanel();
+            this.PanelRBW = new Chess.BoardWatch.BetterPanel();
             this.PanelRed = new Chess.BoardWatch.BetterPanel();
             this.PanelRawVideo = new Chess.BoardWatch.BetterPanel();
-            this.BWPanel = new Chess.BoardWatch.BetterPanel();
-            this.EdgePanel = new Chess.BoardWatch.BetterPanel();
-            this.FinalPanel = new Chess.BoardWatch.BetterPanel();
             this.PanelGreen = new Chess.BoardWatch.BetterPanel();
-            this.betterPanel15 = new Chess.BoardWatch.BetterPanel();
-            this.betterPanel16 = new Chess.BoardWatch.BetterPanel();
+            this.PanelGBW = new Chess.BoardWatch.BetterPanel();
+            this.PanelFinal = new Chess.BoardWatch.BetterPanel();
+            this.PanelBBW = new Chess.BoardWatch.BetterPanel();
             this.PanelBlue = new Chess.BoardWatch.BetterPanel();
+            this.EdgePanel = new Chess.BoardWatch.BetterPanel();
+            this.PanelBw = new Chess.BoardWatch.BetterPanel();
+            this.PanelFinalR = new Chess.BoardWatch.BetterPanel();
+            this.PanelFinalG = new Chess.BoardWatch.BetterPanel();
+            this.PanelFinalB = new Chess.BoardWatch.BetterPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -68,7 +72,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 628F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 693F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 718F));
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
@@ -94,7 +98,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(153, 720);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(128, 720);
             this.tableLayoutPanel3.TabIndex = 4;
             // 
             // flowLayoutPanel1
@@ -113,25 +117,30 @@
             this.flowLayoutPanel1.Controls.Add(this.betterPanel12);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(793, 4);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(768, 4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(687, 720);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(712, 720);
             this.flowLayoutPanel1.TabIndex = 5;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.PanelBlue, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.betterPanel15, 0, 4);
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.Controls.Add(this.PanelFinalB, 2, 4);
+            this.tableLayoutPanel2.Controls.Add(this.PanelRBW, 1, 2);
             this.tableLayoutPanel2.Controls.Add(this.PanelRed, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.PanelRawVideo, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.BWPanel, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.EdgePanel, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.FinalPanel, 1, 1);
             this.tableLayoutPanel2.Controls.Add(this.PanelGreen, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.betterPanel16, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.PanelGBW, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.PanelFinal, 2, 1);
+            this.tableLayoutPanel2.Controls.Add(this.PanelBBW, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.PanelBlue, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.EdgePanel, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.PanelBw, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.PanelFinalR, 2, 2);
+            this.tableLayoutPanel2.Controls.Add(this.PanelFinalG, 2, 3);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -141,7 +150,6 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 720);
             this.tableLayoutPanel2.TabIndex = 6;
             // 
@@ -150,7 +158,7 @@
             this.ImgBwGlyph.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ImgBwGlyph.Location = new System.Drawing.Point(3, 3);
             this.ImgBwGlyph.Name = "ImgBwGlyph";
-            this.ImgBwGlyph.Size = new System.Drawing.Size(147, 354);
+            this.ImgBwGlyph.Size = new System.Drawing.Size(122, 354);
             this.ImgBwGlyph.TabIndex = 1;
             // 
             // ImgBwCalc
@@ -158,7 +166,7 @@
             this.ImgBwCalc.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ImgBwCalc.Location = new System.Drawing.Point(3, 363);
             this.ImgBwCalc.Name = "ImgBwCalc";
-            this.ImgBwCalc.Size = new System.Drawing.Size(147, 354);
+            this.ImgBwCalc.Size = new System.Drawing.Size(122, 354);
             this.ImgBwCalc.TabIndex = 2;
             // 
             // betterPanel1
@@ -257,82 +265,110 @@
             this.betterPanel12.Size = new System.Drawing.Size(100, 100);
             this.betterPanel12.TabIndex = 8;
             // 
+            // PanelRBW
+            // 
+            this.PanelRBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelRBW.Location = new System.Drawing.Point(210, 291);
+            this.PanelRBW.Name = "PanelRBW";
+            this.PanelRBW.Size = new System.Drawing.Size(201, 138);
+            this.PanelRBW.TabIndex = 8;
+            // 
             // PanelRed
             // 
             this.PanelRed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelRed.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelRed.Location = new System.Drawing.Point(3, 291);
             this.PanelRed.Name = "PanelRed";
-            this.PanelRed.Size = new System.Drawing.Size(305, 138);
+            this.PanelRed.Size = new System.Drawing.Size(201, 138);
             this.PanelRed.TabIndex = 5;
             // 
             // PanelRawVideo
             // 
             this.PanelRawVideo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelRawVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PanelRawVideo.Location = new System.Drawing.Point(3, 3);
             this.PanelRawVideo.Name = "PanelRawVideo";
-            this.PanelRawVideo.Size = new System.Drawing.Size(305, 138);
+            this.PanelRawVideo.Size = new System.Drawing.Size(201, 138);
             this.PanelRawVideo.TabIndex = 0;
-            // 
-            // BWPanel
-            // 
-            this.BWPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.BWPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BWPanel.Location = new System.Drawing.Point(314, 3);
-            this.BWPanel.Name = "BWPanel";
-            this.BWPanel.Size = new System.Drawing.Size(305, 138);
-            this.BWPanel.TabIndex = 1;
-            // 
-            // EdgePanel
-            // 
-            this.EdgePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EdgePanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EdgePanel.Location = new System.Drawing.Point(3, 147);
-            this.EdgePanel.Name = "EdgePanel";
-            this.EdgePanel.Size = new System.Drawing.Size(305, 138);
-            this.EdgePanel.TabIndex = 2;
-            // 
-            // FinalPanel
-            // 
-            this.FinalPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.FinalPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FinalPanel.Location = new System.Drawing.Point(314, 147);
-            this.FinalPanel.Name = "FinalPanel";
-            this.FinalPanel.Size = new System.Drawing.Size(305, 138);
-            this.FinalPanel.TabIndex = 3;
             // 
             // PanelGreen
             // 
             this.PanelGreen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelGreen.Location = new System.Drawing.Point(3, 435);
             this.PanelGreen.Name = "PanelGreen";
-            this.PanelGreen.Size = new System.Drawing.Size(305, 138);
+            this.PanelGreen.Size = new System.Drawing.Size(201, 138);
             this.PanelGreen.TabIndex = 6;
             // 
-            // betterPanel15
+            // PanelGBW
             // 
-            this.betterPanel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.betterPanel15.Location = new System.Drawing.Point(314, 579);
-            this.betterPanel15.Name = "betterPanel15";
-            this.betterPanel15.Size = new System.Drawing.Size(305, 138);
-            this.betterPanel15.TabIndex = 7;
+            this.PanelGBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelGBW.Location = new System.Drawing.Point(210, 435);
+            this.PanelGBW.Name = "PanelGBW";
+            this.PanelGBW.Size = new System.Drawing.Size(201, 138);
+            this.PanelGBW.TabIndex = 8;
             // 
-            // betterPanel16
+            // FinalPanel
             // 
-            this.betterPanel16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.betterPanel16.Location = new System.Drawing.Point(314, 435);
-            this.betterPanel16.Name = "betterPanel16";
-            this.betterPanel16.Size = new System.Drawing.Size(305, 138);
-            this.betterPanel16.TabIndex = 8;
+            this.PanelFinal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelFinal.Location = new System.Drawing.Point(417, 147);
+            this.PanelFinal.Name = "FinalPanel";
+            this.PanelFinal.Size = new System.Drawing.Size(202, 138);
+            this.PanelFinal.TabIndex = 3;
+            // 
+            // PanelBBW
+            // 
+            this.PanelBBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelBBW.Location = new System.Drawing.Point(210, 579);
+            this.PanelBBW.Name = "PanelBBW";
+            this.PanelBBW.Size = new System.Drawing.Size(201, 138);
+            this.PanelBBW.TabIndex = 7;
             // 
             // PanelBlue
             // 
             this.PanelBlue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelBlue.Location = new System.Drawing.Point(3, 579);
             this.PanelBlue.Name = "PanelBlue";
-            this.PanelBlue.Size = new System.Drawing.Size(305, 138);
+            this.PanelBlue.Size = new System.Drawing.Size(201, 138);
             this.PanelBlue.TabIndex = 9;
+            // 
+            // EdgePanel
+            // 
+            this.EdgePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.EdgePanel.Location = new System.Drawing.Point(210, 147);
+            this.EdgePanel.Name = "EdgePanel";
+            this.EdgePanel.Size = new System.Drawing.Size(201, 138);
+            this.EdgePanel.TabIndex = 2;
+            // 
+            // BWPanel
+            // 
+            this.PanelBw.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelBw.Location = new System.Drawing.Point(3, 147);
+            this.PanelBw.Name = "BWPanel";
+            this.PanelBw.Size = new System.Drawing.Size(201, 138);
+            this.PanelBw.TabIndex = 1;
+            // 
+            // PanelFinalR
+            // 
+            this.PanelFinalR.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelFinalR.Location = new System.Drawing.Point(417, 291);
+            this.PanelFinalR.Name = "PanelFinalR";
+            this.PanelFinalR.Size = new System.Drawing.Size(202, 138);
+            this.PanelFinalR.TabIndex = 10;
+            // 
+            // PanelFinalG
+            // 
+            this.PanelFinalG.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelFinalG.Location = new System.Drawing.Point(417, 435);
+            this.PanelFinalG.Name = "PanelFinalG";
+            this.PanelFinalG.Size = new System.Drawing.Size(202, 138);
+            this.PanelFinalG.TabIndex = 11;
+            // 
+            // PanelFinalB
+            // 
+            this.PanelFinalB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelFinalB.Location = new System.Drawing.Point(417, 579);
+            this.PanelFinalB.Name = "PanelFinalB";
+            this.PanelFinalB.Size = new System.Drawing.Size(202, 138);
+            this.PanelFinalB.TabIndex = 4;
             // 
             // Form1
             // 
@@ -373,13 +409,17 @@
         private BetterPanel betterPanel12;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private BetterPanel PanelRawVideo;
-        private BetterPanel BWPanel;
+        private BetterPanel PanelBw;
         private BetterPanel EdgePanel;
-        private BetterPanel FinalPanel;
+        private BetterPanel PanelFinal;
         private BetterPanel PanelRed;
         private BetterPanel PanelBlue;
-        private BetterPanel betterPanel15;
+        private BetterPanel PanelBBW;
         private BetterPanel PanelGreen;
-        private BetterPanel betterPanel16;
+        private BetterPanel PanelGBW;
+        private BetterPanel PanelRBW;
+        private BetterPanel PanelFinalB;
+        private BetterPanel PanelFinalR;
+        private BetterPanel PanelFinalG;
     }
 }

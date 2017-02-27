@@ -2,6 +2,8 @@
 using AForge.Imaging;
 using AForge.Imaging.Filters;
 using AForge.Math.Geometry;
+using Chess.BoardWatch.Models;
+using Chess.BoardWatch.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,22 +14,48 @@ using System.Threading.Tasks;
 
 namespace Chess.BoardWatch
 {
-    public class GlyphTools
+    public interface IGlyphTools
+    {
+        int MinSize { get; set; }
+        int ThreshFilter { get; set; }
+        float BlobSizeRatio { get; set; }
+        float Minfullness { get; set; }
+        ColorFilterSettings Red { get; set; }
+        ColorFilterSettings Blue { get; set; }
+        ColorFilterSettings Green { get; set; }
+        int Glypdivisions { get; set; }
+
+        void GetEdges(Blob b, out List<System.Drawing.Point> intleftedge, out List<System.Drawing.Point> intrightedge);
+        UnmanagedImage QuadralateralizeImage(UnmanagedImage grayscaleimage, List<IntPoint> corners, int quadSize1, int quadSize2);
+        bool QuadCheck(Blob b, out List<IntPoint> corners);
+        Blob[] GetBlobs(UnmanagedImage finalimage);
+        UnmanagedImage DoThreshFilter(UnmanagedImage edgeR);
+        UnmanagedImage DoEdgeFilter(UnmanagedImage unmanagedImage);
+        UnmanagedImage GetBlue(Bitmap origional);
+        UnmanagedImage GetGreen(Bitmap origional);
+        UnmanagedImage GetRed(Bitmap origional);
+        void SetCfg(MasterCfg cfg);
+    }
+
+    public class GlyphTools : IGlyphTools
     {
 
-        EuclideanColorFiltering RedFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
-        EuclideanColorFiltering BlueFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
-        EuclideanColorFiltering GreenFilter = new EuclideanColorFiltering(new RGB(215, 30, 30), 100);
-
-        private int Glypdivisions;
+        private EuclideanColorFiltering RedFilter = new EuclideanColorFiltering();
+        private EuclideanColorFiltering BlueFilter = new EuclideanColorFiltering();
+        private EuclideanColorFiltering GreenFilter = new EuclideanColorFiltering();
         private readonly Threshold thresfilter = new Threshold(40);
         private readonly OtsuThreshold othreshFilter = new OtsuThreshold();
+        private readonly SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
         private readonly DifferenceEdgeDetector edgefilter = new DifferenceEdgeDetector();
         private readonly BlobCounter blobCounter = new BlobCounter();
-        private readonly SimpleShapeChecker shapeCheck = new SimpleShapeChecker();
-
         private int _minsize;
+        private float _blobSizeRatio;
+        private ColorFilterSettings _red;
+        private ColorFilterSettings _blue;
+        private ColorFilterSettings _green;
+        private MasterCfg _cfg;
 
+        public int Glypdivisions { get; set; }
         public int ThreshFilter
         {
             get { return thresfilter.ThresholdValue; }
@@ -44,7 +72,6 @@ namespace Chess.BoardWatch
             }
         }
 
-        private float _blobSizeRatio;
 
         public float BlobSizeRatio
         {
@@ -55,10 +82,6 @@ namespace Chess.BoardWatch
                 _blobSizeRatio = value;
             }
         }
-
-        private ColorFilterSettings _red;
-        private ColorFilterSettings _blue;
-        private ColorFilterSettings _green;
         public ColorFilterSettings Red
         {
             get { return _red; }
@@ -87,23 +110,32 @@ namespace Chess.BoardWatch
             }
         }
 
+        public float Minfullness { get; set; }
+
         private static void SetColorFilter(ColorFilterSettings c, EuclideanColorFiltering filter)
         {
             filter.CenterColor = c.GetRgb;
             filter.Radius = c.Radius;
         }
-
-
-        public double Minfullness { get; set; }
-
-        public GlyphTools(int minblobsize, int glypdivisions)
+        public GlyphTools(ICfgTool<MasterCfg> cfgtool)
         {
-            BlobSizeRatio = .9f;
-            Minfullness = .9f;
-            MinSize = minblobsize;
-            Glypdivisions = glypdivisions;
+            var cfg = cfgtool.ReadCfg();
+            SetCfg(cfg);
+        }
+
+        public void SetCfg(MasterCfg cfg)
+        {
             blobCounter.FilterBlobs = true;
             blobCounter.ObjectsOrder = ObjectsOrder.XY;
+            _cfg = cfg;
+            Red = cfg.RedFilter;
+            Green = cfg.GreenFilter;
+            Blue = cfg.BlueFilter;
+            Minfullness = cfg.MinFullness;
+            BlobSizeRatio = cfg.MinBlobShapeRatio;
+            MinSize = cfg.MinBlobSize;
+            thresfilter.ThresholdValue = cfg.ThreshholdFilterValue;
+            Glypdivisions = cfg.Glypdivisions;
         }
 
 
@@ -187,15 +219,18 @@ namespace Chess.BoardWatch
 
             double[,] values = new double[rowcol, rowcol];
             //double quadrantValue = 0;
-            for (var x = 0; x < w; x++)
+            for (double x = 0; x < w; x++)
             {
-                for (var y = 0; y < h; y++)
+                for (double y = 0; y < h; y++)
                 {
                     int xq = (int)Math.Floor(x / wr);
                     int yq = (int)Math.Floor(y / hr);
-                    var pixel = img.GetPixel(x, y);
-                    var val = pixel.R == 0 && pixel.G == 0 && pixel.B == 0;
-                    values[xq, yq] += val ? 1 : 0;
+                    if (xq < rowcol && yq < rowcol)
+                    {
+                        var pixel = img.GetPixel((int)x, (int)y);
+                        var val = pixel.R == 0 && pixel.G == 0 && pixel.B == 0;
+                        values[xq, yq] += val ? 1 : 0;
+                    }
                     //Debug.Print($"x:{x}, y:{y}, xq:{xq}, yq:{yq},  {pixel.ToString()}");
                 }
             }
@@ -234,11 +269,16 @@ namespace Chess.BoardWatch
             UnmanagedImage grayscaleimage = UnmanagedImage.Create(w, h, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
             Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
             return grayscaleimage;
-            //UnmanagedImage grayscaleimage = UnmanagedImage.Create(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-            //Grayscale.CommonAlgorithms.BT709.Apply(img, grayscaleimage);
-            //UnmanagedImage finalimage = gt.ProcessEdgeFilter(grayscaleimage.Clone());
 
         }
+        public static UnmanagedImage GetGrascaleImage(UnmanagedImage tmp)
+        {
+            UnmanagedImage grayscaleimage = UnmanagedImage.Create(tmp.Width, tmp.Height,
+                                                                System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+            Grayscale.CommonAlgorithms.BT709.Apply(tmp, grayscaleimage);
+            return grayscaleimage;
+        }
+
         public static UnmanagedImage GetUnmanagedImage(Bitmap img)
         {
             var tmp = UnmanagedImage.FromManagedImage(img);

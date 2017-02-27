@@ -9,16 +9,21 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using AForge.Imaging;
 using AForge.Imaging.Filters;
+using Chess.BoardWatch.Tools;
+using Chess.BoardWatch.Models;
+using Ninject;
 
 namespace Chess.BoardWatch
 {
     public partial class Form1 : Form
     {
+        public static IKernel kernal;
+
         VideoCaptureDevice stream;
-        const int GlyphDivs = 5;
+        //const int GlyphDivs = 5;
         const int QuadSize = 50;
-        private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
-        GlyphTools gt = new GlyphTools(32, GlyphDivs);
+        //private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
+        readonly IGlyphTools gt;//= new GlyphTools(32, GlyphDivs);
         Pen left = new Pen(Brushes.Yellow, 5);
         Pen right = new Pen(Brushes.Green, 5);
         List<BetterPanel> panels;
@@ -28,6 +33,8 @@ namespace Chess.BoardWatch
             panels = new List<BetterPanel>() { betterPanel1,betterPanel2,betterPanel3,betterPanel4,
                                                 betterPanel5,betterPanel6,betterPanel7,betterPanel8,
                                                 betterPanel9,betterPanel10,betterPanel11,betterPanel12 };
+            kernal = new StandardKernel(new Bindings());
+            gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
         }
 
 
@@ -43,51 +50,52 @@ namespace Chess.BoardWatch
             var vidres = c[0];
             stream.VideoResolution = vidres;
             stream.NewFrame += Stream_NewFrame;
-            //panel1.Size = new Size(vidres.FrameSize.Width, vidres.FrameSize.Height);
             stream.Start();
-            var dilg = new SettingsForm(gt);
+            var dilg = kernal.Get<SettingsForm>();
             dilg.Show();
-
-            //var w1 = panel1.Width / 2;
-            //var h1 = panel1.Height / 2;
-            //topleft = new Rectangle(0, 0, w1, h1);
-            //topright = new Rectangle(w1, 0, w1, h1);
-            //bottomleft = new Rectangle(0, h1, w1, h1);
-            //bottomright = new Rectangle(w1, h1, w1, h1);
         }
 
-
-        private Rectangle topleft;
-        private Rectangle topright;
-        private Rectangle bottomleft;
-        private Rectangle bottomright;
 
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap origional = eventArgs.Frame;
             UnmanagedImage redImage = gt.GetRed(origional);
+            UnmanagedImage greenImage = gt.GetGreen(origional);
+            UnmanagedImage blueImage = gt.GetBlue(origional);
+
+            UnmanagedImage edgeR = gt.DoEdgeFilter(GlyphTools.GetGrascaleImage(redImage));
+            UnmanagedImage edgeG = gt.DoEdgeFilter(GlyphTools.GetGrascaleImage(greenImage));
+            UnmanagedImage edgeB = gt.DoEdgeFilter(GlyphTools.GetGrascaleImage(blueImage));
+
+            UnmanagedImage threshR = gt.DoThreshFilter(edgeR);
+            UnmanagedImage threshG = gt.DoThreshFilter(edgeG);
+            UnmanagedImage threshB = gt.DoThreshFilter(edgeB);
+
+
             UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(origional);
-            //UnmanagedImage grayscaleimage = GlyphTools.GetGrascaleImage(originalimg);
             UnmanagedImage edgeimg = gt.DoEdgeFilter(grayscaleimage);
             UnmanagedImage finalimage = gt.DoThreshFilter(edgeimg);
 
 
-            //panels.ForEach(x => x.Clear());
-
-            //var RawVid = panel1.CreateGraphics();
             var glyphRawCropped = ImgBwGlyph.CreateGraphics();
             var GlyphFinal = ImgBwCalc.CreateGraphics();
 
             PanelRawVideo.DrawImage(origional);
-            BWPanel.DrawImage(grayscaleimage);
             EdgePanel.DrawImage(edgeimg);
-            FinalPanel.DrawImage(finalimage);
+            PanelBw.DrawImage(grayscaleimage);
+            PanelFinal.DrawImage(finalimage);
+
             PanelRed.DrawImage(redImage);
-            //RawVid.DrawImage(origional, topleft);
-            //RawVid.DrawImage(grayscaleimage.ToManagedImage(), topright);
-            //RawVid.DrawImage(edgeimg.ToManagedImage(), bottomleft);
-            //RawVid.DrawImage(finalimage.ToManagedImage(), bottomright);
-            //g.DrawImage(finalimage.ToManagedImage(), 0, 0, grayscaleimage.Width, grayscaleimage.Height);
+            PanelGreen.DrawImage(greenImage);
+            PanelBlue.DrawImage(blueImage);
+            PanelRBW.DrawImage(edgeR);
+            PanelGBW.DrawImage(edgeG);
+            PanelBBW.DrawImage(edgeB);
+            PanelFinalR.DrawImage(threshR);
+            PanelFinalG.DrawImage(threshG);
+            PanelFinalB.DrawImage(threshB);
+
+
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
             Blob[] blobs = gt.GetBlobs(finalimage);// blobCounter.GetObjectsInformation();
@@ -105,11 +113,8 @@ namespace Chess.BoardWatch
 
                     //BrightnessDiff();
                     var p = panels.ElementAt(count);
-                    var res = GlyphTools.GetGlyphData(uBwImg, GlyphDivs);
-                    //for (var x = 0; x < GlyphDivs; x++)
-                    //    for (var y = 0; y < GlyphDivs; y++)
-                    //        GlyphFinal.FillRectangle(res[x, y] == 1 ? Brushes.Black : Brushes.White, x * hwsize, y * hwsize, hwsize, hwsize);
-                    p.DrawMe(res);
+                    var res = GlyphTools.GetGlyphData(uBwImg, gt.Glypdivisions);
+                    p.DrawMe(res, gt.Glypdivisions);
                     var bwimg = uBwImg.ToManagedImage();
                     int minx = corners.Min(x => x.X);
                     int miny = corners.Min(x => x.Y);
@@ -117,9 +122,9 @@ namespace Chess.BoardWatch
                     int maxy = corners.Max(x => x.Y) - miny;
                     var rect = new Rectangle(minx, miny, maxx, maxy);
                     glyphRawCropped.DrawImage(bwimg, 0, 0, bwimg.Width, bwimg.Height);
-                    FinalPanel.DrawRectangle(Pens.Red, rect);
-                    FinalPanel.DrawLines(left, intleftedge);
-                    FinalPanel.DrawLines(right, intrightedge);
+                    PanelFinal.DrawRectangle(Pens.Red, rect);
+                    PanelFinal.DrawLines(left, intleftedge);
+                    PanelFinal.DrawLines(right, intrightedge);
                     count += 1;
                 }
             }

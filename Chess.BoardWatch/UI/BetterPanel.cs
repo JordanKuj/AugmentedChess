@@ -13,8 +13,8 @@ namespace Chess.BoardWatch
     public class BetterPanel : Panel
     {
 
-        const int GlyphDivs = 5;
-        private int hwsize => ((int)((double)this.Width / (double)GlyphDivs));
+        //const int GlyphDivs = 5;
+        //private int hwsize => ((int)((double)this.Width / (double)GlyphDivs));
         private Graphics g;
 
         private float xscale = 1;
@@ -30,8 +30,9 @@ namespace Chess.BoardWatch
             g = this.CreateGraphics();
         }
 
-        public void DrawMe(int[,] vals)
+        public void DrawMe(int[,] vals, int GlyphDivs)
         {
+            var hwsize = ((int)((double)this.Width / (double)GlyphDivs));
             for (var x = 0; x < vals.GetLength(0); x++)
                 for (var y = 0; y < vals.GetLength(1); y++)
                     g.FillRectangle(vals[x, y] == 1 ? Brushes.Black : Brushes.White, x * hwsize, y * hwsize, hwsize, hwsize);
@@ -41,9 +42,7 @@ namespace Chess.BoardWatch
             var b = this.CreateGraphics();
             xscale = (float)this.Width / (float)img.Width;
             yscale = (float)this.Height / (float)img.Height;
-            //g.DrawImage(img, new Rectangle(0, 0, this.Width, this.Height));
             b.DrawImage(img, 0, 0, this.Width, this.Height);
-            //g.DrawImage(img, new Rectangle(0, 0, this.Width, this.Height), new Rectangle(0, 0, img.Width, img.Height), GraphicsUnit.Pixel);
         }
         public void DrawLines(Pen p, List<System.Drawing.Point> edge)
         {
@@ -71,7 +70,6 @@ namespace Chess.BoardWatch
         {
             DrawImage(img.ToManagedImage());
         }
-
         public void Clear()
         {
             this.SuspendLayout();

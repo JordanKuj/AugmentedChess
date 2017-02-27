@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Chess.BoardWatch.Tools;
+using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,8 @@ namespace Chess.BoardWatch
 {
     public static class Program
     {
+
+
 
         public static void Main()
         {

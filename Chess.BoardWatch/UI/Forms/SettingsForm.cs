@@ -41,6 +41,10 @@ namespace Chess.BoardWatch
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
+            LoadValues();
+        }
+        private void LoadValues()
+        {
             NudGlyphDivs.Value = _gt.Glypdivisions;
             nudMinSize.Value = _gt.MinSize;
             nudThresh.Value = _gt.ThreshFilter;
@@ -50,7 +54,6 @@ namespace Chess.BoardWatch
             FilterCtrlBlue.Set(_gt.Blue);
             FilterCtrlRed.Set(_gt.Red);
         }
-
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             _gt.BlobSizeRatio = BlobSizeRatio;
@@ -102,7 +105,8 @@ namespace Chess.BoardWatch
 
         private void BtnLoad_Click(object sender, EventArgs e)
         {
-            _gt.SetCfg(_cfgtool.ReadCfg());
+            _gt.MasterCfg = _cfgtool.ReadCfg();
+            LoadValues();
         }
 
         private void NudGlyphDivs_ValueChanged(object sender, EventArgs e)

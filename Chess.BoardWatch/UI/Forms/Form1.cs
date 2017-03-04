@@ -146,6 +146,10 @@ namespace Chess.BoardWatch
             DrawEdges(gt.Rblobs, gt, PanelFinalR, panelsRed);
             DrawEdges(gt.Gblobs, gt, PanelFinalG, panelsGrn);
             DrawEdges(gt.Bblobs, gt, PanelFinalB, panelsBlu);
+
+
+
+
         }
 
         private static void DrawEdges(List<BlobData> blobs, IGlyphTools gt, BetterPanel p, List<BetterPanel> panels)
@@ -168,10 +172,11 @@ namespace Chess.BoardWatch
                     c++;
                 }
             }
+            panels.Skip(c).ToList().ForEach(x => x.Clear());
         }
 
 
-        //TODO:calculate the average differeance of light inside the box and outside the box
+        //TODO:calculate the average difference of light inside the box and outside the box
         private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
         {
             return 0;

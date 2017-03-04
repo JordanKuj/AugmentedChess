@@ -12,6 +12,7 @@ using AForge.Imaging.Filters;
 using Chess.BoardWatch.Tools;
 using Chess.BoardWatch.Models;
 using Ninject;
+using System.Threading.Tasks;
 
 namespace Chess.BoardWatch
 {
@@ -26,20 +27,39 @@ namespace Chess.BoardWatch
         readonly IGlyphTools gt;//= new GlyphTools(32, GlyphDivs);
         Pen left = new Pen(Brushes.Yellow, 5);
         Pen right = new Pen(Brushes.Green, 5);
-        List<BetterPanel> panels;
+        List<BetterPanel> panelsBnw = new List<BetterPanel>();
+        List<BetterPanel> panelsRed = new List<BetterPanel>();
+        List<BetterPanel> panelsGrn = new List<BetterPanel>();
+        List<BetterPanel> panelsBlu = new List<BetterPanel>();
         public Form1()
         {
             InitializeComponent();
-            panels = new List<BetterPanel>() { betterPanel1,betterPanel2,betterPanel3,betterPanel4,
-                                                betterPanel5,betterPanel6,betterPanel7,betterPanel8,
-                                                betterPanel9,betterPanel10,betterPanel11,betterPanel12 };
             kernal = new StandardKernel(new Bindings());
             gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
+        }
+
+        private static void LoadPanels(List<BetterPanel> panels, FlowLayoutPanel flowpanel)
+        {
+            for (var x = 0; x < 11; x++)
+            {
+                var p = new BetterPanel();
+                p.Height = 105;
+                p.Width = 105;
+                p.BorderStyle = BorderStyle.FixedSingle;
+                panels.Add(p);
+
+                flowpanel.Controls.Add(p);
+            }
+
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            LoadPanels(panelsBnw, FlowBnw);
+            LoadPanels(panelsBlu, FlowBlu);
+            LoadPanels(panelsRed, FlowRed);
+            LoadPanels(panelsGrn, FlowGrn);
 
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
@@ -56,46 +76,18 @@ namespace Chess.BoardWatch
         }
 
 
+        Task ProcessingImage;
+
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            Bitmap origional = eventArgs.Frame;
-            gt.ProcessImage(origional);
 
-            var glyphRawCropped = ImgBwGlyph.CreateGraphics();
-            var GlyphFinal = ImgBwCalc.CreateGraphics();
-
-            PanelRawVideo.DrawImage(origional);
-            EdgePanel.DrawImage(gt.EdgeGray);
-            PanelBw.DrawImage(gt.GrayImage);
-            PanelFinal.DrawImage(gt.threshGray);
-
-
-
-            PanelRed.DrawImage(gt.RImage);
-            PanelGreen.DrawImage(gt.GImage);
-            PanelBlue.DrawImage(gt.BImage);
-            PanelRBW.DrawImage(gt.edgeR);
-            PanelGBW.DrawImage(gt.edgeG);
-            PanelBBW.DrawImage(gt.edgeB);
-            PanelFinalR.DrawImage(gt.threshR);
-            PanelFinalG.DrawImage(gt.threshG);
-            PanelFinalB.DrawImage(gt.threshB);
-
-
-            //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
-
-            DrawEdges(gt.GrayBlobs, PanelFinal);
-            DrawEdges(gt.Rblobs, PanelFinalR);
-            DrawEdges(gt.Gblobs, PanelFinalG);
-            DrawEdges(gt.Bblobs, PanelFinalB);
 
             //Blob[] blobs = gt.GrayBlobs;// blobCounter.GetObjectsInformation();
 
+            PanelRawVideo.DrawImage(eventArgs.Frame);
 
-
-
-
-
+            if (ProcessingImage == null || ProcessingImage.IsCompleted)
+                ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
 
             //    var count = 0;
             //    foreach (var b in gt.GrayBlobs)
@@ -127,15 +119,54 @@ namespace Chess.BoardWatch
             //    panels.Skip(count).ToList().ForEach(x => x.Clear());
         }
 
-        private static void DrawEdges(List<BlobData> blobs, BetterPanel p)
+        private async Task ProcessImage(Bitmap origional)
+        {
+            await gt.ProcessImage(origional);
+
+            EdgePanel.DrawImage(gt.EdgeGray);
+            PanelBw.DrawImage(gt.GrayImage);
+            PanelFinal.DrawImage(gt.threshGray);
+
+
+
+            PanelRed.DrawImage(gt.RImage);
+            PanelGreen.DrawImage(gt.GImage);
+            PanelBlue.DrawImage(gt.BImage);
+            PanelRBW.DrawImage(gt.edgeR);
+            PanelGBW.DrawImage(gt.edgeG);
+            PanelBBW.DrawImage(gt.edgeB);
+            PanelFinalR.DrawImage(gt.threshR);
+            PanelFinalG.DrawImage(gt.threshG);
+            PanelFinalB.DrawImage(gt.threshB);
+
+
+            //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
+
+            DrawEdges(gt.GrayBlobs, gt, PanelFinal, panelsBnw);
+            DrawEdges(gt.Rblobs, gt, PanelFinalR, panelsRed);
+            DrawEdges(gt.Gblobs, gt, PanelFinalG, panelsGrn);
+            DrawEdges(gt.Bblobs, gt, PanelFinalB, panelsBlu);
+        }
+
+        private static void DrawEdges(List<BlobData> blobs, IGlyphTools gt, BetterPanel p, List<BetterPanel> panels)
         {
             Pen left = new Pen(Brushes.Yellow, 5);
             Pen right = new Pen(Brushes.Green, 5);
+            var c = 0;
+
             foreach (var b in blobs)
             {
                 p.DrawRectangle(Pens.Red, b.Rect);
                 p.DrawLines(left, b.leftedge);
                 p.DrawLines(right, b.rightedge);
+                UnmanagedImage uBwImg = gt.QuadralateralizeImage(gt.GrayImage, b.corners, QuadSize);
+                var res = GlyphTools.GetGlyphData(uBwImg, gt.Glypdivisions);
+
+                if (c < panels.Count)
+                {
+                    panels[c].DrawMe(res, gt.Glypdivisions);
+                    c++;
+                }
             }
         }
 

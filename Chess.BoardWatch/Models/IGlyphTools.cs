@@ -1,6 +1,8 @@
-﻿using AForge.Imaging;
+﻿using AForge;
+using AForge.Imaging;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Threading.Tasks;
 
 namespace Chess.BoardWatch.Models
 {
@@ -35,8 +37,9 @@ namespace Chess.BoardWatch.Models
         List<BlobData> Gblobs { get; }
         List<BlobData> Bblobs { get; }
         List<BlobData> GrayBlobs { get; }
-        MasterCfg MasterCfg {   set; }
+        MasterCfg MasterCfg { set; }
 
-        void ProcessImage(Bitmap img);
+        Task ProcessImage(Bitmap img);
+        UnmanagedImage QuadralateralizeImage(UnmanagedImage img, List<IntPoint> corners, int newsize);
     }
 }

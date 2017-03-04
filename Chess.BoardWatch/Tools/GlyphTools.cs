@@ -172,36 +172,51 @@ namespace Chess.BoardWatch
 
         long swhigh = 0;
         long swlow = int.MaxValue;
-        public void ProcessImage(Bitmap origional)
+        public async Task ProcessImage(Bitmap origional)
         {
             var sw = Stopwatch.StartNew();
+            var unmanagedOrig = UnmanagedImage.FromManagedImage(origional);
+            var tGray = Task.Factory.StartNew(() =>
+            {
+                _GrayImage = GetGrascaleImage(unmanagedOrig);
+                DoEdgeAndThresh(_GrayImage, out _EdgeGray, out _threshGray);
+                var tmpGrayBlobs = GetBlobs(threshGray, blobCounterGray, BlobSizeRatio, Minfullness);
+                GrayBlobs.Clear();
+                GrayBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck));
+            });
+            var tRed = Task.Factory.StartNew(() =>
+            {
+                _RImage = RedFilter.Apply(unmanagedOrig);
+                DoEdgeAndThresh(GetGrascaleImage(_RImage), out _edgeR, out _threshR);
+                var tmpRblobs = GetBlobs(threshR, blobCounterRed, BlobSizeRatio, Minfullness);
+                Rblobs.Clear();
+                Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck));
+            });
+            var tGrn = Task.Factory.StartNew(() =>
+            {
+                _GImage = GreenFilter.Apply(unmanagedOrig);
+                DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
+                var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
+                Gblobs.Clear();
+                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck));
 
-            _GrayImage = GetGrascaleImage(origional);
+            });
+            var tBlu = Task.Factory.StartNew(() =>
+            {
+                _BImage = BlueFilter.Apply(unmanagedOrig);
+                DoEdgeAndThresh(GetGrascaleImage(_BImage), out _edgeB, out _threshB);
+                var tmpBblobs = GetBlobs(threshB, blobCounterBlue, BlobSizeRatio, Minfullness);
+                Bblobs.Clear();
+                Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck));
+            });
 
-            _RImage = RedFilter.Apply(UnmanagedImage.FromManagedImage(origional));
-            _GImage = GreenFilter.Apply(UnmanagedImage.FromManagedImage(origional));
-            _BImage = BlueFilter.Apply(UnmanagedImage.FromManagedImage(origional));
 
 
-            DoEdgeAndThresh(GetGrascaleImage(_RImage), out _edgeR, out _threshR);
-            DoEdgeAndThresh(GetGrascaleImage(_BImage), out _edgeB, out _threshB);
-            DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
-            DoEdgeAndThresh(_GrayImage, out _EdgeGray, out _threshGray);
+            await tGray;
+            await tBlu;
+            await tGrn;
+            await tRed;
 
-            var tmpRblobs = GetBlobs(threshR, blobCounterRed, BlobSizeRatio, Minfullness);
-            var tmpBblobs = GetBlobs(threshB, blobCounterBlue, BlobSizeRatio, Minfullness);
-            var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
-            var tmpGrayBlobs = GetBlobs(threshGray, blobCounterGray, BlobSizeRatio, Minfullness);
-
-            Rblobs.Clear();
-            Bblobs.Clear();
-            Gblobs.Clear();
-            GrayBlobs.Clear();
-
-            Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck));
-            Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck));
-            Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck));
-            GrayBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck));
 
             sw.Stop();
             if (sw.ElapsedMilliseconds > swhigh)
@@ -269,9 +284,9 @@ namespace Chess.BoardWatch
             }
         }
 
-        private UnmanagedImage QuadralateralizeImage(UnmanagedImage img, List<IntPoint> corners, int newWidth, int newHeight)
+        public UnmanagedImage QuadralateralizeImage(UnmanagedImage img, List<IntPoint> corners, int newsize)
         {
-            var qt = new QuadrilateralTransformation(corners, 100, 100);
+            var qt = new QuadrilateralTransformation(corners, newsize, newsize);
             return othreshFilter.Apply(qt.Apply(img));
         }
 
@@ -280,7 +295,7 @@ namespace Chess.BoardWatch
         /// </summary>
         /// <param name="img">This should be a black and white image of the glyph. No gray</param>
         /// <param name="rowcol">this will be the number of rows and columns to split the image up by</param>
-        private static int[,] GetGlyphData(UnmanagedImage img, int rowcol)
+        public static int[,] GetGlyphData(UnmanagedImage img, int rowcol)
         {
             if (rowcol <= 1)
                 throw new ArgumentException("rowcol must be larger than 1");

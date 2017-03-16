@@ -4,44 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Core.Models
+namespace ChessTest
 {
-    class Piece
+    public enum PieceType {
+        pawn, rook, knight, bishop, king, queen, error = 0
+    }
+    public enum Team {
+        black, white, error = 0
+    }
+    public class Piece
     {
-
-        bool Team;
-        string Name;
+        Team Team;
+        PieceType Name;
         bool HasMoved;
 
-        public Piece(bool t, string n)
-        {
+        public Piece(Team t, PieceType n) {
             Team = t;
             Name = n;
             HasMoved = false;
         }
-        //getters for variables
-        public bool getTeam()
-        {
+
+        public Team getTeam() {
             return Team;
         }
 
-        public string getName()
-        {
+        public PieceType getName() {
             return Name;
         }
-        public bool getHasMoved()
-        {
+        public bool getHasMoved() {
             return HasMoved;
         }
-
-        //when piece has moved set HasMoved to true
-        public void setHasMoved()
-        {
+        public void setHasMoved() {
             HasMoved = true;
         }
-        //make a copy of a piece
-        public Piece copy()
-        {
+        public Piece copy() {
             return new Piece(Team, Name);
         }
     }

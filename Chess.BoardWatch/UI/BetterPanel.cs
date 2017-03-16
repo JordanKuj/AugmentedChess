@@ -77,6 +77,11 @@ namespace Chess.BoardWatch
             this.ResumeLayout();
         }
 
+        public void DrawChessBoard()
+        {
+
+        }
+
 
 
     }

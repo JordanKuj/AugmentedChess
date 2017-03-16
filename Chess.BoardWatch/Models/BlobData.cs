@@ -29,6 +29,8 @@ namespace Chess.BoardWatch.Models
             maxx = corners.Max(x => x.X) - minx;
             maxy = corners.Max(x => x.Y) - miny;
             Rect = new Rectangle(minx, miny, maxx, maxy);
+
+
         }
         public Rectangle Rect { get; }
         public int minx { get; }
@@ -39,7 +41,10 @@ namespace Chess.BoardWatch.Models
         public List<IntPoint> corners { get; }
         public List<System.Drawing.Point> leftedge { get; }
         public List<System.Drawing.Point> rightedge { get; }
+        public int GlyphDivisions { get; set; }
 
 
+        public UnmanagedImage FlatImage { get; set; }
+        public int[,] glyph { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Chess.BoardWatch
     public partial class Form1 : Form
     {
         public static IKernel kernal;
-
+        public BoardTools bt = new BoardTools();
         VideoCaptureDevice stream;
         //const int GlyphDivs = 5;
         const int QuadSize = 50;
@@ -80,48 +80,18 @@ namespace Chess.BoardWatch
 
         private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-
-
-            //Blob[] blobs = gt.GrayBlobs;// blobCounter.GetObjectsInformation();
-
             PanelRawVideo.DrawImage(eventArgs.Frame);
-
             if (ProcessingImage == null || ProcessingImage.IsCompleted)
                 ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
-
-            //    var count = 0;
-            //    foreach (var b in gt.GrayBlobs)
-            //    {
-            //        List<IntPoint> corners;
-            //        if (gt.QuadCheck(b, out corners) && count < panels.Count)
-            //        {
-            //            List<System.Drawing.Point> intleftedge;
-            //            List<System.Drawing.Point> intrightedge;
-            //            gt.GetEdges(b, out intleftedge, out intrightedge);
-            //            UnmanagedImage uBwImg = gt.QuadralateralizeImage(gt.GrayImage, corners, QuadSize, QuadSize);
-            //            //BrightnessDiff();
-            //            var p = panels.ElementAt(count);
-            //            var res = GlyphTools.GetGlyphData(uBwImg, gt.Glypdivisions);
-            //            p.DrawMe(res, gt.Glypdivisions);
-            //            var bwimg = uBwImg.ToManagedImage();
-            //            int minx = corners.Min(x => x.X);
-            //            int miny = corners.Min(x => x.Y);
-            //            int maxx = corners.Max(x => x.X) - minx;
-            //            int maxy = corners.Max(x => x.Y) - miny;
-            //            var rect = new Rectangle(minx, miny, maxx, maxy);
-            //            glyphRawCropped.DrawImage(bwimg, 0, 0, bwimg.Width, bwimg.Height);
-            //            PanelFinal.DrawRectangle(Pens.Red, rect);
-            //            PanelFinal.DrawLines(left, intleftedge);
-            //            PanelFinal.DrawLines(right, intrightedge);
-            //            count += 1;
-            //        }
-            //    }
-            //    panels.Skip(count).ToList().ForEach(x => x.Clear());
         }
 
         private async Task ProcessImage(Bitmap origional)
         {
             await gt.ProcessImage(origional);
+            bt.BoardSize = origional.Height > origional.Width ? origional.Height : origional.Width;
+            bt.SetBlackPieces(gt.Rblobs);
+            bt.SetWhitePieces(gt.Bblobs);
+
 
             EdgePanel.DrawImage(gt.EdgeGray);
             PanelBw.DrawImage(gt.GrayImage);
@@ -142,17 +112,21 @@ namespace Chess.BoardWatch
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
 
-            DrawEdges(gt.GrayBlobs, gt, PanelFinal, panelsBnw);
-            DrawEdges(gt.Rblobs, gt, PanelFinalR, panelsRed);
-            DrawEdges(gt.Gblobs, gt, PanelFinalG, panelsGrn);
-            DrawEdges(gt.Bblobs, gt, PanelFinalB, panelsBlu);
+            DrawEdges(gt.GrayBlobs, PanelFinal, panelsBnw);
+            DrawEdges(gt.Rblobs, PanelFinalR, panelsRed);
+            DrawEdges(gt.Gblobs, PanelFinalG, panelsGrn);
+            DrawEdges(gt.Bblobs, PanelFinalB, panelsBlu);
 
+            //gt.GrayBlobs.Select(x=>x.Blob.Rectangle)
+
+            var whitePieces = gt.Rblobs;
+            var blackPieces = gt.Bblobs;
 
 
 
         }
 
-        private static void DrawEdges(List<BlobData> blobs, IGlyphTools gt, BetterPanel p, List<BetterPanel> panels)
+        private static void DrawEdges(List<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
         {
             Pen left = new Pen(Brushes.Yellow, 5);
             Pen right = new Pen(Brushes.Green, 5);
@@ -163,12 +137,10 @@ namespace Chess.BoardWatch
                 p.DrawRectangle(Pens.Red, b.Rect);
                 p.DrawLines(left, b.leftedge);
                 p.DrawLines(right, b.rightedge);
-                UnmanagedImage uBwImg = gt.QuadralateralizeImage(gt.GrayImage, b.corners, QuadSize);
-                var res = GlyphTools.GetGlyphData(uBwImg, gt.Glypdivisions);
 
                 if (c < panels.Count)
                 {
-                    panels[c].DrawMe(res, gt.Glypdivisions);
+                    panels[c].DrawMe(b.glyph, b.GlyphDivisions);
                     c++;
                 }
             }

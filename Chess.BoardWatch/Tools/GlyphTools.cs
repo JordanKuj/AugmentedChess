@@ -176,13 +176,15 @@ namespace Chess.BoardWatch
         {
             var sw = Stopwatch.StartNew();
             var unmanagedOrig = UnmanagedImage.FromManagedImage(origional);
+            _GrayImage = GetGrascaleImage(unmanagedOrig);
             var tGray = Task.Factory.StartNew(() =>
             {
-                _GrayImage = GetGrascaleImage(unmanagedOrig);
                 DoEdgeAndThresh(_GrayImage, out _EdgeGray, out _threshGray);
                 var tmpGrayBlobs = GetBlobs(threshGray, blobCounterGray, BlobSizeRatio, Minfullness);
                 GrayBlobs.Clear();
                 GrayBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck));
+                DrawEdges(GrayBlobs, this);
+
             });
             var tRed = Task.Factory.StartNew(() =>
             {
@@ -191,6 +193,8 @@ namespace Chess.BoardWatch
                 var tmpRblobs = GetBlobs(threshR, blobCounterRed, BlobSizeRatio, Minfullness);
                 Rblobs.Clear();
                 Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck));
+                DrawEdges(Rblobs, this);
+
             });
             var tGrn = Task.Factory.StartNew(() =>
             {
@@ -199,6 +203,7 @@ namespace Chess.BoardWatch
                 var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
                 Gblobs.Clear();
                 Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck));
+                DrawEdges(Gblobs, this);
 
             });
             var tBlu = Task.Factory.StartNew(() =>
@@ -208,6 +213,7 @@ namespace Chess.BoardWatch
                 var tmpBblobs = GetBlobs(threshB, blobCounterBlue, BlobSizeRatio, Minfullness);
                 Bblobs.Clear();
                 Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck));
+                DrawEdges(Bblobs, this);
             });
 
 
@@ -224,6 +230,22 @@ namespace Chess.BoardWatch
             else if (sw.ElapsedMilliseconds < swlow)
                 swlow = sw.ElapsedMilliseconds;
             Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
+        }
+        const int QuadSize = 50;
+
+
+        private static void DrawEdges(List<BlobData> blobs, IGlyphTools gt)
+        {
+            Pen left = new Pen(Brushes.Yellow, 5);
+            Pen right = new Pen(Brushes.Green, 5);
+            var c = 0;
+
+            foreach (var b in blobs)
+            {
+                b.GlyphDivisions = gt.Glypdivisions;
+                b.FlatImage = gt.QuadralateralizeImage(gt.GrayImage, b.corners, QuadSize);
+                b.glyph = GlyphTools.GetGlyphData(b.FlatImage, gt.Glypdivisions);
+            }
         }
 
 

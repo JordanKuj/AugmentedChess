@@ -35,27 +35,27 @@ namespace Chess.Core.Tests
                                          { 1, 1, 0 },
                                          { 1, 0, 1 } };
 
-            Assert.AreEqual(PieceConstants.FindPieceType(pwn1), Piece.Pawn);
-            Assert.AreEqual(PieceConstants.FindPieceType(pwn2), Piece.Pawn);
-            Assert.AreEqual(PieceConstants.FindPieceType(pwn3), Piece.Pawn);
-            Assert.AreEqual(PieceConstants.FindPieceType(pwn4), Piece.Pawn);
+            Assert.AreEqual(PieceConstants.FindPieceType(pwn1), PieceType.Pawn);
+            Assert.AreEqual(PieceConstants.FindPieceType(pwn2), PieceType.Pawn);
+            Assert.AreEqual(PieceConstants.FindPieceType(pwn3), PieceType.Pawn);
+            Assert.AreEqual(PieceConstants.FindPieceType(pwn4), PieceType.Pawn);
 
-            EzTest(pwn1, Piece.Pawn);
-            EzTest(pwn2, Piece.Pawn);
-            EzTest(pwn3, Piece.Pawn);
-            EzTest(pwn4, Piece.Pawn);
+            EzTest(pwn1, PieceType.Pawn);
+            EzTest(pwn2, PieceType.Pawn);
+            EzTest(pwn3, PieceType.Pawn);
+            EzTest(pwn4, PieceType.Pawn);
 
-            EzTest(kni, Piece.knight);
-            EzTest(rok, Piece.rook);
+            EzTest(kni, PieceType.knight);
+            EzTest(rok, PieceType.rook);
 
 
 
         }
 
-        private static void EzTest(int[,] val, Piece expected)
+        private static void EzTest(int[,] val, PieceType expected)
         {
             Assert.AreEqual(PieceConstants.FindPieceType(val), expected);
-            foreach (Piece p in Enum.GetValues(typeof(Piece)))
+            foreach (PieceType p in Enum.GetValues(typeof(PieceType)))
                 if (p != expected)
                     Assert.AreNotEqual(PieceConstants.FindPieceType(val), p);
         }

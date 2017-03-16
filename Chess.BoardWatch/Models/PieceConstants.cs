@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Chess.BoardWatch.Models
 {
-    public enum Piece
+    public enum PieceType
     {
-        Pawn, knight, rook, bishop, queen, king, none
+        Pawn =1, knight=2, rook=3, bishop=4, queen=5, king=6, none=0
     }
     public enum Team
     {
@@ -42,21 +42,21 @@ namespace Chess.BoardWatch.Models
                                                    { 0, 0, 0 },
                                                    { 0, 0, 0 } };  //king
 
-        public static Dictionary<Piece, int[,]> PieceLookup = new Dictionary<Piece, int[,]> {
-            { Piece.Pawn, pwn },
-            { Piece.knight, kni },
-            { Piece.rook, rok },
-            { Piece.bishop, bsh },
-            { Piece.queen, qen },
-            { Piece.king, kng },
+        public static Dictionary<PieceType, int[,]> PieceLookup = new Dictionary<PieceType, int[,]> {
+            { PieceType.Pawn, pwn },
+            { PieceType.knight, kni },
+            { PieceType.rook, rok },
+            { PieceType.bishop, bsh },
+            { PieceType.queen, qen },
+            { PieceType.king, kng },
         };
 
-        public static Piece FindPieceType(int[,] blobout)
+        public static PieceType FindPieceType(int[,] blobout)
         {
             foreach (var t in PieceLookup)
                 if (Compare(t.Value, blobout))
                     return t.Key;
-            return Piece.none;
+            return PieceType.none;
         }
         private static bool Compare(int[,] a, int[,] b)
         {

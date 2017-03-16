@@ -18,18 +18,17 @@ namespace Chess.WebAPI.Controllers
         private ChessWebAPIContext db = new ChessWebAPIContext();
 
         // GET: api/Games
-        public IQueryable<Games> GetGames()
+        public IQueryable<GamesDTO> GetGames()
         {
-            // finalize in sprint 2
-            /*var game = from g in db.Games
+            var game = from g in db.Games
                        select new GamesDTO()
                        {
                            GameId = g.GameId,
                            StartTime = g.StartTime,
                            EndTime = g.EndTime
                        };
-            return game;*/
-            return db.Games;
+            return game;
+            //return db.Games;
         }
 
         // GET: api/Games/5

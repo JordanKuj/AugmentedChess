@@ -22,14 +22,8 @@ namespace Chess.WebAPI.Controllers
         {
             // finalize in sprint 2
             var board = from b in db.Boardstates
-                        select new BoardstatesDTO()
-                        {
-                            StateId = b.StateId,
-                            Timestamp = b.Timestamp,
-                            State = b.State,
-                            //GameId = b.Include(g => g.GameId)
-                            // GameId =
-                        };
+                        select new BoardstatesDTO(b);
+
             return board;
             //return db.Boardstates.Include(g => g.GameId);
         }

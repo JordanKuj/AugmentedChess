@@ -16,6 +16,8 @@ namespace Chess.WebAPI.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
+        public virtual ICollection<Boardstates> States { get; set; }
+
         // todo see below for bs but w/games
     }
 
@@ -26,11 +28,13 @@ namespace Chess.WebAPI.Models
         [Timestamp]
         public DateTime Timestamp { get; set; }
         [Required]
-        public Array[,] State { get; set; }
+        public string State { get; set; }
 
         // foreign key
-        [ForeignKey("Games")]
         public int GameId { get; set; }
+
+        [ForeignKey("GameId")]
+        public virtual Games Game { get; set; }
 
         public Boardstates() { }
         public Boardstates(BoardstatesDTO bs)

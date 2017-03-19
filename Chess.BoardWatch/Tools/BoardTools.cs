@@ -25,7 +25,6 @@ namespace Chess.BoardWatch
         public const int BoardDivisions = 8;
         public List<Piece> pieces { get; set; }
 
-        private string blah;
         public BoardTools()
         {
             BoardSize = 500;

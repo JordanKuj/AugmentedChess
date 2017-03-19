@@ -89,8 +89,7 @@ namespace Chess.BoardWatch
         {
             await gt.ProcessImage(origional);
             bt.BoardSize = origional.Height > origional.Width ? origional.Height : origional.Width;
-            bt.SetBlackPieces(gt.Rblobs);
-            bt.SetWhitePieces(gt.Bblobs);
+            bt.SetPieces(gt.Rblobs,gt.Bblobs);
 
 
             EdgePanel.DrawImage(gt.EdgeGray);

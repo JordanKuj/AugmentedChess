@@ -32,6 +32,7 @@ namespace Chess.WebAPI.Migrations
             DateTime time1 = new DateTime(1970, 1, 1, 1, 1, 1);
             DateTime time2 = DateTime.Now;
             Array[,] board = new Array[8,8];
+            // google resful api tester/firefox resful api tester
 
             context.Games.AddOrUpdate(
                 x => x.GameId,

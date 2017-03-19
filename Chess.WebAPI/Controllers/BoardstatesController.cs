@@ -18,19 +18,20 @@ namespace Chess.WebAPI.Controllers
         private ChessWebAPIContext db = new ChessWebAPIContext();
 
         // GET: api/Boardstates
-        public IQueryable<Boardstates> GetBoardstates()
+        public IQueryable<BoardstatesDTO> GetBoardstates()
         {
             // finalize in sprint 2
-            /*var board = from b in db.Boardstates
+            var board = from b in db.Boardstates
                         select new BoardstatesDTO()
                         {
                             StateId = b.StateId,
                             Timestamp = b.Timestamp,
                             State = b.State,
-                            GameId = b.Include(g => g.GameId)
+                            //GameId = b.Include(g => g.GameId)
+                            // GameId =
                         };
-            return board;*/
-            return db.Boardstates.Include(g => g.GameId);
+            return board;
+            //return db.Boardstates.Include(g => g.GameId);
         }
 
         // GET: api/Boardstates/5
@@ -38,13 +39,7 @@ namespace Chess.WebAPI.Controllers
         public async Task<IHttpActionResult> GetBoardstates(int id)
         {
             // finalize in sprint 2
-            /*var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO()
-            {
-                StateId = b.StateId,
-                Timestamp = b.Timestamp,
-                State = b.State,
-                GameId = b.GameId
-            }).SingleOrDefaultAsync(b => b.StateId == id);*/
+            var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO(b)).SingleOrDefaultAsync(b => b.StateId == id);
             Boardstates boardstates = await db.Boardstates.FindAsync(id);
             if (boardstates == null)
             {

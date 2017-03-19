@@ -3,9 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using Chess.WebAPI;
+using Chess.WebAPI.Models;
 
 namespace Chess.Core.Models
 {
+    private ChessWebAPIContext db = new ChessWebAPIContext();
+    /*public class Piece
+    {
+        public Piece(PieceType type, Team team, int x, int y)
+        {
+            Type = type;
+            Team = team;
+            X = x;
+            Y = y;
+        }
+
+        public PieceType Type { get; set; }
+        public Team Team { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+    }
+
+    public class BoardState
+    {
+
+        public List<Piece> Pieces { get; set; }
+        public Team turn;
+
+    }*/
     class Board
     {
         //turn is true for white, false for black
@@ -68,6 +94,7 @@ namespace Chess.Core.Models
             board[7, 6] = new Piece(false, "pawn");
             //set up black team
             turn = true;
+            db.Games.AddOrUpdate();
         }
 
         //loops through board and prints layout to console used for debugging

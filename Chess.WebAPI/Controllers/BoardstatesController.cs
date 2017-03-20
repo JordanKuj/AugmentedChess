@@ -78,7 +78,8 @@ namespace Chess.WebAPI.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Boardstates
+        // probablly not needed
+        /*// POST: api/Boardstates
         [ResponseType(typeof(Boardstates))]
         public async Task<IHttpActionResult> PostBoardstates(Boardstates boardstates)
         {
@@ -107,7 +108,7 @@ namespace Chess.WebAPI.Controllers
             await db.SaveChangesAsync();
 
             return Ok(boardstates);
-        }
+        }*/
 
         protected override void Dispose(bool disposing)
         {

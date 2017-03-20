@@ -86,7 +86,8 @@ namespace Chess.WebAPI.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Games
+        // probably not needed
+        /*// POST: api/Games
         [ResponseType(typeof(Games))]
         public async Task<IHttpActionResult> PostGames(Games games)
         {
@@ -115,7 +116,7 @@ namespace Chess.WebAPI.Controllers
             await db.SaveChangesAsync();
 
             return Ok(games);
-        }
+        }*/
 
         protected override void Dispose(bool disposing)
         {

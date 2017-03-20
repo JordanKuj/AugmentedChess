@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 //using Chess.WebAPI;
 using Chess.WebAPI.Models;
+using System.Net.Http;
 
 namespace Chess.Core.Models
 {
-    private ChessWebAPIContext db = new ChessWebAPIContext();
     /*public class Piece
     {
         public Piece(PieceType type, Team team, int x, int y)
@@ -34,6 +34,13 @@ namespace Chess.Core.Models
     }*/
     class Board
     {
+        HttpClient client = new HttpClient();
+        // commented out to avoid breaking for class demo
+        /*string uri = "http://localhost:50426/";
+        //client.BaseAddress = new Uri("http://localhost:50426/");
+        client.BaseAddress = new Uri(uri);
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));*/
         //turn is true for white, false for black
         bool turn;
 
@@ -94,7 +101,12 @@ namespace Chess.Core.Models
             board[7, 6] = new Piece(false, "pawn");
             //set up black team
             turn = true;
-            db.Games.AddOrUpdate();
+            // a new game has started, so create db entry for it
+            /*Random r = new Random(); // temporary
+            GamesDTO g;
+            g.GameId = r.Next();
+            g.StartTime = DateTime.Now;
+            var response = await client.PostAsync(uri, g);*/
         }
 
         //loops through board and prints layout to console used for debugging
@@ -163,11 +175,25 @@ namespace Chess.Core.Models
         //no checks, no logic, will replace any piece at end position
         public bool move(int a, int b, int x, int y)
         {
+            HttpClient client = new HttpClient();
+            /*string uri = "http://localhost:50426/";
+            //client.BaseAddress = new Uri("http://localhost:50426/");
+            client.BaseAddress = new Uri(uri);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));*/
             Console.WriteLine("MOVE: {0}:{1} to {2}:{3}", a, b, x, y);
             Piece temp = board[a, b].copy();
             board[x, y] = board[a, b];
             board[a, b] = null;
             board[x, y].setHasMoved();
+            
+            // update db with new state
+            /*BoardstatesDTO bs;
+            bs.StateId = 1; // temporary
+            bs.State = board.ToString();
+            bs.Timestamp = DateTime.Now;
+            var response = await client.PostAsync(uri, bs);*/
+
             return true;
         }
 

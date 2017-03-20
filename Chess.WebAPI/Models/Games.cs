@@ -18,7 +18,13 @@ namespace Chess.WebAPI.Models
 
         public virtual ICollection<Boardstates> States { get; set; }
 
-        // todo see below for bs but w/games
+        public Games() { }
+        public Games(GamesDTO g)
+        {
+            this.GameId = g.GameId;
+            this.StartTime = g.StartTime;
+            this.EndTime = g.EndTime;
+        }
     }
 
     public class Boardstates
@@ -40,13 +46,23 @@ namespace Chess.WebAPI.Models
         public Boardstates(BoardstatesDTO bs)
         {
             this.StateId = bs.StateId;
-            // todo the others
+            this.Timestamp = bs.Timestamp;
+            this.State = bs.State;
+            this.GameId = bs.GameId;
         }
     }
 
-    // data transfer objects, to be used in sprint 2
+    // data transfer objects
     public class GamesDTO
     {
+        public GamesDTO() { }
+        public GamesDTO(Games g)
+        {
+            this.GameId = g.GameId;
+            this.StartTime = g.StartTime;
+            this.EndTime = g.EndTime;
+        }
+
         public int GameId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
@@ -58,12 +74,14 @@ namespace Chess.WebAPI.Models
         public BoardstatesDTO(Boardstates bs)
         {
             this.StateId = bs.StateId;
-            // todo the others
+            this.Timestamp = bs.Timestamp;
+            this.State = bs.State;
+            this.GameId = bs.GameId;
         }
 
         public int StateId { get; set; }
         public DateTime Timestamp { get; set; }
-        public Array[,] State { get; set; }
+        public string State { get; set; }
         public int GameId { get; set; }
     }
 }

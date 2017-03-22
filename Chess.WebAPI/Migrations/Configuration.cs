@@ -31,7 +31,8 @@ namespace Chess.WebAPI.Migrations
             // meaningless times and boardstates to seed database
             DateTime time1 = new DateTime(1970, 1, 1, 1, 1, 1);
             DateTime time2 = DateTime.Now;
-            Array[,] board = new Array[8,8];
+            //Array[,] board = new Array[8,8];
+            // google resful api tester/firefox resful api tester
 
             context.Games.AddOrUpdate(
                 x => x.GameId,
@@ -41,8 +42,8 @@ namespace Chess.WebAPI.Migrations
 
             context.Boardstates.AddOrUpdate(
                 x => x.StateId,
-                new Boardstates() { StateId = 0001, GameId = 0000, Timestamp = time1, State = board },
-                new Boardstates() { StateId = 0002, GameId = 0001, Timestamp = time2, State = board }
+                new Boardstates() { StateId = 0001, GameId = 0000, Timestamp = time1, State = "0" },
+                new Boardstates() { StateId = 0002, GameId = 0001, Timestamp = time2, State = "0" }
                 );
         }
     }

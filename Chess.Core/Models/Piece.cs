@@ -8,7 +8,6 @@ namespace Chess.Core.Models
 {
     class Piece
     {
-
         bool Team;
         string Name;
         bool HasMoved;
@@ -19,6 +18,7 @@ namespace Chess.Core.Models
             Name = n;
             HasMoved = false;
         }
+        
         //getters for variables
         public bool getTeam()
         {
@@ -29,6 +29,7 @@ namespace Chess.Core.Models
         {
             return Name;
         }
+
         public bool getHasMoved()
         {
             return HasMoved;
@@ -39,6 +40,7 @@ namespace Chess.Core.Models
         {
             HasMoved = true;
         }
+        
         //make a copy of a piece
         public Piece copy()
         {

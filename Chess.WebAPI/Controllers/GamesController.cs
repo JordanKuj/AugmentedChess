@@ -18,18 +18,17 @@ namespace Chess.WebAPI.Controllers
         private ChessWebAPIContext db = new ChessWebAPIContext();
 
         // GET: api/Games
-        public IQueryable<Games> GetGames()
+        public IQueryable<GamesDTO> GetGames()
         {
-            // finalize in sprint 2
-            /*var game = from g in db.Games
+            var game = from g in db.Games
                        select new GamesDTO()
                        {
                            GameId = g.GameId,
                            StartTime = g.StartTime,
                            EndTime = g.EndTime
                        };
-            return game;*/
-            return db.Games;
+            return game;
+            //return db.Games;
         }
 
         // GET: api/Games/5
@@ -87,7 +86,8 @@ namespace Chess.WebAPI.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Games
+        // probably not needed
+        /*// POST: api/Games
         [ResponseType(typeof(Games))]
         public async Task<IHttpActionResult> PostGames(Games games)
         {
@@ -116,7 +116,7 @@ namespace Chess.WebAPI.Controllers
             await db.SaveChangesAsync();
 
             return Ok(games);
-        }
+        }*/
 
         protected override void Dispose(bool disposing)
         {

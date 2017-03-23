@@ -20,15 +20,48 @@ namespace Chess.WebApi.Client
         private string BaseAddress => "http://localhost:50426/api/";
         private const string BoardState = "Boardstates";
 
-        public async Task<IEnumerable<GamesDTO>> GetGame()
+
+
+        private async Task<string> GetRequest(string path)
         {
-            HttpClient client = new HttpClient();
-            var response = await client.GetAsync(BaseAddress + BoardState);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadAsStringAsync();
-            var games = JsonConvert.DeserializeObject<IEnumerable<GamesDTO>>(result);
+            using (HttpClient client = new HttpClient())
+            {
+                var response = await client.GetAsync(BaseAddress + path);
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
+
+
+        public async Task<ICollection<GamesDTO>> GetGame()
+        {
+
+            var result = await GetRequest(BoardState);
+            var games = JsonConvert.DeserializeObject<ICollection<GamesDTO>>(result);
             return games;
         }
+
+        public async Task<GamesDTO> GetGame(int id)
+        {
+            var result = await GetRequest(BoardState + "/" + id.ToString());
+            var games = JsonConvert.DeserializeObject<GamesDTO>(result);
+            return games;
+        }
+
+        public async Task<BoardstatesDTO> PostGame(BoardstatesDTO state)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                var stateData = JsonConvert.SerializeObject(state);
+                var content = new StringContent(stateData, Encoding.UTF8, "application/json");
+                var response = await client.PostAsync(BaseAddress + BoardState, content);
+                response.EnsureSuccessStatusCode();
+                var respString = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<BoardstatesDTO>(respString);
+            }
+        }
+
+
 
         public class GamesDTO
         {

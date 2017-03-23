@@ -3,42 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using Chess.WebAPI;
-using Chess.WebAPI.Models;
 
-namespace Chess.Core.Models
+namespace ChessTest
 {
-    private ChessWebAPIContext db = new ChessWebAPIContext();
-    /*public class Piece
-    {
-        public Piece(PieceType type, Team team, int x, int y)
-        {
-            Type = type;
-            Team = team;
-            X = x;
-            Y = y;
-        }
-
-        public PieceType Type { get; set; }
-        public Team Team { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
-
-    public class BoardState
-    {
-
-        public List<Piece> Pieces { get; set; }
-        public Team turn;
-
-    }*/
     class Board
     {
-        //turn is true for white, false for black
-        bool turn;
-
-        //array of Pieces initialized to 8x8 starting position
-        Piece[,] board;
+        Team turn;
+        public Piece[,] board;
         /*
          * layout of board
         board[x,y] 
@@ -53,51 +24,50 @@ namespace Chess.Core.Models
           0 1 2 3 4 5 6 7
                  X
         */
-        //initializes a board to the starting layout
         public Board()
         {
             board = new Piece[8, 8];
 
-            board[0, 0] = new Piece(true, "rook");
-            board[1, 0] = new Piece(true, "knight");
-            board[2, 0] = new Piece(true, "bishop");
-            board[3, 0] = new Piece(true, "king");
-            board[4, 0] = new Piece(true, "queen");
-            board[5, 0] = new Piece(true, "bishop");
-            board[6, 0] = new Piece(true, "knight");
-            board[7, 0] = new Piece(true, "rook");
-            board[0, 1] = new Piece(true, "pawn");
-            board[1, 1] = new Piece(true, "pawn");
-            board[2, 1] = new Piece(true, "pawn");
-            board[3, 1] = new Piece(true, "pawn");
-            board[4, 1] = new Piece(true, "pawn");
-            board[5, 1] = new Piece(true, "pawn");
-            board[6, 1] = new Piece(true, "pawn");
-            board[7, 1] = new Piece(true, "pawn");
+            board[0, 0] = new Piece(Team.white, PieceType.rook);
+            board[1, 0] = new Piece(Team.white, PieceType.knight);
+            board[2, 0] = new Piece(Team.white, PieceType.bishop);
+            board[3, 0] = new Piece(Team.white, PieceType.king);
+            board[4, 0] = new Piece(Team.white, PieceType.queen);
+            board[5, 0] = new Piece(Team.white, PieceType.bishop);
+            board[6, 0] = new Piece(Team.white, PieceType.knight);
+            board[7, 0] = new Piece(Team.white, PieceType.rook);
+            board[0, 1] = new Piece(Team.white, PieceType.pawn);
+            board[1, 1] = new Piece(Team.white, PieceType.pawn);
+            board[2, 1] = new Piece(Team.white, PieceType.pawn);
+            board[3, 1] = new Piece(Team.white, PieceType.pawn);
+            board[4, 1] = new Piece(Team.white, PieceType.pawn);
+            board[5, 1] = new Piece(Team.white, PieceType.pawn);
+            board[6, 1] = new Piece(Team.white, PieceType.pawn);
+            board[7, 1] = new Piece(Team.white, PieceType.pawn);
             //set up white team
 
-            board[0, 7] = new Piece(false, "rook");
-            board[1, 7] = new Piece(false, "knight");
-            board[2, 7] = new Piece(false, "bishop");
-            board[3, 7] = new Piece(false, "king");
-            board[4, 7] = new Piece(false, "queen");
-            board[5, 7] = new Piece(false, "bishop");
-            board[6, 7] = new Piece(false, "knight");
-            board[7, 7] = new Piece(false, "rook");
-            board[0, 6] = new Piece(false, "pawn");
-            board[1, 6] = new Piece(false, "pawn");
-            board[2, 6] = new Piece(false, "pawn");
-            board[3, 6] = new Piece(false, "pawn");
-            board[4, 6] = new Piece(false, "pawn");
-            board[5, 6] = new Piece(false, "pawn");
-            board[6, 6] = new Piece(false, "pawn");
-            board[7, 6] = new Piece(false, "pawn");
+            board[0, 7] = new Piece(Team.black, PieceType.rook);
+            board[1, 7] = new Piece(Team.black, PieceType.knight);
+            board[2, 7] = new Piece(Team.black, PieceType.bishop);
+            board[3, 7] = new Piece(Team.black, PieceType.king);
+            board[4, 7] = new Piece(Team.black, PieceType.queen);
+            board[5, 7] = new Piece(Team.black, PieceType.bishop);
+            board[6, 7] = new Piece(Team.black, PieceType.knight);
+            board[7, 7] = new Piece(Team.black, PieceType.rook);
+            board[0, 6] = new Piece(Team.black, PieceType.pawn);
+            board[1, 6] = new Piece(Team.black, PieceType.pawn);
+            board[2, 6] = new Piece(Team.black, PieceType.pawn);
+            board[3, 6] = new Piece(Team.black, PieceType.pawn);
+            board[4, 6] = new Piece(Team.black, PieceType.pawn);
+            board[5, 6] = new Piece(Team.black, PieceType.pawn);
+            board[6, 6] = new Piece(Team.black, PieceType.pawn);
+            board[7, 6] = new Piece(Team.black, PieceType.pawn);
             //set up black team
-            turn = true;
-            db.Games.AddOrUpdate();
+            turn = Team.white;
         }
 
-        //loops through board and prints layout to console used for debugging
+
+
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)
@@ -113,22 +83,22 @@ namespace Chess.Core.Models
                     {
                         switch (board[i, j].getName())
                         {
-                            case "rook":
+                            case PieceType.rook:
                                 Console.Write("R  ");
                                 break;
-                            case "knight":
+                            case PieceType.knight:
                                 Console.Write("N  ");
                                 break;
-                            case "bishop":
+                            case PieceType.bishop:
                                 Console.Write("B  ");
                                 break;
-                            case "king":
+                            case PieceType.king:
                                 Console.Write("K  ");
                                 break;
-                            case "queen":
+                            case PieceType.queen:
                                 Console.Write("Q  ");
                                 break;
-                            case "pawn":
+                            case PieceType.pawn:
                                 Console.Write("P  ");
                                 break;
                             default:
@@ -155,53 +125,58 @@ namespace Chess.Core.Models
             {
                 return false;
             }
-            turn = !turn;
+            turn = turn==Team.white?  Team.black : Team.white;
             return true;
         }
 
         //move piece from [a,b] to [x,y]
-        //no checks, no logic, will replace any piece at end position
         public bool move(int a, int b, int x, int y)
         {
             Console.WriteLine("MOVE: {0}:{1} to {2}:{3}", a, b, x, y);
-            Piece temp = board[a, b].copy();
             board[x, y] = board[a, b];
             board[a, b] = null;
             board[x, y].setHasMoved();
             return true;
         }
 
+        public bool capture(int x, int y)
+        {
+            if (board[x, y] == null)
+            {
+                Console.WriteLine("no piece at end");
+                return true;
+            }
+            if (board[x, y].getTeam() == turn) {
+                Console.WriteLine("Cannot capture own team {0} at {1},{2}", board[x,y].getName(), x, y);
+                return false;
+            }
+            
+            Console.WriteLine("Capturing {0} at {1},{2}", board[x, y].getName(), x, y);
+            return true;
+        }
 
-        //checks logic of the move and determines if valid for that piece
-        //does not check collisions, those are handled by called methods
+
         public bool validMove(int a, int b, int x, int y)
         {
-            //check if any indexes are out of bounds
-            if (a < 0 || b < 0 || x < 0 || y < 0 || a > 7 || b > 7 || x > 7 || y > 7)
+            if (a < 0 || b < 0 || x < 0 || y < 0)
             {
                 Console.WriteLine("INDEX OUT OF BOUNDS");
                 return false;
             }
-
-            //check the move distance so it is not 0
             if (a == x && b == y)
             {
                 Console.WriteLine("MOVE MUST HAVE A DISTANCE");
                 return false;
             }
-
-            //check if a piece is at the starting position
             if (board[a, b] == null)
             {
                 Console.WriteLine("NO PIECE AT START LOCATION");
                 return false;
             }
 
-            //checks the name of the piece at the starting position and if the move is valid for that type of piece
             switch (board[a, b].getName())
             {
-                //rook can move up down left or right so a-x or b-y most be 0
-                case "rook":
+                case PieceType.rook:
                     if (a - x == 0 || b - y == 0)
                     {
                         if (stepThrough(a, b, x, y))
@@ -220,10 +195,8 @@ namespace Chess.Core.Models
                         Console.WriteLine("INVALID ROOK MOVE {0},{1}", x - a, y - b);
                         return false;
                     }
-                    break;
-                
-                //knight can move in L shape so x dist + y dist must be three with neither being three by itself
-                case "knight":
+
+                case PieceType.knight:
                     if (Math.Abs(a - x) + Math.Abs(b - y) == 3 && Math.Abs(a - x) != 3 && Math.Abs(b - y) != 3)
                     {
                         return move(a, b, x, y);
@@ -233,10 +206,8 @@ namespace Chess.Core.Models
                         Console.WriteLine("INVALID KNIGHT MOVE {0},{1}", x - a, y - b);
                         return false;
                     }
-                    break;
 
-                //bishop can move diagonally so |a-x| == |b-y|
-                case "bishop":
+                case PieceType.bishop:
                     if (Math.Abs(a - x) == Math.Abs(b - y))
                     {
                         if (stepThrough(a, b, x, y))
@@ -254,13 +225,14 @@ namespace Chess.Core.Models
                         Console.WriteLine("INVALID BISHOP MOVE {0},{1}", x - a, y - b);
                         return false;
                     }
-                    break;
 
-                //king can move one square in any direction so |a-x| and |b-y| must be one or 0
-                case "king":
+                case PieceType.king:
                     if ((Math.Abs(a - x) == 1 || Math.Abs(a - x) == 0) && (Math.Abs(b - y) == 1 || Math.Abs(b - y) == 0))
                     {
-
+                        if (stepThrough(a, b, x, y))
+                        {
+                            return move(a, b, x, y);
+                        }
                     }
                     else
                     {
@@ -268,9 +240,7 @@ namespace Chess.Core.Models
                         return false;
                     }
                     break;
-
-                //queen combines rook and bishop logic
-                case "queen":
+                case PieceType.queen:
                     if ((a - x == 0 || b - y == 0) || (Math.Abs(a - x) == Math.Abs(b - y)))
                     {
                         if (stepThrough(a, b, x, y))
@@ -288,22 +258,23 @@ namespace Chess.Core.Models
                         Console.WriteLine("INVALID QUEEN MOVE {0},{1}", x - a, y - b);
                         return false;
                     }
-                    break;
-
-                //pawn can move straight up and down one space or 2 if it is the first move
-                //TODO create logic for taking and team specific movesets
-                case "pawn":
-                    //pawn can always move one square
+                
+                case PieceType.pawn:
                     if (a - x == 0 && Math.Abs(b - y) == 1)
                     {
                         move(a, b, x, y);
                         return true;
                     }
-                    //if pawn has not moved, it can move 2 spaces
-                    if (!board[a, b].getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
+                    else if (!board[a, b].getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
                     {
                         move(a, b, x, y);
                         return true;
+                    }
+                    else if (Math.Abs(a - x) == 1 && ((b - y == 1 && board[a, b].getTeam()==Team.black) || (b - y == -1 && board[a, b].getTeam()==Team.white)))
+                    {
+                        //diagonal capture
+                        Console.WriteLine("Pawn capture");
+                        move(a, b, x, y);
                     }
                     else
                     {
@@ -311,192 +282,168 @@ namespace Chess.Core.Models
                         return false;
                     }
                     break;
-                //code should never reach default state
                 default:
                     Console.WriteLine("NO PIECE AT START LOCATION");
                     break;
             }
-            //function should return in cases
             Console.WriteLine("Should Not Get Here");
             return false;
         }
-
-        //determine the direction moved, up, down left right or diagonal
         public bool stepThrough(int a, int b, int x, int y)
         {
             Console.WriteLine("Step Through [{0},{1}] [{2},{3}]", a, b, x, y);
             //if move is straight up or down
             if (a == x)
             {
-                //move is up
                 if (b < y)
                 {
                     return loopUp(a, b, x, y);
                 }
-                //move is down
                 else return loopDown(a, b, x, y);
             }
             //if move is straight left or right
             if (b == y)
             {
-                //move is right
                 if (a < x)
                 {
                     return loopRight(a, b, x, y);
                 }
-                //move is left
                 else return loopLeft(a, b, x, y);
             }
             //if move is up left or up right
             if (a < x)
             {
-                //move is up right
                 if (b < y)
                 {
                     return loopUpRight(a, b, x, y);
                 }
-                //move is up left
                 else return loopDownRight(a, b, x, y);
             }
             //if move is down left or down right
             if (a > x)
             {
-                //move is down right
                 if (b < y)
                 {
-                    return loopDownRight(a, b, x, y);
+                    return loopUpLeft(a, b, x, y);
                 }
-                //move is down left
                 else return loopDownLeft(a, b, x, y);
             }
-
-            //code should return before this point
             Console.WriteLine("SHOULD NOT PRINT");
             return false;
 
         }
 
-        //-------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------
-        //-------------------------------------------------------------------------------------
-        //methods below are used to loop through the grid and return true if no collisions, false if collision is found
-        //may be replaced with recursive methods in sprint  2
         public bool loopUp(int a, int b, int x, int y)
         {
-            Console.WriteLine("LOOP UP");
-            for (int i = b + 1; i < y; i++)
+            Console.WriteLine("Checking {0},{1}", a, b + 1);
+            
+            if (b + 1 == y)
             {
-                Console.WriteLine("Checking [{0},{1}]", a, i);
-                if (board[a, i] == null)
-                {
-                    continue;
-                }
+                return capture(x, y);
+            }
+            else if (board[a, b + 1] != null)
+            {
                 return false;
             }
-            return true;
-        }
-        public bool loopUpRight(int a, int b, int x, int y)
-        {
-            Console.WriteLine("LOOP UP RIGHT");
-            int j = b + 1;
-            for (int i = a + 1; i < x; i++, j++)
-            {
-                Console.WriteLine("Checking [{0},{1}]", i, j);
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
-        }
-        public bool loopRight(int a, int b, int x, int y)
-        {
-            Console.WriteLine("LOOP RIGHT");
-            for (int i = a + 1; i < x; i++)
-            {
-                Console.WriteLine("Checking [{0},{1}]", i, b);
-                if (board[i, b] == null)
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
-        }
-        public bool loopDownRight(int a, int b, int x, int y)
-        {
-            int j = b - 1;
-            for (int i = a + 1; i < x; i++, j--)
-            {
-                Console.WriteLine("Checking [{0},{1}]", i, j);
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
-                return false;
-            }
-            return true;
+            return loopUp(a, b + 1, x, y);
+
         }
         public bool loopDown(int a, int b, int x, int y)
         {
-            Console.WriteLine("LOOP DOWN");
-            for (int i = b - 1; i > y; i--)
+            Console.WriteLine("Checking {0},{1}", a, b - 1);
+            
+            if (b - 1 == y)
             {
-                Console.WriteLine("Checking [{0},{1}]", a, i);
-                if (board[a, i] == null)
-                {
-                    continue;
-                }
+                return capture(x, y);
+            }
+            else if (board[a, b - 1] != null)
+            {
                 return false;
             }
-            return true;
+            return loopDown(a, b - 1, x, y);
         }
-        public bool loopDownLeft(int a, int b, int x, int y)
+        public bool loopRight(int a, int b, int x, int y)
         {
-            Console.WriteLine("LOOP DOWN LEFT");
-            int j = b - 1;
-            for (int i = a - 1; i > x; i--, j--)
+            Console.WriteLine("Checking {0},{1}", a + 1, b);
+            
+            if (a + 1 == x)
             {
-                Console.WriteLine("Checking [{0},{1}]", i, j);
-                if (board[a, i] == null)
-                {
-                    continue;
-                }
+                return capture(x, y);
+            }
+            else if (board[a + 1, b] != null)
+            {
                 return false;
             }
-            return true;
+            return loopRight(a + 1, b, x, y);
         }
         public bool loopLeft(int a, int b, int x, int y)
         {
-            Console.WriteLine("LOOP LEFT");
-            for (int i = a - 1; i > x; i--)
+            Console.WriteLine("Checking {0},{1}", a - 1, b);
+            
+            if (a - 1 == x)
             {
-                Console.WriteLine("Checking [{0},{1}]", i, b);
-                if (board[i, a] == null)
-                {
-                    continue;
-                }
+                return capture(x, y);
+            }
+            else if (board[a - 1, b] != null)
+            {
                 return false;
             }
-            return true;
+            return loopLeft(a - 1, b, x, y);
         }
-        public bool loopUpLeft(int a, int b, int x, int y)
+        public bool loopUpLeft(int a, int b, int x, int y) {
+            Console.WriteLine("Checking {0},{1}", a + 1, b -1);
+            
+            if (a - 1 == x)
+            {
+                return capture(x, y);
+            }
+            else if (board[a - 1, b + 1] != null)
+            {
+                return false;
+            }
+            return loopUpLeft(a - 1, b + 1, x, y);
+        }
+        public bool loopUpRight(int a, int b, int x, int y)
         {
-            Console.WriteLine("LOOP UP LEFT");
-            int j = b + 1;
-            for (int i = a - 1; i > x; i--, j++)
+            Console.WriteLine("Checking {0},{1}", a + 1, b + 1);
+            
+            if (a + 1 == x)
             {
-                Console.WriteLine("Checking [{0},{1}]", i, j);
-                if (board[i, j] == null)
-                {
-                    continue;
-                }
+                return capture(x, y);
+            }
+            else if (board[a + 1, b + 1] != null)
+            {
                 return false;
             }
-            return true;
+            return loopUpRight(a + 1, b + 1, x, y);
         }
-
+        public bool loopDownLeft(int a, int b, int x, int y)
+        {
+            Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
+           
+            if (a - 1 == x)
+            {
+                return capture(x, y);
+            }
+            else if (board[a - 1, b + 1] != null)
+            {
+                return false;
+            }
+            return loopDownLeft(a - 1, b - 1, x, y);
+        }
+        public bool loopDownRight(int a, int b, int x, int y)
+        {
+            Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
+           
+            if (a + 1 == x)
+            {
+                return capture(x, y);
+            }
+            else if (board[a + 1, b + 1] != null)
+            {
+                return false;
+            }
+            return loopDownRight(a + 1, b - 1, x, y);
+        }
     }
 }

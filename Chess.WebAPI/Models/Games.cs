@@ -11,6 +11,7 @@ namespace Chess.WebAPI.Models
     {
         // repository pattern
         // business/entity models
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int GameId { get; set; }
         public DateTime StartTime { get; set; }

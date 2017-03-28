@@ -66,8 +66,6 @@ namespace ChessTest
             turn = Team.white;
         }
 
-
-
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)

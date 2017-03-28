@@ -35,14 +35,13 @@ namespace Chess.WebAPI.Controllers
         [ResponseType(typeof(Games))]
         public async Task<IHttpActionResult> GetGames(int id)
         {
-            // finalize in sprint 2
-            /*var game = await db.Games.Include(g => g.GameId).Select(g => new GamesDTO()
+            var games = await db.Games.Include(g => g.GameId).Select(g => new GamesDTO()
                 {
                     GameId = g.GameId,
                     StartTime = g.StartTime,
                     EndTime = g.EndTime
-                }).SingleOrDefaultAsync(g => g.GameId == id);*/
-            Games games = await db.Games.FindAsync(id);
+                }).SingleOrDefaultAsync(g => g.GameId == id);
+            //Games games = await db.Games.FindAsync(id);
             if (games == null)
             {
                 return NotFound();
@@ -130,6 +129,52 @@ namespace Chess.WebAPI.Controllers
         private bool GamesExists(int id)
         {
             return db.Games.Count(e => e.GameId == id) > 0;
+        }
+
+        // returns game indicated by id
+        public GamesDTO GetGameById(int gId)
+        {
+            Games g;
+            GamesDTO game;
+            g = db.Games.SingleOrDefault(x => x.GameId == gId);
+            if (g == null)
+                return null;
+            game = new GamesDTO(g);
+            return game;
+        }
+
+        // returns array containing all game ids
+        public List<int> GetAllGameIds()
+        {
+            var games = db.Games.Include(g => g.GameId).Select(x => x.GameId).ToList();
+            return games;
+        }
+
+        // returns most recent game (game added to db last)
+        public Games GetMostRecentGame()
+        {
+            Games g;
+            g = db.Games.Last();
+            return g;
+        }
+
+        // add new game to db
+        private void AddNewGame()
+        {
+            Games g = new Games();
+            g.StartTime = DateTime.Now;
+
+            db.Games.Add(g);
+            // check when debugging int x = db.SaveChanges();
+            db.SaveChanges();
+        }
+
+        // end game
+        private void EndGame(int gId)
+        {
+            Games g = db.Games.SingleOrDefault(x => x.GameId == gId);
+            g.EndTime = DateTime.Now;
+            db.SaveChanges();
         }
     }
 }

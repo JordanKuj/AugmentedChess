@@ -20,7 +20,6 @@ namespace Chess.WebAPI.Controllers
         // GET: api/Boardstates
         public IQueryable<BoardstatesDTO> GetBoardstates()
         {
-            // finalize in sprint 2
             var board = from b in db.Boardstates
                         select new BoardstatesDTO(b);
 
@@ -32,7 +31,6 @@ namespace Chess.WebAPI.Controllers
         [ResponseType(typeof(Boardstates))]
         public async Task<IHttpActionResult> GetBoardstates(int id)
         {
-            // finalize in sprint 2
             var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO(b)).SingleOrDefaultAsync(b => b.StateId == id);
             Boardstates boardstates = await db.Boardstates.FindAsync(id);
             if (boardstates == null)
@@ -122,6 +120,81 @@ namespace Chess.WebAPI.Controllers
         private bool BoardstatesExists(int id)
         {
             return db.Boardstates.Count(e => e.StateId == id) > 0;
+        }
+
+        // get board by ids
+        public Boardstates GetStateById(int sId)
+        {
+            return db.Boardstates.SingleOrDefault(x => x.StateId == sId);
+        }
+
+        // add new state to bs
+        public void AddState(Board b)
+        {
+            Boardstates bs = new Boardstates();
+            // will get one state
+            // compare it to the last state in the db
+            // with Chris's method
+            // if true or whatever, then add the state
+            // if not true, don't
+            // make this return a boolean instead
+            //bs.Game = GetGameById(gId);
+            /*bs.GameId = gId;
+            bs.StateId = sId;
+            bs.State = state;*/
+            b.
+            //bs.Timestamp = DateTime.Now;
+
+            db.Boardstates.Add(bs);
+            db.SaveChanges();
+        }
+    }
+    public class Board
+    {
+        Team turn;
+        public Piece[,] board;
+    }
+    public enum PieceType
+    {
+        pawn, rook, knight, bishop, king, queen, error = 0
+    }
+    public enum Team
+    {
+        black, white, error = 0
+    }
+    public class Piece
+    {
+        Team Team;
+        PieceType Name;
+        bool HasMoved;
+
+        public Piece(Team t, PieceType n)
+        {
+            Team = t;
+            Name = n;
+            HasMoved = false;
+        }
+
+        public Team getTeam()
+        {
+            return Team;
+        }
+
+        public PieceType getName()
+        {
+            return Name;
+        }
+        public bool getHasMoved()
+        {
+            return HasMoved;
+        }
+        public void setHasMoved()
+        {
+            HasMoved = true;
+        }
+        public Piece copy()
+        {
+            return new Piece(Team, Name);
         }
     }
 }

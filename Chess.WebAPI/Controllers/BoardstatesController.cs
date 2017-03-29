@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Chess.WebAPI.Models;
+using Chess.WebAPI.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -128,10 +129,13 @@ namespace Chess.WebAPI.Controllers
             return db.Boardstates.SingleOrDefault(x => x.StateId == sId);
         }
 
+        // TODO that comment!
+        
         // add new state to bs
         public void AddState(Board b)
         {
             Boardstates bs = new Boardstates();
+            // bs.State = MakeString(b);
             // will get one state
             // compare it to the last state in the db
             // with Chris's method
@@ -153,7 +157,24 @@ namespace Chess.WebAPI.Controllers
     {
         Team turn;
         public Piece[,] board;
+
+        public Piece GetPiece(int x, int y)
+        {
+            Piece p;
+            p = board[x,y];
+
+            // no piece there? return null
+            if (p == null)
+                return null;
+            return p;
+        }
+
+        public void SetPiece(int x, int y, Team team, PieceType type)
+        {
+            board[x,y] = new Piece(team, type);
+        }
     }
+
     public enum PieceType
     {
         pawn, rook, knight, bishop, king, queen, error = 0

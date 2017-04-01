@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace ChessTest
 {
-    public enum PieceType {
+    public enum PieceType
+    {
         pawn, rook, knight, bishop, king, queen, error = 0
     }
-    public enum Team {
+    public enum Team
+    {
         black, white, error = 0
     }
     public class Piece
@@ -18,26 +20,32 @@ namespace ChessTest
         PieceType Name;
         bool HasMoved;
 
-        public Piece(Team t, PieceType n) {
+        public Piece(Team t, PieceType n)
+        {
             Team = t;
             Name = n;
             HasMoved = false;
         }
 
-        public Team getTeam() {
+        public Team getTeam()
+        {
             return Team;
         }
 
-        public PieceType getName() {
+        public PieceType getName()
+        {
             return Name;
         }
-        public bool getHasMoved() {
+        public bool getHasMoved()
+        {
             return HasMoved;
         }
-        public void setHasMoved() {
+        public void setHasMoved()
+        {
             HasMoved = true;
         }
-        public Piece copy() {
+        public Piece copy()
+        {
             return new Piece(Team, Name);
         }
     }

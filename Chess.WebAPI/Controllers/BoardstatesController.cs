@@ -128,31 +128,34 @@ namespace Chess.WebAPI.Controllers
         {
             return db.Boardstates.SingleOrDefault(x => x.StateId == sId);
         }
-
-        // TODO that comment!
         
         // add new state to bs
-        public void AddState(Board b)
+        public bool AddState(Board b)
         {
             Boardstates bs = new Boardstates();
-            // bs.State = MakeString(b);
-            // will get one state
-            // compare it to the last state in the db
-            // with Chris's method
-            // if true or whatever, then add the state
-            // if not true, don't
-            // make this return a boolean instead
-            //bs.Game = GetGameById(gId);
-            /*bs.GameId = gId;
-            bs.StateId = sId;
-            bs.State = state;*/
-            b.
-            //bs.Timestamp = DateTime.Now;
+            BoardConversion con = new BoardConversion();
+
+            Boardstates lastMove = db.Boardstates.Last();
+            Board last = con.MakeBoard(lastMove.State);
+            // compare!
+
+            string strB = con.MakeString(b);
+            bs.State = strB;
+            bs.StateId = (lastMove.StateId)++;
+            bs.GameId = lastMove.GameId;
+            bs.Timestamp = DateTime.Now;
 
             db.Boardstates.Add(bs);
-            db.SaveChanges();
+            int x = db.SaveChanges();
+
+            // successful db add
+            if (x == 1)
+                return true;
+
+            return false;
         }
     }
+
     public class Board
     {
         Team turn;
@@ -179,10 +182,12 @@ namespace Chess.WebAPI.Controllers
     {
         pawn, rook, knight, bishop, king, queen, error = 0
     }
+
     public enum Team
     {
         black, white, error = 0
     }
+
     public class Piece
     {
         Team Team;
@@ -205,14 +210,17 @@ namespace Chess.WebAPI.Controllers
         {
             return Name;
         }
+
         public bool getHasMoved()
         {
             return HasMoved;
         }
+
         public void setHasMoved()
         {
             HasMoved = true;
         }
+
         public Piece copy()
         {
             return new Piece(Team, Name);

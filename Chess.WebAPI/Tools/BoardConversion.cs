@@ -23,12 +23,13 @@ namespace Chess.WebAPI.Tools
          * k = king black
          * l = queen black
          * *******************/
-        public static string MakeString(Board b)
+        public string MakeString(Board b)
         {
             string s = string.Empty;
             Piece p;
             PieceType name;
             Team team;
+
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -106,7 +107,7 @@ namespace Chess.WebAPI.Tools
             return s;
         }
 
-        public static Board MakeBoard(string str)
+        public Board MakeBoard(string str)
         {
             Board b = new Board();
             char temp = 'x';
@@ -170,8 +171,7 @@ namespace Chess.WebAPI.Tools
     }
 
     /*
-     * list of potential moves (boardstate + turn) in a new class Piece at x,y could move to... List<List<>>
-     * f
+     * list of potential moves (boardstate + turn) in a new class Piece at x,y could move to... List<Vector()>
      */
 
     public class Vector

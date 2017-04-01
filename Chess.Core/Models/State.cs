@@ -14,7 +14,6 @@ namespace ChessTest
         {
         }
 
-
         public bool Comparer()
         {
             return true;
@@ -76,11 +75,7 @@ namespace ChessTest
 
                             Console.WriteLine("Board 2: {0},{1} :: NULL", i, j);
                         }
-
                     }
-
-
-
                 }
             }
             return true;
@@ -155,9 +150,6 @@ namespace ChessTest
                         }
 
                     }
-
-
-
                 }
             }
             state1.printBoard();

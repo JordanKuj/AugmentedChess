@@ -153,7 +153,6 @@ namespace ChessTest
             return true;
         }
 
-
         public bool validMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
@@ -328,7 +327,6 @@ namespace ChessTest
             }
             Console.WriteLine("SHOULD NOT PRINT");
             return false;
-
         }
 
         public bool loopUp(int a, int b, int x, int y)

@@ -48,5 +48,15 @@ namespace ChessTest
         {
             return new Piece(Team, Name);
         }
+
+        public void setTeam(Team t)
+        {
+            this.Team = t;
+        }
+
+        public void setName(PieceType type)
+        {
+            this.Name = type;
+        }
     }
 }

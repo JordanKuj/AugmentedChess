@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChessTest
 {
-    class Board
+    public class Board
     {
         Team turn;
         public Piece[,] board;
@@ -739,7 +739,20 @@ namespace ChessTest
             return false;
         }
 
+        public Piece GetPiece(int x, int y)
+        {
+            Piece p;
+            p = board[x, y];
 
+            // no piece there? return null
+            if (p == null)
+                return null;
+            return p;
+        }
 
+        public void SetPiece(int x, int y, Team team, PieceType type)
+        {
+            board[x, y] = new Piece(team, type);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Chess.WebAPI.Controllers;
+using ChessTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,10 @@ namespace Chess.WebAPI.Tools
          * k = king black
          * l = queen black
          * *******************/
-        public string MakeString(Board b)
+        public static string MakeString(ChessTest.Board b)
         {
             string s = string.Empty;
-            Piece p;
+            ChessTest.Piece p;
             PieceType name;
             Team team;
 
@@ -107,9 +108,9 @@ namespace Chess.WebAPI.Tools
             return s;
         }
 
-        public Board MakeBoard(string str)
+        public static ChessTest.Board MakeBoard(string str)
         {
-            Board b = new Board();
+            ChessTest.Board b = new ChessTest.Board();
             char temp = 'x';
             int x = 0, y = 0;
 
@@ -167,28 +168,6 @@ namespace Chess.WebAPI.Tools
                 }
             }
             return b;
-        }
-    }
-
-    /*
-     * list of potential moves (boardstate + turn) in a new class Piece at x,y could move to... List<Vector()>
-     */
-
-    public class Vector
-    {
-        public int x;
-        public int y;
-    }
-
-    public class Move
-    {
-        public Piece p;
-        public List<Vector> moves;
-
-        public Move(Piece piece)
-        {
-            moves = new List<Vector>();
-            p = piece;
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
+using ChessTest;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -124,22 +125,35 @@ namespace Chess.WebAPI.Controllers
         }
 
         // get board by ids
-        public Boardstates GetStateById(int sId)
+        public BoardstatesDTO GetStateById(int sId)
         {
-            return db.Boardstates.SingleOrDefault(x => x.StateId == sId);
+            Boardstates bs;
+            BoardstatesDTO bsDTO;
+            bs = db.Boardstates.SingleOrDefault(x => x.StateId == sId);
+            bsDTO = new BoardstatesDTO(bs);
+            return bsDTO;
+        }
+
+        // get last move/most recently added boardstate
+        public BoardstatesDTO GetMostRecentState()
+        {
+            BoardstatesDTO bsDTO;
+            Boardstates bs = db.Boardstates.Last();
+            bsDTO = new BoardstatesDTO(bs);
+            return bsDTO;
         }
         
         // add new state to bs
-        public bool AddState(Board b)
+        public bool AddState(ChessTest.Board b)
         {
             Boardstates bs = new Boardstates();
-            BoardConversion con = new BoardConversion();
 
             Boardstates lastMove = db.Boardstates.Last();
-            Board last = con.MakeBoard(lastMove.State);
-            // compare!
+            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+            if (State.validState(b, last) == false)
+                return false;
 
-            string strB = con.MakeString(b);
+            string strB = BoardConversion.MakeString(b);
             bs.State = strB;
             bs.StateId = (lastMove.StateId)++;
             bs.GameId = lastMove.GameId;
@@ -158,13 +172,16 @@ namespace Chess.WebAPI.Controllers
 
     public class Board
     {
-        Team turn;
-        public Piece[,] board;
+        public ChessTest.Board b;
+        ChessTest.Piece p;
+        //public ChessTest.Piece p;
+        //Team turn;
+        //public Piece[,] board;
 
-        public Piece GetPiece(int x, int y)
+        /*public ChessTest.Piece GetPiece(int x, int y)
         {
-            Piece p;
-            p = board[x,y];
+            //ChessTest.Piece p;
+            p = b.board[x,y];
 
             // no piece there? return null
             if (p == null)
@@ -174,56 +191,58 @@ namespace Chess.WebAPI.Controllers
 
         public void SetPiece(int x, int y, Team team, PieceType type)
         {
-            board[x,y] = new Piece(team, type);
-        }
+            b.board[x,y] = new Piece(team, type);
+        }*/
     }
 
-    public enum PieceType
+    /*public enum PieceType
     {
         pawn, rook, knight, bishop, king, queen, error = 0
     }
 
     public enum Team
     {
-        black, white, error = 0
-    }
+        public ChessTest.Team;
+        t.black, t.white, t.error = 0
+    }*/
 
     public class Piece
     {
-        Team Team;
-        PieceType Name;
-        bool HasMoved;
+        public ChessTest.Piece p;
+        //Team Team;
+        //PieceType Name;
+        //bool HasMoved;
 
         public Piece(Team t, PieceType n)
         {
-            Team = t;
-            Name = n;
-            HasMoved = false;
+            p.setTeam(t);
+            p.setName(n);
+            p.setHasMoved();  // maybe
         }
 
         public Team getTeam()
         {
-            return Team;
+            return p.getTeam();
         }
 
         public PieceType getName()
         {
-            return Name;
+            return p.getName();
         }
 
         public bool getHasMoved()
         {
-            return HasMoved;
+            return p.getHasMoved();
         }
 
         public void setHasMoved()
         {
-            HasMoved = true;
+            p.setHasMoved();
         }
 
         public Piece copy()
         {
-            return new Piece(Team, Name);
+            return new Piece(p.getTeam(), p.getName());
         }
     }
 }

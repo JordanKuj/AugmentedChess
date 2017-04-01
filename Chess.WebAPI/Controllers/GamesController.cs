@@ -151,11 +151,13 @@ namespace Chess.WebAPI.Controllers
         }
 
         // returns most recent game (game added to db last)
-        public Games GetMostRecentGame()
+        public GamesDTO GetMostRecentGame()
         {
             Games g;
+            GamesDTO game;
             g = db.Games.Last();
-            return g;
+            game = new GamesDTO(g);
+            return game;
         }
 
         // add new game to db

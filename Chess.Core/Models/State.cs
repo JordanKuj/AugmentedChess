@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace ChessTest
 {
-    class State
+    public class State
     {
 
 
-        public State()
-        {
-        }
+        //public StateCheck()
+        //{
+        //}
 
 
-        public bool Comparer()
+        public static bool Comparer()
         {
             return true;
         }
 
-        public bool getDiff(Board state1, Board state2)
+        public static bool getDiff(Board state1, Board state2)
         {
             bool one = false;
             bool two = false;
@@ -86,7 +86,7 @@ namespace ChessTest
             return true;
         }
 
-        public bool validState(Board state1, Board state2)
+        public static bool validState(Board state1, Board state2)
         {
             Tuple<int, int>[] locations = new Tuple<int, int>[10];
             int count = 0;

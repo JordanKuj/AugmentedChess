@@ -1,0 +1,13 @@
+﻿{
+  "supports": {},
+  "dependencies": {
+    "portable.aforge.core": "2.2.5.60302",
+    "portable.aforge.imaging": "2.2.5.60302",
+    "portable.aforge.math": "2.2.5.60302",
+    "portable.aforge.vision": "2.2.5.60302",
+    "Portable.Ninject": "3.3.1"
+  },
+  "frameworks": {
+    ".NETPortable,Version=v4.5,Profile=Profile7": {}
+  }
+}

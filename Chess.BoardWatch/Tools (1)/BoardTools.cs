@@ -1,7 +1,6 @@
 ﻿using Chess.BoardWatch.Models;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,31 +11,32 @@ namespace Chess.BoardWatch
     public class BoardTools
     {
         //TODO:create a way to offset the BoardArea's x y coordinates 
-        //public Rectangle BoardSize
-        //{
-        //    get { return BoardArea; }
-        //    set
-        //    {
-        //        BoardArea = value;
-        //    }
-        //}
+        public int BoardSize
+        {
+            get { return _boardSize; }
+            set
+            {
+                _boardSize = value;
+                BoardArea = new Rectangle(0, 0, _boardSize, _boardSize);
+            }
+        }
+        private int _boardSize;
         private Rectangle BoardArea { get; set; }
         public const int BoardDivisions = 8;
         public List<Piece> pieces { get; set; }
 
         public BoardTools()
         {
-            pieces = new List<Piece>();
+            BoardSize = 500;
         }
 
-        public BoardState SetPieces(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
+        public BoardState SetPieces(IEnumerable<BlobData> black, IEnumerable<BlobData> white)
         {
             pieces.Clear();
-            BoardArea = boardArea;
             SetData(pieces, black, BoardArea, Team.black);
             SetData(pieces, white, BoardArea, Team.white);
 
-            return new BoardState(pieces);
+            return new BoardState(pieces);  
         }
 
         private static void SetData(List<Piece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
@@ -45,12 +45,8 @@ namespace Chess.BoardWatch
             {
                 if (BoardArea.Contains(b.Blob.Rectangle.Location))
                 {
-                    int x = (int)Math.Floor(b.Blob.Rectangle.X / ((double)BoardArea.Width / BoardDivisions));
-                    int y = (int)Math.Floor(b.Blob.Rectangle.Y / ((double)BoardArea.Height / BoardDivisions));
-                    if (x > 8 || y > 8 || x < 0 || y < 0)
-                    {
-                        Debug.Print("error");
-                    }
+                    int x = (int)Math.Floor(((double)BoardArea.Width / BoardDivisions) / b.Blob.Rectangle.X);
+                    int y = (int)Math.Floor(((double)BoardArea.Height / BoardDivisions) / b.Blob.Rectangle.Y);
                     var ptype = PieceConstants.FindPieceType(b.glyph);
                     pieces.Add(new Piece(ptype, t, x, y));
                 }

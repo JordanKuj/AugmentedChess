@@ -229,7 +229,7 @@ namespace Chess.BoardWatch
                 swhigh = sw.ElapsedMilliseconds;
             else if (sw.ElapsedMilliseconds < swlow)
                 swlow = sw.ElapsedMilliseconds;
-            //Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
+            Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
         }
         const int QuadSize = 50;
 

@@ -13,7 +13,6 @@ using Chess.BoardWatch.Tools;
 using Chess.BoardWatch.Models;
 using Ninject;
 using System.Threading.Tasks;
-using Chess.BoardWatch.UI.Forms;
 
 namespace Chess.BoardWatch
 {
@@ -32,8 +31,6 @@ namespace Chess.BoardWatch
         List<BetterPanel> panelsRed = new List<BetterPanel>();
         List<BetterPanel> panelsGrn = new List<BetterPanel>();
         List<BetterPanel> panelsBlu = new List<BetterPanel>();
-
-        private BoardView DialogBoardView;
         public Form1()
         {
             InitializeComponent();
@@ -66,7 +63,7 @@ namespace Chess.BoardWatch
 
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[1].MonikerString);
+            stream = new VideoCaptureDevice(devices[0].MonikerString);
             var c = new VideoCapabilities[stream.VideoCapabilities.Length];
             var capabilities = new List<VideoCapabilities>(c);
             stream.VideoCapabilities.CopyTo(c, 0);
@@ -76,9 +73,6 @@ namespace Chess.BoardWatch
             stream.Start();
             var dilg = kernal.Get<SettingsForm>();
             dilg.Show();
-
-            DialogBoardView = new BoardView();
-            DialogBoardView.Show();
         }
 
 
@@ -94,8 +88,10 @@ namespace Chess.BoardWatch
         private async Task ProcessImage(Bitmap origional)
         {
             await gt.ProcessImage(origional);
+            bt.BoardSize = origional.Height > origional.Width ? origional.Height : origional.Width;
+            bt.SetPieces(gt.Rblobs,gt.Bblobs);
 
-            DialogBoardView.DrawBoard(origional, bt.SetPieces(gt.Rblobs, gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height)));
+
             EdgePanel.DrawImage(gt.EdgeGray);
             PanelBw.DrawImage(gt.GrayImage);
             PanelFinal.DrawImage(gt.threshGray);

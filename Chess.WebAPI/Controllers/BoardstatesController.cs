@@ -17,7 +17,7 @@ namespace Chess.WebAPI.Controllers
 {
     public class BoardstatesController : ApiController
     {
-        private ChessWebAPIContext db = new ChessWebAPIContext();
+        private ChessWebAPIContext db = null;// new ChessWebAPIContext();
 
         // GET: api/Boardstates
         public IQueryable<BoardstatesDTO> GetBoardstates()

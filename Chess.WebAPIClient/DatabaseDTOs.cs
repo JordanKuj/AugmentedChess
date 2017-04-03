@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Chess.WebAPIClient
 {
-    public class DatabaseDTOs
-    {
+    //public class DatabaseDTOs
+    //{
         public class GamesDTO
         {
             public GamesDTO() { }
@@ -40,5 +40,5 @@ namespace Chess.WebAPIClient
             public string State { get; set; }
             public int GameId { get; set; }
         }
-    }
+    //}
 }

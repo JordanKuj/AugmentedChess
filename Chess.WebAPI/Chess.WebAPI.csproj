@@ -260,6 +260,8 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tools\BoardConversion.cs" />
+    <Compile Include="Tools\MovePrediction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -340,6 +342,12 @@
     <EmbeddedResource Include="Migrations\201702190549137_Initial1.resx">
       <DependentUpon>201702190549137_Initial1.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Chess.Core\Chess.Core.csproj">
+      <Project>{6ce49514-a7d3-4309-8c20-ec4a3acabfbb}</Project>
+      <Name>Chess.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

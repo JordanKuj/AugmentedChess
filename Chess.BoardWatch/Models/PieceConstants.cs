@@ -98,63 +98,85 @@ namespace Chess.BoardWatch.Models
             //if (a[1, 1] != b[1, 1])
             //    return false;
 
-            var tmpa = new List<int>
+            var tmpa = new List<int>();
+            var tmpb = new List<int>();
+            for (var y = 0; y < 5; y++)
             {
-                a[0, 0],
-                a[1, 0],
-                a[2, 0],
-                a[3, 0],
-                a[4, 0],
-                a[0, 1],
-                a[1, 1],
-                a[2, 1],
-                a[3, 1],
-                a[4, 1],
-                a[0, 2],
-                a[1, 2],
-                a[2, 2],
-                a[3, 2],
-                a[4, 2],
-                a[0, 3],
-                a[1, 3],
-                a[2, 3],
-                a[3, 3],
-                a[4, 3],
-                a[0, 4],
-                a[1, 4],
-                a[2, 4],
-                a[3, 4],
-                a[4, 4]
-            };
-            var tmpb = new List<int>
-            {
-                b[0, 0],
-                b[1, 0],
-                b[2, 0],
-                b[3, 0],
-                b[4, 0],
-                b[0, 1],
-                b[1, 1],
-                b[2, 1],
-                b[3, 1],
-                b[4, 1],
-                b[0, 2],
-                b[1, 2],
-                b[2, 2],
-                b[3, 2],
-                b[4, 2],
-                b[0, 3],
-                b[1, 3],
-                b[2, 3],
-                b[3, 3],
-                b[4, 3],
-                b[0, 4],
-                b[1, 4],
-                b[2, 4],
-                b[3, 4],
-                b[4, 4]
-            };
+                for (var x = 0; x < 5; x++)
+                {
+                    tmpa.Add(a[x, y]);
+                    tmpb.Add(b[x, y]);
+                }
+            }
+
+            //var tmpa = new List<int>
+            //{
+            //    a[0, 0],
+            //    a[1, 0],
+            //    a[2, 0],
+            //    a[3, 0],
+            //    a[4, 0],
+            //    a[0, 1],
+            //    a[1, 1],
+            //    a[2, 1],
+            //    a[3, 1],
+            //    a[4, 1],
+            //    a[0, 2],
+            //    a[1, 2],
+            //    a[2, 2],
+            //    a[3, 2],
+            //    a[4, 2],
+            //    a[0, 3],
+            //    a[1, 3],
+            //    a[2, 3],
+            //    a[3, 3],
+            //    a[4, 3],
+            //    a[0, 4],
+            //    a[1, 4],
+            //    a[2, 4],
+            //    a[3, 4],
+            //    a[4, 4]
+            //};
+            //var tmpb = new List<int>
+            //{
+            //    b[0, 0],
+            //    b[1, 0],
+            //    b[2, 0],
+            //    b[3, 0],
+            //    b[4, 0],
+            //    b[0, 1],
+            //    b[1, 1],
+            //    b[2, 1],
+            //    b[3, 1],
+            //    b[4, 1],
+            //    b[0, 2],
+            //    b[1, 2],
+            //    b[2, 2],
+            //    b[3, 2],
+            //    b[4, 2],
+            //    b[0, 3],
+            //    b[1, 3],
+            //    b[2, 3],
+            //    b[3, 3],
+            //    b[4, 3],
+            //    b[0, 4],
+            //    b[1, 4],
+            //    b[2, 4],
+            //    b[3, 4],
+            //    b[4, 4]
+            //};
+            Debug.Print("");
+            Debug.Print("");
+            Debug.Print("");
+            Debug.Print("tmpa");
+            PrintArray(tmpa);
+            Debug.Print("-------");
+            Debug.Print("tmpblob");
+            PrintArray(tmpb);
             //var tmpb = new List<int> { b[0, 0], b[1, 0], b[2, 0], b[2, 1], b[2, 2], b[1, 2], b[0, 2], b[0, 1] };
+
+            var asum = tmpa.Sum();
+            var bsum = tmpb.Sum();
 
             if (tmpa.Sum() != tmpb.Sum())
                 return false;
@@ -210,6 +232,11 @@ namespace Chess.BoardWatch.Models
             }
             return true;
         }
+
+        //private static int RotateCw(int x, int y, int times)
+        //{
+        //     if
+        //}
         private static int Flip(int val)
         {
             switch (val)
@@ -226,6 +253,17 @@ namespace Chess.BoardWatch.Models
                     return 0;
             }
             throw new ArgumentOutOfRangeException();
+        }
+
+        private static void PrintArray(List<int> vals, int colcount = 5)
+        {
+            var count = 1;
+            foreach (var val in vals)
+            {
+                var endchar = count % colcount == 0 ? "\n" : ",";
+                Debug.Write($"{val}{endchar}");
+                count++;
+            }
         }
 
 

@@ -39,6 +39,9 @@
             this.checkBox8 = new System.Windows.Forms.CheckBox();
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.BtnVertFlip = new System.Windows.Forms.Button();
+            this.BtnHorizFlip = new System.Windows.Forms.Button();
+            this.BtnRotate = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,6 +76,7 @@
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox1.AutoCheck = false;
             this.checkBox1.AutoSize = true;
             this.checkBox1.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox1.Location = new System.Drawing.Point(3, 3);
@@ -86,6 +90,7 @@
             this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox2.AutoCheck = false;
             this.checkBox2.AutoSize = true;
             this.checkBox2.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox2.Location = new System.Drawing.Point(24, 3);
@@ -99,6 +104,7 @@
             this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox3.AutoCheck = false;
             this.checkBox3.AutoSize = true;
             this.checkBox3.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox3.Location = new System.Drawing.Point(45, 3);
@@ -112,6 +118,7 @@
             this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox4.AutoCheck = false;
             this.checkBox4.AutoSize = true;
             this.checkBox4.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox4.Location = new System.Drawing.Point(3, 23);
@@ -125,6 +132,7 @@
             this.checkBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox5.AutoCheck = false;
             this.checkBox5.AutoSize = true;
             this.checkBox5.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox5.Location = new System.Drawing.Point(24, 23);
@@ -138,6 +146,7 @@
             this.checkBox6.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox6.AutoCheck = false;
             this.checkBox6.AutoSize = true;
             this.checkBox6.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox6.Location = new System.Drawing.Point(45, 23);
@@ -151,6 +160,7 @@
             this.checkBox7.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox7.AutoCheck = false;
             this.checkBox7.AutoSize = true;
             this.checkBox7.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox7.Location = new System.Drawing.Point(3, 43);
@@ -164,6 +174,7 @@
             this.checkBox8.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox8.AutoCheck = false;
             this.checkBox8.AutoSize = true;
             this.checkBox8.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox8.Location = new System.Drawing.Point(24, 43);
@@ -177,6 +188,7 @@
             this.checkBox9.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBox9.AutoCheck = false;
             this.checkBox9.AutoSize = true;
             this.checkBox9.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.checkBox9.Location = new System.Drawing.Point(45, 43);
@@ -194,11 +206,44 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
+            // BtnVertFlip
+            // 
+            this.BtnVertFlip.Location = new System.Drawing.Point(122, 15);
+            this.BtnVertFlip.Name = "BtnVertFlip";
+            this.BtnVertFlip.Size = new System.Drawing.Size(125, 22);
+            this.BtnVertFlip.TabIndex = 2;
+            this.BtnVertFlip.Text = "MirrorVertical    |";
+            this.BtnVertFlip.UseVisualStyleBackColor = true;
+            this.BtnVertFlip.Click += new System.EventHandler(this.BtnVertFlip_Click);
+            // 
+            // BtnHorizFlip
+            // 
+            this.BtnHorizFlip.Location = new System.Drawing.Point(122, 43);
+            this.BtnHorizFlip.Name = "BtnHorizFlip";
+            this.BtnHorizFlip.Size = new System.Drawing.Size(125, 22);
+            this.BtnHorizFlip.TabIndex = 3;
+            this.BtnHorizFlip.Text = "MirrorHorizontal ---";
+            this.BtnHorizFlip.UseVisualStyleBackColor = true;
+            this.BtnHorizFlip.Click += new System.EventHandler(this.BtnHorizFlip_Click);
+            // 
+            // BtnRotate
+            // 
+            this.BtnRotate.Location = new System.Drawing.Point(122, 71);
+            this.BtnRotate.Name = "BtnRotate";
+            this.BtnRotate.Size = new System.Drawing.Size(125, 21);
+            this.BtnRotate.TabIndex = 4;
+            this.BtnRotate.Text = "Rotate CW";
+            this.BtnRotate.UseVisualStyleBackColor = true;
+            this.BtnRotate.Click += new System.EventHandler(this.BtnRotate_Click);
+            // 
             // GlyphTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(686, 461);
+            this.ClientSize = new System.Drawing.Size(327, 159);
+            this.Controls.Add(this.BtnRotate);
+            this.Controls.Add(this.BtnHorizFlip);
+            this.Controls.Add(this.BtnVertFlip);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "GlyphTestForm";
@@ -223,5 +268,8 @@
         private System.Windows.Forms.CheckBox checkBox8;
         private System.Windows.Forms.CheckBox checkBox9;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button BtnVertFlip;
+        private System.Windows.Forms.Button BtnHorizFlip;
+        private System.Windows.Forms.Button BtnRotate;
     }
 }

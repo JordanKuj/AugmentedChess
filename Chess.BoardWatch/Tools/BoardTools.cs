@@ -1,4 +1,5 @@
 ﻿using Chess.BoardWatch.Models;
+using Chess.BoardWatch.Tools;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -45,8 +46,10 @@ namespace Chess.BoardWatch
             {
                 if (BoardArea.Contains(b.Blob.Rectangle.Location))
                 {
-                    int x = (int)Math.Floor(b.Blob.Rectangle.X / ((double)BoardArea.Width / BoardDivisions));
-                    int y = (int)Math.Floor(b.Blob.Rectangle.Y / ((double)BoardArea.Height / BoardDivisions));
+                    var blobcenter = b.Blob.Rectangle.Center();
+
+                    int x = (int)Math.Floor(blobcenter.X / ((double)BoardArea.Width / BoardDivisions));
+                    int y = (int)Math.Floor(blobcenter.Y / ((double)BoardArea.Height / BoardDivisions));
                     if (x > 8 || y > 8 || x < 0 || y < 0)
                     {
                         Debug.Print("error");

@@ -89,6 +89,7 @@
     </Compile>
     <Compile Include="Tools\Bindings.cs" />
     <Compile Include="Tools\CfgUtility.cs" />
+    <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FilterTool.cs" />
     <Compile Include="UI\BetterPanel.cs">
       <SubType>Component</SubType>
@@ -156,6 +157,7 @@
     <Content Include="Resources\black_bishop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\black_debug.png" />
     <Content Include="Resources\black_king.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -175,6 +177,7 @@
     <Content Include="Resources\white_bishop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\white_debug.png" />
     <Content Include="Resources\white_king.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

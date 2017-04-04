@@ -41,7 +41,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.BtnVertFlip = new System.Windows.Forms.Button();
             this.BtnHorizFlip = new System.Windows.Forms.Button();
-            this.BtnRotate = new System.Windows.Forms.Button();
+            this.BtnRotateCw = new System.Windows.Forms.Button();
+            this.btnRotateCcw = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -226,22 +227,33 @@
             this.BtnHorizFlip.UseVisualStyleBackColor = true;
             this.BtnHorizFlip.Click += new System.EventHandler(this.BtnHorizFlip_Click);
             // 
-            // BtnRotate
+            // BtnRotateCw
             // 
-            this.BtnRotate.Location = new System.Drawing.Point(122, 71);
-            this.BtnRotate.Name = "BtnRotate";
-            this.BtnRotate.Size = new System.Drawing.Size(125, 21);
-            this.BtnRotate.TabIndex = 4;
-            this.BtnRotate.Text = "Rotate CW";
-            this.BtnRotate.UseVisualStyleBackColor = true;
-            this.BtnRotate.Click += new System.EventHandler(this.BtnRotate_Click);
+            this.BtnRotateCw.Location = new System.Drawing.Point(122, 71);
+            this.BtnRotateCw.Name = "BtnRotateCw";
+            this.BtnRotateCw.Size = new System.Drawing.Size(125, 21);
+            this.BtnRotateCw.TabIndex = 4;
+            this.BtnRotateCw.Text = "Rotate CW";
+            this.BtnRotateCw.UseVisualStyleBackColor = true;
+            this.BtnRotateCw.Click += new System.EventHandler(this.BtnRotate_Click);
+            // 
+            // btnRotateCcw
+            // 
+            this.btnRotateCcw.Location = new System.Drawing.Point(122, 98);
+            this.btnRotateCcw.Name = "btnRotateCcw";
+            this.btnRotateCcw.Size = new System.Drawing.Size(125, 21);
+            this.btnRotateCcw.TabIndex = 5;
+            this.btnRotateCcw.Text = "Rotate CCW";
+            this.btnRotateCcw.UseVisualStyleBackColor = true;
+            this.btnRotateCcw.Click += new System.EventHandler(this.btnRotateCcw_Click);
             // 
             // GlyphTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(327, 159);
-            this.Controls.Add(this.BtnRotate);
+            this.Controls.Add(this.btnRotateCcw);
+            this.Controls.Add(this.BtnRotateCw);
             this.Controls.Add(this.BtnHorizFlip);
             this.Controls.Add(this.BtnVertFlip);
             this.Controls.Add(this.label1);
@@ -270,6 +282,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button BtnVertFlip;
         private System.Windows.Forms.Button BtnHorizFlip;
-        private System.Windows.Forms.Button BtnRotate;
+        private System.Windows.Forms.Button BtnRotateCw;
+        private System.Windows.Forms.Button btnRotateCcw;
     }
 }

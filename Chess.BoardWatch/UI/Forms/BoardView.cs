@@ -92,6 +92,8 @@ namespace Chess.BoardWatch.UI.Forms
                     return p.Team == Team.black ? Resources.black_queen : Resources.white_queen;
                 case PieceType.rook:
                     return p.Team == Team.black ? Resources.black_rook : Resources.white_rook;
+                case PieceType.Debug:
+                    return p.Team == Team.black ? Resources.black_debug : Resources.white_debug;
                 default:
                     return Resources.errorPiece;
             }

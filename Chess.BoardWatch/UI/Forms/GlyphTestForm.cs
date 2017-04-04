@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chess.BoardWatch.Models;
+using Chess.BoardWatch.Tools;
 
 namespace Chess.BoardWatch.UI.Forms
 {
@@ -86,20 +87,6 @@ namespace Chess.BoardWatch.UI.Forms
             _tmpboard[2, 3] = tc;
             _tmpboard[3, 3] = tr;
             update();
-
-            //var leftTop = checkBox1.Checked;
-            //var leftCenter = checkBox4.Checked;
-            //var leftBottom = checkBox7.Checked;
-
-
-            //checkBox1.Checked = checkBox3.Checked;
-            //checkBox4.Checked = checkBox6.Checked;
-            //checkBox7.Checked = checkBox9.Checked;
-
-            //checkBox3.Checked = leftTop;
-            //checkBox6.Checked = leftCenter;
-            //checkBox9.Checked = leftBottom;
-
         }
 
         private void BtnHorizFlip_Click(object sender, EventArgs e)
@@ -121,64 +108,17 @@ namespace Chess.BoardWatch.UI.Forms
 
         private void BtnRotate_Click(object sender, EventArgs e)
         {
-            var newboard = new int[5, 5];
-
-            const int newstart = 0;
-            const int newInc = 1;
-
-            int newx = newstart;
-            int newy = newstart;
-            for (int x = 0; x <= 4; x++)
-            {
-                newx = newstart;
-                for (int y = 4; y >= 0; y--)
-                {
-                    newboard[newx, newy] = tmpboard[x, y];
-                    newx += newInc;
-                }
-                newy += newInc;
-            }
-
-            _tmpboard = newboard;
+            _tmpboard = PieceConstants.Rotate(_tmpboard, RotateType.cw);
             update();
-
         }
-        private static int RotateCcw(int[,] arr, int x, int y)
+
+        private void btnRotateCcw_Click(object sender, EventArgs e)
         {
-            if (x < 0 || y < 0) { throw new ArgumentOutOfRangeException(); }
-            else if (x == 1 && y == 1) { x = 3; y = 1; }
-            else if (x == 3 && y == 1) { x = 3; y = 3; }
-            else if (x == 3 && y == 3) { x = 1; y = 3; }
-            else if (x == 1 && y == 3) { x = 1; y = 1; }
-
-            else if (x == 2 && y == 1) { x = 3; y = 3; }
-            else if (x == 3 && y == 3) { x = 2; y = 3; }
-            else if (x == 2 && y == 3) { x = 1; y = 3; }
-            else if (x == 1 && y == 3) { x = 2; y = 1; }
-
-            return arr[x, y];
+            _tmpboard = PieceConstants.Rotate(_tmpboard, RotateType.ccw);
+            update();
         }
-
     }
 
 
-    public static class Extensions
-    {
-        public static int ToInt(this CheckBox val)
-        {
-            return val.Checked.ToInt();
-        }
-        public static bool ToBool(this int val)
-        {
-            return val == 0 ? false : true;
-        }
-
-        public static int ToInt(this bool val)
-        {
-
-            return val ? 1 : 0;
-        }
-
-
-    }
+   
 }

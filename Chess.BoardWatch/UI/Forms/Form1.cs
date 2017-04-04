@@ -66,7 +66,7 @@ namespace Chess.BoardWatch
 
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[1].MonikerString);
+            stream = new VideoCaptureDevice(devices[0].MonikerString);
             var c = new VideoCapabilities[stream.VideoCapabilities.Length];
             var capabilities = new List<VideoCapabilities>(c);
             stream.VideoCapabilities.CopyTo(c, 0);

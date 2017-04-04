@@ -73,6 +73,16 @@ namespace Chess.BoardWatch.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap black_debug {
+            get {
+                object obj = ResourceManager.GetObject("black_debug", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap black_king {
             get {
                 object obj = ResourceManager.GetObject("black_king", resourceCulture);
@@ -136,6 +146,16 @@ namespace Chess.BoardWatch.Properties {
         internal static System.Drawing.Bitmap white_bishop {
             get {
                 object obj = ResourceManager.GetObject("white_bishop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap white_debug {
+            get {
+                object obj = ResourceManager.GetObject("white_debug", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -14,7 +14,11 @@ namespace Chess.WebAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int GameId { get; set; }
+
+        //[Column(TypeName = "datetime2")]
         public DateTime StartTime { get; set; }
+
+        //[Column(TypeName = "datetime2")]
         public DateTime EndTime { get; set; }
 
         public virtual ICollection<Boardstates> States { get; set; }
@@ -32,7 +36,6 @@ namespace Chess.WebAPI.Models
     {
         [Key]
         public int StateId { get; set; }
-        [Timestamp]
         public DateTime Timestamp { get; set; }
         [Required]
         public string State { get; set; }

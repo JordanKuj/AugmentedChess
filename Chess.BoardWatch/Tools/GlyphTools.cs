@@ -229,7 +229,7 @@ namespace Chess.BoardWatch
                 swhigh = sw.ElapsedMilliseconds;
             else if (sw.ElapsedMilliseconds < swlow)
                 swlow = sw.ElapsedMilliseconds;
-            Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
+            //Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
         }
         const int QuadSize = 50;
 
@@ -238,8 +238,6 @@ namespace Chess.BoardWatch
         {
             Pen left = new Pen(Brushes.Yellow, 5);
             Pen right = new Pen(Brushes.Green, 5);
-            var c = 0;
-
             foreach (var b in blobs)
             {
                 b.GlyphDivisions = gt.Glypdivisions;

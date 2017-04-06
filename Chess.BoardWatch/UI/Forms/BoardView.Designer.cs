@@ -40,6 +40,7 @@
             this.betterPanel1.Name = "betterPanel1";
             this.betterPanel1.Size = new System.Drawing.Size(746, 512);
             this.betterPanel1.TabIndex = 0;
+            this.betterPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.betterPanel1_Paint);
             // 
             // BoardView
             // 

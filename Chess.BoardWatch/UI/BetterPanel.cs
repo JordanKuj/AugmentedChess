@@ -27,6 +27,7 @@ namespace Chess.BoardWatch
               System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
               System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
               true);
+            this.DoubleBuffered = true;
             g = this.CreateGraphics();
         }
 

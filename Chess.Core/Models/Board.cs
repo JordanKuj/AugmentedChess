@@ -9,6 +9,12 @@ namespace ChessTest
     public class Board
     {
         Team turn;
+        public class Moveset
+        {
+            public Piece piece;
+            public Tuple<int, int> start;
+            public List<Tuple<int, int>> end;
+        }
         public Piece[,] board;
         /*
          * layout of board
@@ -65,7 +71,17 @@ namespace ChessTest
             //set up black team
             turn = Team.white;
         }
+        public Board(Board b)
+        {
+            turn = b.turn;
+            board = b.board;
+        }
 
+        public Piece getAt(int x, int y)
+        {
+            return board[x, y];
+        }
+        
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)
@@ -73,13 +89,13 @@ namespace ChessTest
                 Console.Write("{0}: ", j);
                 for (int i = 0; i < 8; i++)
                 {
-                    if (board[i, j] == null)
+                    if (getAt(i, j) == null)
                     {
                         Console.Write("   ");
                     }
                     else
                     {
-                        switch (board[i, j].getName())
+                        switch (getAt(i, j).getName())
                         {
                             case PieceType.rook:
                                 Console.Write("R  ");
@@ -111,20 +127,32 @@ namespace ChessTest
             Console.WriteLine("   0  1  2  3  4  5  6  7");
             return;
         }
-        public bool inCheck(Team t)
+        public bool inCheck(Team t, bool checkmate)
         {
             int x = 0;
             int y = 0;
-            for (y = 0; y < 8; y++)
+            bool flag = true;
+            for (int ky = 0; ky < 8 && flag; ky++)
             {
-                for (x = 0; x < 8; x++)
+                for (int kx = 0; kx < 8 && flag; kx++)
                 {
-                    if (board[x, y] != null && board[x, y].getName() == PieceType.king && board[x, y].getTeam() == t)
+                    Console.WriteLine("{0},{1}  {2}  {3}", kx, ky, getAt(kx, ky)?.getName(), getAt(kx, ky)?.getTeam());
+                    if (getAt(kx, ky) != null && getAt(kx, ky).getName() == PieceType.king && getAt(kx, ky).getTeam() == t)
                     {
+                        x = kx;
+                        y = ky;
+                        Console.WriteLine("Found");
+                        flag = false;
                         break;
                     }
                 }
 
+            }
+
+            Console.WriteLine("King at {0}{1}", x, y);
+            if (x == 8 || y == 8)
+            {
+                return false;
             }
             if (t == Team.white)
             {
@@ -134,11 +162,18 @@ namespace ChessTest
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        if (board[i, j] != null && board[i, j].getTeam() == Team.black)
+                        if (getAt(i, j) != null && getAt(i, j).getTeam() == Team.black)
                         {
+                            Console.WriteLine("{0}{1} {2}{3}", i, j, x, y);
+                            Console.WriteLine("{0}", validNoMove(i, j, x, y));
                             if (validNoMove(i, j, x, y))
                             {
                                 Console.WriteLine("White King in Check");
+                                if (checkmate)
+                                {
+                                    inCheckmate(Team.white);
+                                }
+
                                 return true;
                             }
                         }
@@ -154,11 +189,15 @@ namespace ChessTest
                 {
                     for (int i = 0; i < 8; i++)
                     {
-                        if (board[i, j] != null && board[i, j].getTeam() == Team.white)
+                        if (getAt(i, j) != null && getAt(i, j).getTeam() == Team.white)
                         {
                             if (validNoMove(i, j, x, y))
                             {
                                 Console.WriteLine("Black King in Check");
+                                if (checkmate)
+                                {
+                                    inCheckmate(Team.black);
+                                }
                                 return true;
                             }
                         }
@@ -168,10 +207,69 @@ namespace ChessTest
             }
             return false;
         }
+        public bool inCheckmate(Team t)
+        {
+            int kingx = 0;
+            int kingy = 0;
+            bool flag = true;
+            Tuple<int, int>[] locations = new Tuple<int, int>[15];
+            int locCount = 0;
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    if (getAt(x, y) != null && getAt(x, y).getTeam() == t)
+                    {
+                        locations[locCount] = new Tuple<int, int>(x, y);
+                        locCount++;
+                    }
+                    if (flag && getAt(x, y) != null && getAt(x, y).getName() == PieceType.king && getAt(x, y).getTeam() == t)
+                    {
+                        flag = false;
+                        kingx = x;
+                        kingy = y;
+                    }
+                }
 
+            }
+            //try {
+            Board copy = new Board();
+
+            for (int l = 0; l < locCount; l++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        copy.board = (Piece[,])board.Clone();
+                        if (copy.validMove(locations[l].Item1, locations[l].Item2, i, j) && copy.inCheck(t, false))
+                        {
+                            Console.WriteLine("NOT IN CHECKMATE");
+                            return false;
+                        }
+
+
+
+                    }
+                }
+
+
+
+            }
+            // }
+            //catch(Exception e)
+            // {
+            //Console.WriteLine(e);
+            //Console.WriteLine("THROW {0} in checkmate", t.ToString());
+            //return true;
+            // }
+
+            Console.WriteLine("{0} in checkmate", t.ToString());
+            return true;
+        }
         public bool teamMove(int a, int b, int x, int y)
         {
-            if (turn != board[a, b].getTeam())
+            if (turn != getAt(a, b).getTeam())
             {
                 Console.WriteLine("Not Your Turn");
                 return false;
@@ -183,35 +281,32 @@ namespace ChessTest
             turn = turn == Team.white ? Team.black : Team.white;
             return true;
         }
-
-        //move piece from [a,b] to [x,y]
         public bool move(int a, int b, int x, int y)
         {
             Console.WriteLine("MOVE: {0}:{1} to {2}:{3}", a, b, x, y);
-            board[x, y] = board[a, b];
+            board[x, y] = getAt(a, b);
             board[a, b] = null;
-            board[x, y].setHasMoved();
+            getAt(x, y).setHasMoved();
             return true;
         }
-
         public bool capture(int x, int y)
         {
-            if (board[x, y] == null)
+            if (getAt(x, y) == null)
             {
-                Console.WriteLine("no piece at end");
+                //Console.WriteLine("no piece at end");
                 return true;
             }
-            if (board[x, y].getTeam() == turn)
+            if (getAt(x, y).getTeam() == turn)
             {
-                Console.WriteLine("Cannot capture own team {0} at {1},{2}", board[x, y].getName(), x, y);
+                // Console.WriteLine("Cannot capture own team {0} at {1},{2}", getAt(x, y).getName(), x, y);
                 return false;
             }
 
-            Console.WriteLine("Capturing {0} at {1},{2}", board[x, y].getName(), x, y);
+            Console.WriteLine("Capturing {0} at {1},{2}", getAt(x, y).getName(), x, y);
             return true;
         }
-
-        public bool validMove(int a, int b, int x, int y)
+        
+      public bool validMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
             {
@@ -223,13 +318,13 @@ namespace ChessTest
                 Console.WriteLine("MOVE MUST HAVE A DISTANCE");
                 return false;
             }
-            if (board[a, b] == null)
+            if (getAt(a, b) == null)
             {
                 Console.WriteLine("NO PIECE AT START LOCATION");
                 return false;
             }
 
-            switch (board[a, b].getName())
+            switch (getAt(a, b).getName())
             {
                 case PieceType.rook:
                     if (a - x == 0 || b - y == 0)
@@ -252,7 +347,7 @@ namespace ChessTest
                     }
 
                 case PieceType.knight:
-                    if (Math.Abs(a - x) + Math.Abs(b - y) == 3 && Math.Abs(a - x) != 3 && Math.Abs(b - y) != 3)
+                    if (Math.Abs(a - x) + Math.Abs(b - y) == 3 && Math.Abs(a - x) != 3 && Math.Abs(b - y) != 3 && board[x, y]?.getTeam() != getAt(a, b)?.getTeam())
                     {
                         return move(a, b, x, y);
                     }
@@ -321,29 +416,27 @@ namespace ChessTest
                     }
 
                 case PieceType.pawn:
-                    if (a - x == 0 && Math.Abs(b - y) == 1)
+                    if (a - x == 0 && ((b - y == -1 && getAt(a, b).getTeam() == Team.white)
+                                                || (b - y == 1 && getAt(a, b).getTeam() == Team.white)))
                     {
-                        move(a, b, x, y);
                         return true;
                     }
-                    else if (!board[a, b].getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
+                    else if (!getAt(a, b).getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
                     {
-                        move(a, b, x, y);
                         return true;
                     }
-                    else if (Math.Abs(a - x) == 1 && ((b - y == 1 && board[a, b].getTeam() == Team.black) || (b - y == -1 && board[a, b].getTeam() == Team.white)))
+                    else if (Math.Abs(a - x) == 1 && ((b - y == 1 && getAt(a, b).getTeam() == Team.black)
+                                                || (b - y == -1 && getAt(a, b).getTeam() == Team.white)))
                     {
                         //diagonal capture
-                        Console.WriteLine("Pawn capture");
-                        move(a, b, x, y);
                         return true;
                     }
                     else
                     {
-                        Console.WriteLine("INVALID PAWN MOVE {0},{1}", x - a, y - b);
+
                         return false;
                     }
-                    break;
+
                 default:
                     Console.WriteLine("NO PIECE AT START LOCATION");
                     break;
@@ -353,7 +446,7 @@ namespace ChessTest
         }
         public bool stepThrough(int a, int b, int x, int y)
         {
-            Console.WriteLine("Step Through [{0},{1}] [{2},{3}]", a, b, x, y);
+            //Console.WriteLine("Step Through [{0},{1}] [{2},{3}]", a, b, x, y);
             //if move is straight up or down
             if (a == x)
             {
@@ -390,13 +483,12 @@ namespace ChessTest
                 }
                 else return loopDownLeft(a, b, x, y);
             }
-            Console.WriteLine("SHOULD NOT PRINT");
+            //Console.WriteLine("SHOULD NOT PRINT");
             return false;
         }
-
         public bool loopUp(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a, b + 1);
+            //Console.WriteLine("Checking {0},{1}", a, b + 1);
 
             if (b + 1 == y)
             {
@@ -425,7 +517,7 @@ namespace ChessTest
         }
         public bool loopRight(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a + 1, b);
+            //Console.WriteLine("Checking {0},{1}", a + 1, b);
 
             if (a + 1 == x)
             {
@@ -439,7 +531,7 @@ namespace ChessTest
         }
         public bool loopLeft(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a - 1, b);
+            //Console.WriteLine("Checking {0},{1}", a - 1, b);
 
             if (a - 1 == x)
             {
@@ -453,7 +545,7 @@ namespace ChessTest
         }
         public bool loopUpLeft(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
+            //Console.WriteLine("Checking {0},{1}", a - 1, b + 1);
 
             if (a - 1 == x)
             {
@@ -467,7 +559,7 @@ namespace ChessTest
         }
         public bool loopUpRight(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a + 1, b + 1);
+            //Console.WriteLine("Checking {0},{1}", a + 1, b + 1);
 
             if (a + 1 == x)
             {
@@ -481,13 +573,13 @@ namespace ChessTest
         }
         public bool loopDownLeft(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
+            //Console.WriteLine("Checking {0},{1}", a - 1, b - 1);
 
             if (a - 1 == x)
             {
                 return capture(x, y);
             }
-            else if (board[a - 1, b + 1] != null)
+            else if (board[a - 1, b - 1] != null)
             {
                 return false;
             }
@@ -495,19 +587,18 @@ namespace ChessTest
         }
         public bool loopDownRight(int a, int b, int x, int y)
         {
-            Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
+            //Console.WriteLine("Checking {0},{1}", a + 1, b - 1);
 
             if (a + 1 == x)
             {
                 return capture(x, y);
             }
-            else if (board[a + 1, b + 1] != null)
+            else if (board[a + 1, b - 1] != null)
             {
                 return false;
             }
             return loopDownRight(a + 1, b - 1, x, y);
         }
-
         public bool castle(int x, int y)
         {
 
@@ -559,7 +650,6 @@ namespace ChessTest
 
             return false;
         }
-
         public bool validNoMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
@@ -572,13 +662,13 @@ namespace ChessTest
 
                 return false;
             }
-            if (board[a, b] == null)
+            if (getAt(a, b) == null)
             {
 
                 return false;
             }
 
-            switch (board[a, b].getName())
+            switch (getAt(a, b).getName())
             {
                 case PieceType.rook:
                     if (a - x == 0 || b - y == 0)
@@ -601,7 +691,7 @@ namespace ChessTest
                     }
 
                 case PieceType.knight:
-                    if (Math.Abs(a - x) + Math.Abs(b - y) == 3 && Math.Abs(a - x) != 3 && Math.Abs(b - y) != 3)
+                    if (Math.Abs(a - x) + Math.Abs(b - y) == 3 && Math.Abs(a - x) != 3 && Math.Abs(b - y) != 3 && getAt(x, y)?.getTeam() != getAt(a, b).getTeam())
                     {
                         return true;
                     }
@@ -651,10 +741,13 @@ namespace ChessTest
                     }
                     break;
                 case PieceType.queen:
+                    //Console.WriteLine("MOVE {0}{1} {2}{3}", a, b, x, y);
                     if ((a - x == 0 || b - y == 0) || (Math.Abs(a - x) == Math.Abs(b - y)))
                     {
+                        //Console.WriteLine("Valid direction");
                         if (stepThrough(a, b, x, y))
                         {
+                            //Console.WriteLine("Valid step");
                             return true;
                         }
                         else
@@ -670,15 +763,17 @@ namespace ChessTest
                     }
 
                 case PieceType.pawn:
-                    if (a - x == 0 && Math.Abs(b - y) == 1)
+                    if (a - x == 0 && ((b - y == -1 && getAt(a, b).getTeam() == Team.white)
+                                                || (b - y == 1 && getAt(a, b).getTeam() == Team.black)))
                     {
                         return true;
                     }
-                    else if (!board[a, b].getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
+                    else if (!getAt(a, b).getHasMoved() && (a - x == 0 && Math.Abs(b - y) == 2))
                     {
                         return true;
                     }
-                    else if (Math.Abs(a - x) == 1 && ((b - y == 1 && board[a, b].getTeam() == Team.black) || (b - y == -1 && board[a, b].getTeam() == Team.white)))
+                    else if (Math.Abs(a - x) == 1 && ((b - y == 1 && getAt(a, b).getTeam() == Team.black && getAt(x, y) != null && getAt(x, y).getTeam() == Team.white)
+                                                || (b - y == -1 && getAt(a, b).getTeam() == Team.white && getAt(x, y) != null && getAt(x, y).getTeam() == Team.black)))
                     {
                         //diagonal capture
                         return true;
@@ -688,7 +783,7 @@ namespace ChessTest
 
                         return false;
                     }
-                    break;
+
                 default:
 
                     break;
@@ -696,7 +791,6 @@ namespace ChessTest
             Console.WriteLine("Should Not Get Here");
             return false;
         }
-
         public bool castleNoMove(int x, int y)
         {
 
@@ -739,7 +833,42 @@ namespace ChessTest
             return false;
         }
 
-        public Piece GetPiece(int x, int y)
+
+        //returns a list of Moveset which contains a Piece, starting coordinates and a list of end coordinates
+        public List<Moveset> listAllMoves(Team t)
+        {
+            List<Moveset> TeamMoveset = new List<Moveset>();
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    if (getAt(i, j) != null && getAt(i, j).getTeam() == t)
+                    {
+                        Moveset ms = new Moveset();
+                        ms.piece = getAt(i, j);
+                        ms.start = new Tuple<int, int>(i, j);
+                        ms.end = new List<Tuple<int, int>>();
+                        for (int x = 0; x < 8; x++)
+                        {
+                            for (int y = 0; y < 8; y++)
+                            {
+                                if (validNoMove(i, j, x, y))
+                                {
+                                    Tuple<int, int> p = new Tuple<int, int>(x, y);
+                                    ms.end.Add(p);
+                                    //Console.WriteLine("{0}: {1},{2} -> {3},{4}", getAt(i, j).getNameString(), i, j, x, y);
+                                }
+                            }
+                        }
+                        TeamMoveset.Add(ms);
+                    }
+                }
+
+            }
+
+            return TeamMoveset;
+        
+  public Piece GetPiece(int x, int y)
         {
             Piece p;
             p = board[x, y];

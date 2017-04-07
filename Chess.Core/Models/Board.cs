@@ -81,6 +81,7 @@ namespace ChessTest
         {
             return board[x, y];
         }
+        
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)
@@ -304,7 +305,8 @@ namespace ChessTest
             Console.WriteLine("Capturing {0} at {1},{2}", getAt(x, y).getName(), x, y);
             return true;
         }
-        public bool validMove(int a, int b, int x, int y)
+        
+      public bool validMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
             {
@@ -483,7 +485,6 @@ namespace ChessTest
             }
             //Console.WriteLine("SHOULD NOT PRINT");
             return false;
-
         }
         public bool loopUp(int a, int b, int x, int y)
         {
@@ -832,6 +833,7 @@ namespace ChessTest
             return false;
         }
 
+
         //returns a list of Moveset which contains a Piece, starting coordinates and a list of end coordinates
         public List<Moveset> listAllMoves(Team t)
         {
@@ -865,7 +867,21 @@ namespace ChessTest
             }
 
             return TeamMoveset;
+        
+  public Piece GetPiece(int x, int y)
+        {
+            Piece p;
+            p = board[x, y];
 
+            // no piece there? return null
+            if (p == null)
+                return null;
+            return p;
+        }
+
+        public void SetPiece(int x, int y, Team team, PieceType type)
+        {
+            board[x, y] = new Piece(team, type);
         }
     }
 }

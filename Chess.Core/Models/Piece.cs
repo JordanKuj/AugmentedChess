@@ -26,6 +26,12 @@ namespace ChessTest
             Name = n;
             HasMoved = false;
         }
+        public Piece(Piece p)
+        {
+            Team = p.Team;
+            Name = p.Name;
+            HasMoved = p.HasMoved;
+        }
 
         public Team getTeam()
         {
@@ -35,6 +41,26 @@ namespace ChessTest
         public PieceType getName()
         {
             return Name;
+        }
+        public string getNameString()
+        {
+            switch (Name)
+            {
+                case PieceType.pawn:
+                    return "Pawn";
+                case PieceType.rook:
+                    return "Rook";
+                case PieceType.knight:
+                    return "Knight";
+                case PieceType.bishop:
+                    return "Bishop";
+                case PieceType.king:
+                    return "King";
+                case PieceType.queen:
+                    return "Queen";
+                default:
+                    return "ERROR";
+            }
         }
         public bool getHasMoved()
         {

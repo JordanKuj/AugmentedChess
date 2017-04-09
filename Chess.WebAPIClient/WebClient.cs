@@ -58,6 +58,15 @@ namespace Chess.WebAPIClient
             return resp.Headers.Location;
         }
 
+        public async Task<GamesDTO> EndGame(GamesDTO g)
+        {
+            HttpResponseMessage resp = await client.PutAsJsonAsync($"api/Games/{g.GameId}", g);
+            resp.EnsureSuccessStatusCode();
+
+            g = await resp.Content.ReadAsAsync<GamesDTO>();
+            return g;
+        }
+
         public async Task<BoardstatesDTO> GetCurrentGameState(int sId)
         {
             string path;

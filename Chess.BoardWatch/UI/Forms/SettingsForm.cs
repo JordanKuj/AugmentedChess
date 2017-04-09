@@ -59,6 +59,7 @@ namespace Chess.BoardWatch
             FilterCtrlGreen.Set(_gt.Green);
             FilterCtrlBlue.Set(_gt.Blue);
             FilterCtrlRed.Set(_gt.Red);
+            FilterCtrlBlack.Set(_gt.Black);
         }
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
@@ -85,6 +86,11 @@ namespace Chess.BoardWatch
         private void FilterCtrlGreen_ValueChanged(ColorFilterSettings obj)
         {
             _gt.Green = FilterCtrlGreen.Get();
+        }
+        private void FilterCtrlBlack_ValueChanged(ColorFilterSettings obj)
+        {
+            _gt.Black = FilterCtrlBlack.Get();
+
         }
 
         private void SettingsForm_Activated(object sender, EventArgs e)

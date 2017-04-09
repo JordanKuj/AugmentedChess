@@ -60,7 +60,7 @@ namespace Chess.WebAPIClient
 
         public async Task<GamesDTO> EndGame(GamesDTO g)
         {
-            HttpResponseMessage resp = await client.PutAsJsonAsync($"api/Games/{g.GameId}", g);
+            HttpResponseMessage resp = await GetNewClient().PutAsJsonAsync($"api/Games/{g.GameId}", g);
             resp.EnsureSuccessStatusCode();
 
             g = await resp.Content.ReadAsAsync<GamesDTO>();

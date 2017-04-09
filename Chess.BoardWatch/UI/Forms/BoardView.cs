@@ -16,10 +16,18 @@ namespace Chess.BoardWatch.UI.Forms
 {
     public partial class BoardView : Form
     {
-        public BoardView()
+        private readonly BoardTools _bt;
+        public BoardView(BoardTools bt)
         {
             InitializeComponent();
+            _bt = bt;
+            _bt.NewBoardState += BtOnNewBoardState;
+        }
 
+        private void BtOnNewBoardState(BoardState boardState, bool isvalid)
+        {
+            BtnAccept.Enabled = isvalid;
+            BtnAccept.BackColor = isvalid ? Color.PaleGreen : Color.PaleVioletRed;
         }
 
         private List<GlyphPiece> pieces;
@@ -38,7 +46,6 @@ namespace Chess.BoardWatch.UI.Forms
 
         private void betterPanel1_Paint(object sender, PaintEventArgs e)
         {
-
             validating = true;
             betterPanel1.SuspendLayout();
             var g = e.Graphics;
@@ -62,7 +69,7 @@ namespace Chess.BoardWatch.UI.Forms
                     var selectedImage = (Image)GetImage(p);
 
                     var rect = new Rectangle(p.X * spaceWidth, p.Y * spaceHeight, spaceWidth, spaceHeight);
-                    Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
+                    //Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
                     g.DrawImage(selectedImage, rect);
                 }
             }

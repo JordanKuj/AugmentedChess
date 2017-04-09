@@ -38,7 +38,7 @@ namespace Chess.BoardWatch.Tools
         public static Board ToBoard(this BoardState state)
         {
             var b = new Board();
-            b.turn = state.turn;
+            b.turn = state.Turn;
             for (int y = 0; y < 8; y++)
                 for (int x = 0; x < 8; x++)
                 {
@@ -52,7 +52,7 @@ namespace Chess.BoardWatch.Tools
         public static BoardState ToBoard(this Board b)
         {
             var state = new BoardState();
-            state.turn = b.turn;
+            state.Turn = b.turn;
             for (int y = 0; y < 8; y++)
                 for (int x = 0; x < 8; x++)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.WebAPI.Migrations;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -14,14 +15,22 @@ namespace Chess.WebAPI.Models
         // automatically whenever you change your model schema, please use data migrations.
         // For more information refer to the documentation:
         // http://msdn.microsoft.com/en-us/data/jj591621.aspx
-    
-        public ChessWebAPIContext() : base("ChessWebAPIContext")
+
+        public ChessWebAPIContext() : base("Server=.\\sqlexpress;Database=ChessDb;Trusted_Connection=True")
         {
             Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            //Database.SetInitializer(new DbApiConfiguration());
+            
+            //Database.Initialize(false);
         }
 
         public System.Data.Entity.DbSet<Chess.WebAPI.Models.Games> Games { get; set; }
 
         public System.Data.Entity.DbSet<Chess.WebAPI.Models.Boardstates> Boardstates { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+        }
+
     }
 }

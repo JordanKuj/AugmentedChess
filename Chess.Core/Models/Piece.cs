@@ -16,9 +16,9 @@ namespace ChessTest
     }
     public class Piece
     {
-        Team Team;
-        PieceType Name;
-        bool HasMoved;
+        public Team Team;
+        public PieceType Name;
+        public bool HasMoved;
 
         public Piece(Team t, PieceType n)
         {
@@ -69,6 +69,25 @@ namespace ChessTest
         public void setHasMoved()
         {
             HasMoved = true;
+        }
+        public void setType(String s)
+        {
+            switch (s)
+            {
+                case "rook":
+                    Name = PieceType.rook;
+                    break;
+                case "knight":
+                    Name = PieceType.knight;
+                    break;
+                case "bishop":
+                    Name = PieceType.bishop;
+                    break;
+                default:
+                    Name = PieceType.queen;
+                    break;
+
+            }
         }
         public Piece copy()
         {

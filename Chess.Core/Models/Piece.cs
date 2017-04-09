@@ -70,6 +70,25 @@ namespace ChessTest
         {
             HasMoved = true;
         }
+        public void setType(String s)
+        {
+            switch (s)
+            {
+                case "rook":
+                    Name = PieceType.rook;
+                    break;
+                case "knight":
+                    Name = PieceType.knight;
+                    break;
+                case "bishop":
+                    Name = PieceType.bishop;
+                    break;
+                default:
+                    Name = PieceType.queen;
+                    break;
+
+            }
+        }
         public Piece copy()
         {
             return new Piece(Team, Name);

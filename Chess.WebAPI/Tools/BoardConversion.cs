@@ -35,14 +35,16 @@ namespace Chess.WebAPI.Tools
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    p = b.GetPiece(i,j);
+                    //p = b.GetPiece(i,j);
+                    p = b.GetPiece(j,i);
+                    Console.WriteLine("j: " + j.ToString() + ", i: " + i.ToString());
 
                     // if there's no piece there
                     if (p == null)
                     {
-                        s += "x";
                         break;
                     }
+                    Console.WriteLine(p.getName());
                     name = p.getName();
                     team = p.getTeam();
 
@@ -55,52 +57,53 @@ namespace Chess.WebAPI.Tools
                             else // black
                                 s += "g";
                             // where is the piece?
-                            s += i;  // x
-                            s += j;  // y
+                            s += j;  // x
+                            s += i;  // y
                             break;
                         case PieceType.rook:
                             if (team == Team.white)
                                 s += "b";
                             else
                                 s += "h";
-                            s += i;
-                            s += j;
+                            //.WriteLine(i); // TODO
+                            //Console.WriteLine(j);  // TODO
+                            s += j;  // x
+                            s += i;  // y
                             break;
                         case PieceType.knight:
                             if (team == Team.white)
                                 s += "c";
                             else
                                 s += "i";
-                            s += i;
-                            s += j;
+                            s += j;  // x
+                            s += i;  // y
                             break;
                         case PieceType.bishop:
                             if (team == Team.white)
                                 s += "d";
                             else
                                 s += "j";
-                            s += i;
-                            s += j;
+                            s += j;  // x
+                            s += i;  // y
                             break;
                         case PieceType.king:
                             if (team == Team.white)
                                 s += "e";
                             else
                                 s += "k";
-                            s += i;
-                            s += j;
+                            s += j;  // x
+                            s += i;  // y
                             break;
                         case PieceType.queen:
                             if (team == Team.white)
                                 s += "f";
                             else
                                 s += "l";
-                            s += i;
-                            s += j;
+                            s += j;  // x
+                            s += i;  // y
                             break;
 
                         default:  // shouldn't ever reach here, but just in case
-                            s += "x";
                             break;
                     }
                 }
@@ -114,11 +117,24 @@ namespace Chess.WebAPI.Tools
             char temp = 'x';
             int x = 0, y = 0;
 
-            for (int i = 0; i < str.Length; i++)
+            //Console.WriteLine(str[0]);  // TODO
+            //Console.WriteLine(str[1]);  // TODO
+            //Console.WriteLine(str[2]);  // TODO
+
+            for (int i = 0; i < str.Length; i+=2)
             {
                 temp = str[i];  // piece
-                x = str[i+1];  // x coord.
-                y = str[i+2];  // y coord.
+                Console.WriteLine(temp);  // TODO
+                //x = str[i+1];  // x coord.
+                //x = str.Substring(i+1,1);
+
+                //y = str[i+2];  // y coord.
+                //x = str[1];
+                //y = str[2];
+                //Console.WriteLine(str[i+1]);  // TODO
+                //Console.WriteLine(str[i+2]);  // TODO
+                //Console.WriteLine(x);  // TODO
+                //Console.WriteLine(y);  // TODO
 
                 switch (temp)
                 {
@@ -126,43 +142,45 @@ namespace Chess.WebAPI.Tools
                         b.SetPiece(x, y, Team.white, PieceType.pawn);
                         break;
                     case 'b':
-                        b.SetPiece(x, y, Team.white, PieceType.rook);
+                        Console.WriteLine(str[i + 1]);  // TODO
+                        Console.WriteLine(str[i + 2]);  // TODO
+                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.rook);
                         break;
                     case 'c':
-                        b.SetPiece(x, y, Team.white, PieceType.knight);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.knight);
                         break;
                     case 'd':
-                        b.SetPiece(x, y, Team.white, PieceType.bishop);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.bishop);
                         break;
                     case 'e':
-                        b.SetPiece(x, y, Team.white, PieceType.king);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.king);
                         break;
                     case 'f':
-                        b.SetPiece(x, y, Team.white, PieceType.queen);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.queen);
                         break;
                     case 'g':
-                        b.SetPiece(x, y, Team.black, PieceType.pawn);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.pawn);
                         break;
                     case 'h':
-                        b.SetPiece(x, y, Team.black, PieceType.rook);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.rook);
                         break;
                     case 'i':
-                        b.SetPiece(x, y, Team.black, PieceType.knight);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.knight);
                         break;
                     case 'j':
-                        b.SetPiece(x, y, Team.black, PieceType.bishop);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.bishop);
                         break;
                     case 'k':
-                        b.SetPiece(x, y, Team.black, PieceType.king);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.king);
                         break;
                     case 'l':
-                        b.SetPiece(x, y, Team.black, PieceType.queen);
+                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.queen);
                         break;
                     case 'x':
                         // do nothing
                         break;
 
-                    default:  // i = 0-8
+                    default:
                         // do nothing
                         break;
                 }

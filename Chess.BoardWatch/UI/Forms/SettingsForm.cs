@@ -31,10 +31,15 @@ namespace Chess.BoardWatch
         {
             _gt.MinSize = MinGlyphSize;
         }
+        private void NudMaxSize_ValueChanged(object sender, EventArgs e)
+        {
+            _gt.MaxSize = MaxGlyphSize;
 
+        }
         int Glyphdivs => (int)NudGlyphDivs.Value;
         int ThreshholdVal => (int)nudThresh.Value;
         int MinGlyphSize => (int)nudMinSize.Value;
+        int MaxGlyphSize => (int)NudMaxSize.Value;
         float BlobSizeRatio => trackBar1.Value / 100f;
         float MinFullness => TrackFullness.Value / 100f;
         //int GlyphDivisions => 
@@ -47,6 +52,7 @@ namespace Chess.BoardWatch
         {
             NudGlyphDivs.Value = _gt.Glypdivisions;
             nudMinSize.Value = _gt.MinSize;
+            NudMaxSize.Value = _gt.MaxSize;
             nudThresh.Value = _gt.ThreshFilter;
             trackBar1.Value = (int)(_gt.BlobSizeRatio * 100);
             TrackFullness.Value = (int)(_gt.Minfullness * 100);
@@ -97,6 +103,7 @@ namespace Chess.BoardWatch
                 GreenFilter = FilterCtrlGreen.Get(),
                 Glypdivisions = Glyphdivs,
                 MinBlobSize = this.MinGlyphSize,
+                MaxBlobSize = this.MaxGlyphSize,
                 MinFullness = this.MinFullness,
                 MinBlobShapeRatio = this.BlobSizeRatio,
                 ThreshholdFilterValue = this.ThreshholdVal
@@ -113,5 +120,7 @@ namespace Chess.BoardWatch
         {
             _gt.Glypdivisions = Glyphdivs;
         }
+
+
     }
 }

@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chess.BoardWatch.Models;
 using Chess.BoardWatch.Properties;
+using ChessTest;
 
 namespace Chess.BoardWatch.UI.Forms
 {
@@ -21,7 +22,7 @@ namespace Chess.BoardWatch.UI.Forms
 
         }
 
-        private List<Piece> pieces;
+        private List<GlyphPiece> pieces;
         private Bitmap _background;
         private bool validating;
         public void DrawBoard(Bitmap bacground, BoardState board)
@@ -29,7 +30,7 @@ namespace Chess.BoardWatch.UI.Forms
             if (!validating && board != null)
             {
                 _background = (Bitmap)bacground.Clone();
-                pieces = new List<Piece>(board.Pieces);
+                pieces = new List<GlyphPiece>(board.Pieces);
                 betterPanel1.Invalidate();
             }
 
@@ -76,11 +77,11 @@ namespace Chess.BoardWatch.UI.Forms
             validating = false;
         }
 
-        private Bitmap GetImage(Piece p)
+        private Bitmap GetImage(GlyphPiece p)
         {
             switch (p.Type)
             {
-                case PieceType.Pawn:
+                case PieceType.pawn:
                     return p.Team == Team.black ? Resources.black_pawn : Resources.white_pawn;
                 case PieceType.bishop:
                     return p.Team == Team.black ? Resources.black_bishop : Resources.white_bishop;

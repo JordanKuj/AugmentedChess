@@ -5,17 +5,18 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using ChessTest;
 
 namespace Chess.BoardWatch.Models
 {
-    public enum PieceType
-    {
-        Pawn = 1, knight = 2, rook = 3, bishop = 4, queen = 5, king = 6, Debug = 7, none = 0
-    }
-    public enum Team
-    {
-        black, white
-    }
+    //public enum PieceType
+    //{
+    //    Pawn = 1, knight = 2, rook = 3, bishop = 4, queen = 5, king = 6, Debug = 7, none = 0
+    //}
+    //public enum Team
+    //{
+    //    black, white
+    //}
     public enum RotateType { cw, ccw }
 
     public static class PieceConstants
@@ -65,7 +66,7 @@ namespace Chess.BoardWatch.Models
                                                    { 1, 1, 1, 1, 1} };  //king
 
         public static Dictionary<PieceType, int[,]> PieceLookup = new Dictionary<PieceType, int[,]> {
-            { PieceType.Pawn, pwn },
+            { PieceType.pawn, pwn },
             { PieceType.knight, kni },
             { PieceType.rook, rok },
             { PieceType.bishop, bsh },
@@ -79,7 +80,7 @@ namespace Chess.BoardWatch.Models
             foreach (var t in PieceLookup)
                 if (Compare(t.Value, blobout))
                     return t.Key;
-            return PieceType.none;
+            return PieceType.error;
         }
 
 

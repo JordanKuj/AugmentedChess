@@ -17,6 +17,7 @@ namespace Chess.BoardWatch.Models
             MinFullness = .03f;
             MinBlobShapeRatio = .05f;
             MinBlobSize = 32;
+            MaxBlobSize = 100;
             ThreshholdFilterValue = 40;
             Glypdivisions = 5;
         }
@@ -31,6 +32,7 @@ namespace Chess.BoardWatch.Models
         public float MinFullness { get; set; }
         public float MinBlobShapeRatio { get; set; }
         public int MinBlobSize { get; set; }
+        public int MaxBlobSize { get; set; }
         public int ThreshholdFilterValue { get; set; }
         public int Glypdivisions { get; set; }
 

@@ -8,7 +8,7 @@ namespace ChessTest
 {
     public enum PieceType
     {
-        pawn, rook, knight, bishop, king, queen, error = 0
+        pawn = 1, rook = 2, knight = 3, bishop = 4, king = 5, queen = 6, Debug = 7, error = 0
     }
     public enum Team
     {
@@ -16,9 +16,9 @@ namespace ChessTest
     }
     public class Piece
     {
-        Team Team;
-        PieceType Name;
-        bool HasMoved;
+        public Team Team;
+        public PieceType Name;
+        public bool HasMoved;
 
         public Piece(Team t, PieceType n)
         {

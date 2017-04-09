@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChessTest;
 
 namespace Chess.BoardWatch
 {
@@ -21,26 +22,30 @@ namespace Chess.BoardWatch
         //        BoardArea = value;
         //    }
         //}
+        public List<BoardState> States = new List<BoardState>();
+
         private Rectangle BoardArea { get; set; }
         public const int BoardDivisions = 8;
-        public List<Piece> pieces { get; set; }
+        public List<GlyphPiece> pieces { get; set; }
 
         public BoardTools()
         {
-            pieces = new List<Piece>();
+            pieces = new List<GlyphPiece>();
         }
 
         public BoardState SetPieces(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
         {
+
             pieces.Clear();
             BoardArea = boardArea;
             SetData(pieces, black, BoardArea, Team.black);
             SetData(pieces, white, BoardArea, Team.white);
-
-            return new BoardState(pieces);
+            var state = new BoardState(pieces);
+            States.Add(state);
+            return state;
         }
 
-        private static void SetData(List<Piece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
+        private static void SetData(List<GlyphPiece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
         {
             foreach (var b in bd)
             {
@@ -55,15 +60,15 @@ namespace Chess.BoardWatch
                         Debug.Print("error");
                     }
                     var ptype = PieceConstants.FindPieceType(b.glyph);
-                    pieces.Add(new Piece(ptype, t, x, y));
+                    pieces.Add(new GlyphPiece(ptype, t, x, y));
                 }
             }
         }
     }
 
-    public class Piece
+    public class GlyphPiece
     {
-        public Piece(PieceType type, Team team, int x, int y)
+        public GlyphPiece(PieceType type, Team team, int x, int y)
         {
             Type = type;
             Team = team;
@@ -80,15 +85,15 @@ namespace Chess.BoardWatch
     public class BoardState
     {
 
-        public List<Piece> Pieces { get; set; }
+        public List<GlyphPiece> Pieces { get; set; }
         public Team turn;
 
         public BoardState()
         {
-            Pieces = new List<Piece>();
+            Pieces = new List<GlyphPiece>();
         }
 
-        public BoardState(List<Piece> pieces)
+        public BoardState(List<GlyphPiece> pieces)
         {
             Pieces = pieces;
         }

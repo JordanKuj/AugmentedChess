@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using ChessTest;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -31,6 +32,35 @@ namespace Chess.BoardWatch.Tools
             var x = (r.Width / 2f) + r.Location.X;
             var y = (r.Height / 2f) + r.Location.Y;
             return new Point((int)x, (int)y);
+        }
+
+
+        public static Board ToBoard(this BoardState state)
+        {
+            var b = new Board();
+            b.turn = state.turn;
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+                {
+                    b.board[x, y] = null;
+                    var piece = state.Pieces.SingleOrDefault(z => z.X == x && z.Y == y);
+                    if (piece != null)
+                        b.board[x, y] = new Piece(piece.Team, piece.Type);
+                }
+            return b;
+        }
+        public static BoardState ToBoard(this Board b)
+        {
+            var state = new BoardState();
+            state.turn = b.turn;
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+                {
+                    Piece piece = b.board[x, y];
+                    if (piece != null)
+                        state.Pieces.Add(new GlyphPiece(piece.Name, piece.Team, x, y));
+                }
+            return state;
         }
 
 

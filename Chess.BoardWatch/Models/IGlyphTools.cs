@@ -8,6 +8,7 @@ namespace Chess.BoardWatch.Models
 {
     public interface IGlyphTools
     {
+        int MaxSize { get; set; }
         int MinSize { get; set; }
         int ThreshFilter { get; set; }
         float BlobSizeRatio { get; set; }

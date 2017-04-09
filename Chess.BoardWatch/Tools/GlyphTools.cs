@@ -20,13 +20,26 @@ namespace Chess.BoardWatch
     {
         #region Properties
         private int _minsize;
+        private int _maxSize;
         private float _blobSizeRatio;
         private ColorFilterSettings _red;
         private ColorFilterSettings _blue;
         private ColorFilterSettings _green;
         private MasterCfg _cfg;
 
-
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            set
+            {
+                _maxSize = value;
+                foreach (var b in blobcounters)
+                {
+                    b.MaxHeight = value;
+                    b.MaxWidth = value;
+                }
+            }
+        }
         public int MinSize
         {
             get { return _minsize; }
@@ -136,6 +149,7 @@ namespace Chess.BoardWatch
                 Minfullness = _cfg.MinFullness;
                 BlobSizeRatio = _cfg.MinBlobShapeRatio;
                 MinSize = _cfg.MinBlobSize;
+                MaxSize = _cfg.MaxBlobSize;
                 thresfilter.ThresholdValue = _cfg.ThreshholdFilterValue;
                 Glypdivisions = _cfg.Glypdivisions;
             }

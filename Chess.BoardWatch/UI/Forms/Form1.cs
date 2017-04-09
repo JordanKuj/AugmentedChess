@@ -66,7 +66,7 @@ namespace Chess.BoardWatch
 
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[0].MonikerString);
+            stream = new VideoCaptureDevice(devices[1].MonikerString);
             var c = new VideoCapabilities[stream.VideoCapabilities.Length];
             var capabilities = new List<VideoCapabilities>(c);
             stream.VideoCapabilities.CopyTo(c, 0);
@@ -91,11 +91,13 @@ namespace Chess.BoardWatch
                 ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
         }
 
+
         private async Task ProcessImage(Bitmap origional)
         {
             await gt.ProcessImage(origional);
-
-            DialogBoardView.DrawBoard(origional, bt.SetPieces(gt.Rblobs, gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height)));
+            var state = bt.SetPieces(gt.GrayBlobs, gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height));
+    
+            DialogBoardView.DrawBoard(origional, state);
             EdgePanel.DrawImage(gt.EdgeGray);
             PanelBw.DrawImage(gt.GrayImage);
             PanelFinal.DrawImage(gt.threshGray);
@@ -131,16 +133,10 @@ namespace Chess.BoardWatch
 
         private static void DrawEdges(List<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
         {
-            Pen left = new Pen(Brushes.Yellow, 5);
-            Pen right = new Pen(Brushes.Green, 5);
             var c = 0;
-
+            p.DrawBlobs(blobs);
             foreach (var b in blobs)
             {
-                p.DrawRectangle(Pens.Red, b.Rect);
-                p.DrawLines(left, b.leftedge);
-                p.DrawLines(right, b.rightedge);
-
                 if (c < panels.Count)
                 {
                     panels[c].DrawMe(b.glyph, b.GlyphDivisions);

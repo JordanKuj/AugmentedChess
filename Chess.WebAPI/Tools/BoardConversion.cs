@@ -10,7 +10,6 @@ namespace Chess.WebAPI.Tools
     public class BoardConversion
     {
         /*********************
-         * x = blank space/no piece
          * a = pawn white
          * b = rook white
          * c = knight white
@@ -37,14 +36,14 @@ namespace Chess.WebAPI.Tools
                 {
                     //p = b.GetPiece(i,j);
                     p = b.GetPiece(j,i);
-                    Console.WriteLine("j: " + j.ToString() + ", i: " + i.ToString());
+                    // Console.WriteLine("j: " + j.ToString() + ", i: " + i.ToString());  // TODO
 
                     // if there's no piece there
                     if (p == null)
                     {
                         break;
                     }
-                    Console.WriteLine(p.getName());
+                    //Console.WriteLine(p.getName());  // TODO
                     name = p.getName();
                     team = p.getTeam();
 
@@ -65,8 +64,6 @@ namespace Chess.WebAPI.Tools
                                 s += "b";
                             else
                                 s += "h";
-                            //.WriteLine(i); // TODO
-                            //Console.WriteLine(j);  // TODO
                             s += j;  // x
                             s += i;  // y
                             break;
@@ -117,67 +114,72 @@ namespace Chess.WebAPI.Tools
             char temp = 'x';
             int x = 0, y = 0;
 
-            //Console.WriteLine(str[0]);  // TODO
-            //Console.WriteLine(str[1]);  // TODO
-            //Console.WriteLine(str[2]);  // TODO
-
-            for (int i = 0; i < str.Length; i+=2)
+            for (int i = 0; i < str.Length; i++)
             {
                 temp = str[i];  // piece
-                Console.WriteLine(temp);  // TODO
-                //x = str[i+1];  // x coord.
-                //x = str.Substring(i+1,1);
-
-                //y = str[i+2];  // y coord.
-                //x = str[1];
-                //y = str[2];
-                //Console.WriteLine(str[i+1]);  // TODO
-                //Console.WriteLine(str[i+2]);  // TODO
-                //Console.WriteLine(x);  // TODO
-                //Console.WriteLine(y);  // TODO
 
                 switch (temp)
                 {
                     case 'a':
+                        // x, y must be in here, otherwise out of bounds error
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
                         b.SetPiece(x, y, Team.white, PieceType.pawn);
                         break;
                     case 'b':
-                        Console.WriteLine(str[i + 1]);  // TODO
-                        Console.WriteLine(str[i + 2]);  // TODO
-                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.rook);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.white, PieceType.rook);
                         break;
                     case 'c':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.knight);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.white, PieceType.knight);
                         break;
                     case 'd':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.bishop);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.white, PieceType.bishop);
                         break;
                     case 'e':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.king);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.white, PieceType.king);
                         break;
                     case 'f':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.white, PieceType.queen);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.white, PieceType.queen);
                         break;
                     case 'g':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.pawn);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.pawn);
                         break;
                     case 'h':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.rook);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.rook);
                         break;
                     case 'i':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.knight);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.knight);
                         break;
                     case 'j':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.bishop);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.bishop);
                         break;
                     case 'k':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.king);
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.king);
                         break;
                     case 'l':
-                        b.SetPiece(str[i + 1], str[i + 2], Team.black, PieceType.queen);
-                        break;
-                    case 'x':
-                        // do nothing
+                        x = (int)char.GetNumericValue(str[i + 1]);
+                        y = (int)char.GetNumericValue(str[i + 2]);
+                        b.SetPiece(x, y, Team.black, PieceType.queen);
                         break;
 
                     default:

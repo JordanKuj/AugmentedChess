@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
 using ChessTest;
+using static ChessTest.Board;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -167,6 +168,17 @@ namespace Chess.WebAPI.Controllers
                 return true;
 
             return false;
+        }
+
+        // predict
+        public List<Moveset> predictMoves(Team t)
+        {
+            List<Moveset> moves;
+            Boardstates lastMove = db.Boardstates.Last();
+            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+            moves = last.listAllMoves(t);
+
+            return moves;
         }
     }
 

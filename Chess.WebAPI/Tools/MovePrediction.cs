@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static ChessTest.Board;
 
 namespace Chess.WebAPI.Tools
 {
@@ -16,6 +17,16 @@ namespace Chess.WebAPI.Tools
         {
             public int x;
             public int y;
+
+            public void setX(int xMove)
+            {
+                this.x = xMove;
+            }
+
+            public void setY(int yMove)
+            {
+                this.y = yMove;
+            }
         }
 
         public class Move
@@ -35,15 +46,13 @@ namespace Chess.WebAPI.Tools
             }
         }
 
-        public static Move predict(Piece p)
+        // sets all moves possible for team t
+        public static List<Moveset> predictAll(Team t)
         {
-            Move m = new Move(p);
-            List<Vector> possible = null;  // assuming no moves possible at start
-
-            // logic tbd here
-            m.setMoves(possible);
-
-            return m;
+            ChessTest.Board b = new ChessTest.Board();
+            List<Moveset> moves = new List<Moveset>();
+            moves = b.listAllMoves(t);
+            return moves;
         }
     }
 }

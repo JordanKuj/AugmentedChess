@@ -898,6 +898,9 @@ namespace ChessTest
 
         public void SetPiece(int x, int y, Team team, PieceType type)
         {
+            //Console.WriteLine("x: " + x);  // TODO
+            //Console.WriteLine("y: " + y);  // TODO
+            //Console.ReadKey();  // TODO
             board[x, y] = new Piece(team, type);
         }
     }

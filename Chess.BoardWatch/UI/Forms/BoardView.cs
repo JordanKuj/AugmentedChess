@@ -26,6 +26,11 @@ namespace Chess.BoardWatch.UI.Forms
 
         private void BtOnNewBoardState(BoardState boardState, bool isvalid)
         {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
+                return;
+            }
             BtnAccept.Enabled = isvalid;
             BtnAccept.BackColor = isvalid ? Color.PaleGreen : Color.PaleVioletRed;
         }

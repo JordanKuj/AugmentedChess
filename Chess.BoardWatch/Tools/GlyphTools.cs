@@ -219,9 +219,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_BlackImage), out _EdgeBlack, out _threshBlack);
                 var tmpGrayBlobs = GetBlobs(threshBlack, blobCounterGray, BlobSizeRatio, Minfullness);
                 BlackBlobs.Clear();
-                BlackBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck));
-                SetBlobData(BlackBlobs, this);
-
+                BlackBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck, this));
             });
             var tRed = Task.Factory.StartNew(() =>
             {
@@ -229,9 +227,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_RImage), out _edgeR, out _threshR);
                 var tmpRblobs = GetBlobs(threshR, blobCounterRed, BlobSizeRatio, Minfullness);
                 Rblobs.Clear();
-                Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck));
-                SetBlobData(Rblobs, this);
-
+                Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck, this));
             });
             var tGrn = Task.Factory.StartNew(() =>
             {
@@ -239,9 +235,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
                 var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
                 Gblobs.Clear();
-                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck));
-                SetBlobData(Gblobs, this);
-
+                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck, this));
             });
             var tBlu = Task.Factory.StartNew(() =>
             {
@@ -249,8 +243,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_BImage), out _edgeB, out _threshB);
                 var tmpBblobs = GetBlobs(threshB, blobCounterBlue, BlobSizeRatio, Minfullness);
                 Bblobs.Clear();
-                Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck));
-                SetBlobData(Bblobs, this);
+                Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck, this));
             });
 
 
@@ -269,19 +262,6 @@ namespace Chess.BoardWatch
             //Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
         }
         const int QuadSize = 50;
-
-
-        private static void SetBlobData(List<BlobData> blobs, IGlyphTools gt)
-        {
-            foreach (var b in blobs)
-            {
-                b.GlyphDivisions = gt.Glypdivisions;
-                b.FlatImage = gt.QuadralateralizeImage(gt.GrayImage, b.corners, QuadSize);
-                b.glyph = GetGlyphData(b.FlatImage, gt.Glypdivisions);
-            }
-        }
-
-
         public static Blob[] GetBlobs(UnmanagedImage img, BlobCounter bc, float BlobSizeRatio, float Minfullness)
         {
             bc.ProcessImage(img);
@@ -297,7 +277,8 @@ namespace Chess.BoardWatch
 
             return filteredBlobs.ToArray();
         }
-        private static IEnumerable<BlobData> GetBlobData(Blob[] blobs, BlobCounter bc, SimpleShapeChecker sc)
+
+        private static IEnumerable<BlobData> GetBlobData(Blob[] blobs, BlobCounter bc, SimpleShapeChecker sc, IGlyphTools gt)
         {
             var bdata = new List<BlobData>();
             foreach (var b in blobs)
@@ -309,15 +290,22 @@ namespace Chess.BoardWatch
                     List<System.Drawing.Point> intleftedge;
                     List<System.Drawing.Point> intrightedge;
                     GetEdges(b, out intleftedge, out intrightedge, bc);
-                    bdata.Add(new BlobData(b, corners, intleftedge, intrightedge));
+                    var bd = new BlobData(b, corners, intleftedge, intrightedge);
+                    bd.GlyphDivisions = gt.Glypdivisions;
+                    bd.FlatImage = gt.QuadralateralizeImage(gt.GrayImage, bd.corners, QuadSize);
+                    bd.glyph = GetGlyphData(bd.FlatImage, gt.Glypdivisions);
+
+                    if (bd.GlyphHasBorder())
+                        bdata.Add(bd);
                 }
             }
+
             return bdata;
         }
         private static void SetColorFilter(ColorFilterSettings c, EuclideanColorFiltering filter)
         {
             filter.FillOutside = true;
-            filter.FillColor = new RGB(0, 0, 0);
+            filter.FillColor = new RGB(255, 255, 255);
             filter.CenterColor = c.GetRgb;
             filter.Radius = c.Radius;
         }

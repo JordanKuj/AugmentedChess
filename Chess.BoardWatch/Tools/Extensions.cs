@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using ChessTest;
+using Chess.BoardWatch.Models;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -61,6 +62,32 @@ namespace Chess.BoardWatch.Tools
                         state.Pieces.Add(new GlyphPiece(piece.Name, piece.Team, x, y));
                 }
             return state;
+        }
+        public static bool GlyphHasBorder(this BlobData bd)
+        {
+            var pass = true;
+            var max = bd.GlyphDivisions - 1;
+            var min = 0;
+            for (var y = 0; y < bd.GlyphDivisions; y++)
+            {
+                if (y == min || y == max)
+                    for (var x = 0; x < bd.GlyphDivisions; x++)
+                    {
+                        //check ceiling and floor
+                        pass &= bd.glyph[y, x] == 1;
+                        if (!pass)
+                            break;
+                    }
+                else
+                {
+                    //check walls
+                    pass &= bd.glyph[y, min] == 1;
+                    pass &= bd.glyph[y, max] == 1;
+                    if (!pass)
+                        break;
+                }
+            }
+            return pass;
         }
 
 

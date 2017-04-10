@@ -36,18 +36,17 @@ namespace Chess.BoardWatch
                 laststate = new Board();
                 laststate.fillNewBoard();
             }
-            var sw = Stopwatch.StartNew();
             if (!State.getDiff(laststate, current))
             {
-                Debug.Print("getdiff = " + sw.ElapsedMilliseconds.ToString());
-                sw.Restart();
-                if (State.validState(laststate, current))
-                {
-                    Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
-                    return laststate;
-                }
-                Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+                return null;
             }
+            var sw = Stopwatch.StartNew();
+            if (State.validState(laststate, current))
+            {
+                Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+                return laststate;
+            }
+            Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
             return null;
         }
         public bool AcceptCurrentState()
@@ -75,8 +74,8 @@ namespace Chess.BoardWatch
                 turn = Team.black;
 
             currentState = new BoardState(pieces, turn);
-            var isvalid = IsCurrentStateValid() != null;
-            NewBoardState?.Invoke(currentState, isvalid);
+            //var isvalid = IsCurrentStateValid() != null;
+            NewBoardState?.Invoke(currentState, false);
             return currentState;
         }
 
@@ -93,6 +92,10 @@ namespace Chess.BoardWatch
                     if (x > 8 || y > 8 || x < 0 || y < 0)
                     {
                         Debug.Print("error");
+                    }
+                    if (pieces.Any(z => z.X == x && z.Y == y))
+                    {
+                        Debug.Print("error2");
                     }
                     var ptype = PieceConstants.FindPieceType(b.glyph);
                     pieces.Add(new GlyphPiece(ptype, t, x, y));

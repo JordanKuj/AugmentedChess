@@ -44,12 +44,12 @@
             this.NudMaxSize = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.FilterCtrlRed = new Chess.BoardWatch.ColorUserControl();
-            this.FilterCtrlBlue = new Chess.BoardWatch.ColorUserControl();
-            this.FilterCtrlGreen = new Chess.BoardWatch.ColorUserControl();
-            this.FilterCtrlBlack = new Chess.BoardWatch.ColorUserControl();
             this.BtnSave = new System.Windows.Forms.Button();
             this.BtnLoad = new System.Windows.Forms.Button();
+            this.FilterCtrlRed = new Chess.BoardWatch.ColorUserControl();
+            this.FilterCtrlBlue = new Chess.BoardWatch.ColorUserControl();
+            this.FilterCtrlBlack = new Chess.BoardWatch.ColorUserControl();
+            this.FilterCtrlGreen = new Chess.BoardWatch.ColorUserControl();
             ((System.ComponentModel.ISupportInitialize)(this.nudThresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -271,6 +271,26 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(653, 248);
             this.tableLayoutPanel2.TabIndex = 12;
             // 
+            // BtnSave
+            // 
+            this.BtnSave.Location = new System.Drawing.Point(90, 649);
+            this.BtnSave.Name = "BtnSave";
+            this.BtnSave.Size = new System.Drawing.Size(184, 32);
+            this.BtnSave.TabIndex = 13;
+            this.BtnSave.Text = "Save";
+            this.BtnSave.UseVisualStyleBackColor = true;
+            this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
+            // 
+            // BtnLoad
+            // 
+            this.BtnLoad.Location = new System.Drawing.Point(280, 649);
+            this.BtnLoad.Name = "BtnLoad";
+            this.BtnLoad.Size = new System.Drawing.Size(184, 32);
+            this.BtnLoad.TabIndex = 14;
+            this.BtnLoad.Text = "Load";
+            this.BtnLoad.UseVisualStyleBackColor = true;
+            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
+            // 
             // FilterCtrlRed
             // 
             this.FilterCtrlRed.AutoSize = true;
@@ -295,18 +315,6 @@
             this.FilterCtrlBlue.Title = "Blue Filter";
             this.FilterCtrlBlue.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlBlue_ValueChanged);
             // 
-            // FilterCtrlGreen
-            // 
-            this.FilterCtrlGreen.AutoSize = true;
-            this.FilterCtrlGreen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FilterCtrlGreen.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FilterCtrlGreen.Location = new System.Drawing.Point(329, 127);
-            this.FilterCtrlGreen.Name = "FilterCtrlGreen";
-            this.FilterCtrlGreen.Size = new System.Drawing.Size(321, 118);
-            this.FilterCtrlGreen.TabIndex = 12;
-            this.FilterCtrlGreen.Title = "Green Filter";
-            this.FilterCtrlGreen.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlGreen_ValueChanged);
-            // 
             // FilterCtrlBlack
             // 
             this.FilterCtrlBlack.AutoSize = true;
@@ -319,25 +327,17 @@
             this.FilterCtrlBlack.Title = "Black Filter";
             this.FilterCtrlBlack.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlBlack_ValueChanged);
             // 
-            // BtnSave
+            // FilterCtrlGreen
             // 
-            this.BtnSave.Location = new System.Drawing.Point(90, 649);
-            this.BtnSave.Name = "BtnSave";
-            this.BtnSave.Size = new System.Drawing.Size(184, 32);
-            this.BtnSave.TabIndex = 13;
-            this.BtnSave.Text = "Save";
-            this.BtnSave.UseVisualStyleBackColor = true;
-            this.BtnSave.Click += new System.EventHandler(this.BtnSave_Click);
-            // 
-            // BtnLoad
-            // 
-            this.BtnLoad.Location = new System.Drawing.Point(280, 649);
-            this.BtnLoad.Name = "BtnLoad";
-            this.BtnLoad.Size = new System.Drawing.Size(184, 32);
-            this.BtnLoad.TabIndex = 14;
-            this.BtnLoad.Text = "Load";
-            this.BtnLoad.UseVisualStyleBackColor = true;
-            this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
+            this.FilterCtrlGreen.AutoSize = true;
+            this.FilterCtrlGreen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.FilterCtrlGreen.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FilterCtrlGreen.Location = new System.Drawing.Point(329, 127);
+            this.FilterCtrlGreen.Name = "FilterCtrlGreen";
+            this.FilterCtrlGreen.Size = new System.Drawing.Size(321, 118);
+            this.FilterCtrlGreen.TabIndex = 12;
+            this.FilterCtrlGreen.Title = "Green Filter";
+            this.FilterCtrlGreen.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlGreen_ValueChanged);
             // 
             // SettingsForm
             // 

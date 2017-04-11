@@ -74,8 +74,16 @@ namespace Chess.BoardWatch
                 turn = Team.black;
 
             currentState = new BoardState(pieces, turn);
-            //var isvalid = IsCurrentStateValid() != null;
-            NewBoardState?.Invoke(currentState, false);
+            if (currentState.Pieces.Any(x => currentState.Pieces.Any(y => y != x && y.X == x.X && y.Y == x.Y)))
+            {
+                //there are 2 pieces in the same spot
+                NewBoardState?.Invoke(currentState, false);
+            }
+            else
+            {
+                var isvalid = IsCurrentStateValid() != null;
+                NewBoardState?.Invoke(currentState, isvalid);
+            }
             return currentState;
         }
 

@@ -14,6 +14,16 @@ namespace ChessTest
             public Piece piece;
             public Tuple<int, int> start;
             public List<Tuple<int, int>> end;
+
+            public Tuple<int, int> GetMoveStart()
+            {
+                return start;
+            }
+
+            public List<Tuple<int, int>> GetMoveEnds()
+            {
+                return end;
+            }
         }
         public Piece[,] board;
         /*
@@ -746,6 +756,9 @@ namespace ChessTest
                         {
                             return true;
                         }
+                        else {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -890,7 +903,7 @@ namespace ChessTest
             Piece p;
             p = board[x, y];
 
-            // no piece there? return null
+            // no piece there, return null
             if (p == null)
                 return null;
             return p;
@@ -898,10 +911,9 @@ namespace ChessTest
 
         public void SetPiece(int x, int y, Team team, PieceType type)
         {
-            //Console.WriteLine("x: " + x);  // TODO
-            //Console.WriteLine("y: " + y);  // TODO
-            //Console.ReadKey();  // TODO
-            board[x, y] = new Piece(team, type);
+            if (x > 7 || x < 0 || y > 7 || y < 0)
+                throw new ArgumentOutOfRangeException("Piece off the board");
+            board[x,y] = new Piece(team, type);
         }
     }
 }

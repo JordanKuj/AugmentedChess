@@ -16,6 +16,7 @@ using static ChessTest.Board;
 
 namespace Chess.WebAPI.Controllers
 {
+    [RoutePrefix("Boardstates")]
     public class BoardstatesController : ApiController
     {
         private ChessWebAPIContext db = null;// new ChessWebAPIContext();
@@ -45,18 +46,16 @@ namespace Chess.WebAPI.Controllers
         }
 
         // PUT: api/Boardstates/5
+        [Route("{id}")]
+        [HttpPost]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutBoardstates(int id, Boardstates boardstates)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
             if (id != boardstates.StateId)
-            {
                 return BadRequest();
-            }
 
             db.Entry(boardstates).State = EntityState.Modified;
 
@@ -79,44 +78,11 @@ namespace Chess.WebAPI.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // probablly not needed
-        /*// POST: api/Boardstates
-        [ResponseType(typeof(Boardstates))]
-        public async Task<IHttpActionResult> PostBoardstates(Boardstates boardstates)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.Boardstates.Add(boardstates);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = boardstates.StateId }, boardstates);
-        }
-
-        // DELETE: api/Boardstates/5
-        [ResponseType(typeof(Boardstates))]
-        public async Task<IHttpActionResult> DeleteBoardstates(int id)
-        {
-            Boardstates boardstates = await db.Boardstates.FindAsync(id);
-            if (boardstates == null)
-            {
-                return NotFound();
-            }
-
-            db.Boardstates.Remove(boardstates);
-            await db.SaveChangesAsync();
-
-            return Ok(boardstates);
-        }*/
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
 
@@ -126,6 +92,8 @@ namespace Chess.WebAPI.Controllers
         }
 
         // get board by ids
+        [Route("{id}")]
+        [HttpGet]
         public BoardstatesDTO GetStateById(int sId)
         {
             Boardstates bs;
@@ -136,6 +104,7 @@ namespace Chess.WebAPI.Controllers
         }
 
         // get last move/most recently added boardstate
+        [HttpGet]
         public BoardstatesDTO GetMostRecentState()
         {
             BoardstatesDTO bsDTO;
@@ -143,8 +112,9 @@ namespace Chess.WebAPI.Controllers
             bsDTO = new BoardstatesDTO(bs);
             return bsDTO;
         }
-        
+
         // add new state to bs
+        [HttpPost]
         public bool AddState(ChessTest.Board b)
         {
             Boardstates bs = new Boardstates();
@@ -171,90 +141,49 @@ namespace Chess.WebAPI.Controllers
         }
 
         // predict
-        public List<Moveset> predictMoves(Team t)
+        [Route("Moves")]
+        [HttpGet]
+        public List<Moveset> predictMoves()
         {
             List<Moveset> moves;
             Boardstates lastMove = db.Boardstates.Last();
             ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
-            moves = last.listAllMoves(t);
+            moves = last.listAllMoves(last.turn);
 
             return moves;
         }
     }
 
-    public class Board
+
+    // probablly not needed
+    /*// POST: api/Boardstates
+    [ResponseType(typeof(Boardstates))]
+    public async Task<IHttpActionResult> PostBoardstates(Boardstates boardstates)
     {
-        public ChessTest.Board b;
-        ChessTest.Piece p;
-        //public ChessTest.Piece p;
-        //Team turn;
-        //public Piece[,] board;
-
-        /*public ChessTest.Piece GetPiece(int x, int y)
+        if (!ModelState.IsValid)
         {
-            //ChessTest.Piece p;
-            p = b.board[x,y];
-
-            // no piece there? return null
-            if (p == null)
-                return null;
-            return p;
+            return BadRequest(ModelState);
         }
 
-        public void SetPiece(int x, int y, Team team, PieceType type)
+        db.Boardstates.Add(boardstates);
+        await db.SaveChangesAsync();
+
+        return CreatedAtRoute("DefaultApi", new { id = boardstates.StateId }, boardstates);
+    }
+
+    // DELETE: api/Boardstates/5
+    [ResponseType(typeof(Boardstates))]
+    public async Task<IHttpActionResult> DeleteBoardstates(int id)
+    {
+        Boardstates boardstates = await db.Boardstates.FindAsync(id);
+        if (boardstates == null)
         {
-            b.board[x,y] = new Piece(team, type);
-        }*/
-    }
+            return NotFound();
+        }
 
-    /*public enum PieceType
-    {
-        pawn, rook, knight, bishop, king, queen, error = 0
-    }
+        db.Boardstates.Remove(boardstates);
+        await db.SaveChangesAsync();
 
-    public enum Team
-    {
-        public ChessTest.Team;
-        t.black, t.white, t.error = 0
+        return Ok(boardstates);
     }*/
-
-    public class Piece
-    {
-        public ChessTest.Piece p;
-        //Team Team;
-        //PieceType Name;
-        //bool HasMoved;
-
-        public Piece(Team t, PieceType n)
-        {
-            p.setTeam(t);
-            p.setName(n);
-            p.setHasMoved();  // maybe
-        }
-
-        public Team getTeam()
-        {
-            return p.getTeam();
-        }
-
-        public PieceType getName()
-        {
-            return p.getName();
-        }
-
-        public bool getHasMoved()
-        {
-            return p.getHasMoved();
-        }
-
-        public void setHasMoved()
-        {
-            p.setHasMoved();
-        }
-
-        public Piece copy()
-        {
-            return new Piece(p.getTeam(), p.getName());
-        }
-    }
 }

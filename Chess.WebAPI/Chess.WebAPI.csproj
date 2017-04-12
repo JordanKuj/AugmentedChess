@@ -234,25 +234,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BoardstatesController.cs" />
     <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201702190533463_Initial.cs" />
-    <Compile Include="Migrations\201702190533463_Initial.Designer.cs">
-      <DependentUpon>201702190533463_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702190549137_Initial1.cs" />
-    <Compile Include="Migrations\201702190549137_Initial1.Designer.cs">
-      <DependentUpon>201702190549137_Initial1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ChessWebAPIContext.cs" />
     <Compile Include="Models\Games.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -260,6 +248,8 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Tools\BoardConversion.cs" />
+    <Compile Include="Tools\MovePrediction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -334,12 +324,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702190533463_Initial.resx">
-      <DependentUpon>201702190533463_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702190549137_Initial1.resx">
-      <DependentUpon>201702190549137_Initial1.cs</DependentUpon>
-    </EmbeddedResource>
+    <ProjectReference Include="..\Chess.Core\Chess.Core.csproj">
+      <Project>{6ce49514-a7d3-4309-8c20-ec4a3acabfbb}</Project>
+      <Name>Chess.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

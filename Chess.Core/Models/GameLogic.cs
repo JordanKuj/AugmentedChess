@@ -20,10 +20,10 @@ namespace Chess.Core.Models
         public bool isValid() {
             
         }
+        
         public void evaluate() {
-
+            
         }
-
 
         public Piece getMoved() {
             foreach (Piece in StartState) {

@@ -2,98 +2,170 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using ChessTest;
 
 namespace Chess.BoardWatch.Models
 {
-    public enum PieceType
-    {
-        Pawn =1, knight=2, rook=3, bishop=4, queen=5, king=6, none=0
-    }
-    public enum Team
-    {
-        black, white
-    }
+    //public enum PieceType
+    //{
+    //    Pawn = 1, knight = 2, rook = 3, bishop = 4, queen = 5, king = 6, Debug = 7, none = 0
+    //}
+    //public enum Team
+    //{
+    //    black, white
+    //}
+    public enum RotateType { cw, ccw }
+
     public static class PieceConstants
     {
 
-        public static int[,] pwn = new int[3, 3] { { 0, 1, 0 },
-                                                   { 0, 0, 0 },
-                                                   { 1, 0, 1 } };  //pawn
 
-        public static int[,] kni = new int[3, 3] { { 0, 1, 0 },
-                                                   { 1, 0, 1 },
-                                                   { 1, 1, 0 } };  //knight
+        public static int[,] dbg = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 0, 0, 0, 1},
+                                                   { 1, 1, 0, 1, 1},
+                                                   { 1, 1, 1, 1, 1} };  //debug
 
-        public static int[,] rok = new int[3, 3] { { 0, 0, 1 },
-                                                   { 1, 1, 0 },
-                                                   { 1, 0, 1 } };  //rook
+        public static int[,] pwn = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 0, 0, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1},
+                                                   { 1, 1, 1, 1, 1} };  //pawn
 
-        public static int[,] bsh = new int[3, 3] { { 0, 0, 0 },
-                                                   { 0, 0, 0 },
-                                                   { 0, 0, 0 } };  //bishop
+        public static int[,] kni = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 1, 0, 0, 1},
+                                                   { 1, 1, 1, 0, 1},
+                                                   { 1, 0, 0, 0, 1},
+                                                   { 1, 1, 1, 1, 1} };  //knight
 
-        public static int[,] qen = new int[3, 3] { { 0, 0, 0 },
-                                                   { 0, 0, 0 },
-                                                   { 0, 0, 0 } };  //queen
+        public static int[,] rok = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 0, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1} };  //rook
 
-        public static int[,] kng = new int[3, 3] { { 0, 0, 0 },
-                                                   { 0, 0, 0 },
-                                                   { 0, 0, 0 } };  //king
+        public static int[,] bsh = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1} };  //bishop
+
+        public static int[,] qen = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1},
+                                                   { 1, 1, 1, 1, 1} };  //queen
+
+        public static int[,] kng = new int[5, 5] { { 1, 1, 1, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 0, 0, 1, 1},
+                                                   { 1, 0, 1, 0, 1},
+                                                   { 1, 1, 1, 1, 1} };  //king
 
         public static Dictionary<PieceType, int[,]> PieceLookup = new Dictionary<PieceType, int[,]> {
-            { PieceType.Pawn, pwn },
+            { PieceType.pawn, pwn },
             { PieceType.knight, kni },
             { PieceType.rook, rok },
             { PieceType.bishop, bsh },
             { PieceType.queen, qen },
             { PieceType.king, kng },
+            { PieceType.Debug, dbg }
         };
 
         public static PieceType FindPieceType(int[,] blobout)
         {
+
+            var outside = new List<int>(new[]
+            {
+                blobout[0,0], blobout[0, 1] , blobout[0, 2] , blobout[0, 3] , blobout[0, 4],
+                blobout[4,0], blobout[4, 1] , blobout[4, 2] , blobout[4, 3] , blobout[4, 4],
+                blobout[1,0], blobout[2, 0] , blobout[3, 0] , blobout[2, 0]  ,
+                blobout[1,4], blobout[2, 4] , blobout[3, 4] , blobout[2, 4]
+
+            });
+            if (outside.Any(x => x == 0))
+                return PieceType.error;
+
+
             foreach (var t in PieceLookup)
                 if (Compare(t.Value, blobout))
                     return t.Key;
-            return PieceType.none;
+            return PieceType.error;
+        }
+
+
+        public static int[,] Rotate(int[,] tmpboard, RotateType type)
+        {
+
+            var newboard = new int[,] { { 1, 1, 1, 1, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 1, 1, 1, 1} };
+            //initializing the outside border so then only the inside 3x3 needs to rotate
+
+            int newx = 1;
+            int newy = 1;
+            for (int x = 1; x <= 3; x++)
+            {
+                newx = 1;
+                for (int y = 3; y >= 1; y--)
+                {
+                    if (type == RotateType.cw)
+                        newboard[newy, newx] = tmpboard[y, x];
+                    else
+                        newboard[newx, newy] = tmpboard[x, y];
+                    newx += 1;
+                }
+                newy += 1;
+            }
+            return newboard;
         }
         private static bool Compare(int[,] a, int[,] b)
         {
-            if (a[1, 1] != b[1, 1])
-                return false;
-
-            var tmpa = new List<int> { a[0, 0], a[1, 0], a[2, 0], a[2, 1], a[2, 2], a[1, 2], a[0, 2], a[0, 1] };
-            var tmpb = new List<int> { b[0, 0], b[1, 0], b[2, 0], b[2, 1], b[2, 2], b[1, 2], b[0, 2], b[0, 1] };
-
-            if (tmpa.Sum() != tmpb.Sum())
-                return false;
-
-            for (var c = 0; c < 8; c++)
-            {
-                var passed = true;
-                for (var r = 0; r < 8; r++)
+            //if (a[1, 1] != b[1, 1])
+            //    return false;
+            var asum = 0;
+            var bsum = 0;
+            for (var y = 0; y < 5; y++)
+                for (var x = 0; x < 5; x++)
                 {
-                    passed &= tmpa[r] == tmpb[(c + r) % 8];
-                    if (!passed)
-                        break;
+                    asum += (a[x, y]);
+                    bsum += (b[x, y]);
                 }
-                if (passed)
-                    return true;
-            }
+
+            if (asum != bsum)
+                return false;
+
+            if (CheckGlyps(a, b))
+                return true;
+            b = Rotate(b, RotateType.cw);
+            if (CheckGlyps(a, b))
+                return true;
+            b = Rotate(b, RotateType.cw);
+            if (CheckGlyps(a, b))
+                return true;
+            b = Rotate(b, RotateType.cw);
+            if (CheckGlyps(a, b))
+                return true;
             return false;
         }
-        //private static void Rotate(ref int x, ref int y)
-        //{
-        //    if (x == 0 && y == 0)
-        //        x = 2;
-        //    else if (x == 2 && y == 0)
-        //        y = 2;
-        //    else if (x == 2 && y == 2)
-        //        x = 0;
-        //    else if (x == 0 && y == 2)
-        //        y = 0;
-        //}
+
+        private static bool CheckGlyps(int[,] a, int[,] b)
+        {
+            var passed = true;
+            for (var x = 1; x < 5; x++)
+                for (var y = 1; y < 5; y++)
+                {
+                    passed = a[x, y] == b[x, y];
+                    if (!passed)
+                        return false;
+                }
+            return true;
+        }
     }
 
 }

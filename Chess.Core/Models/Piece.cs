@@ -6,39 +6,102 @@ using System.Threading.Tasks;
 
 namespace ChessTest
 {
-    public enum PieceType {
-        pawn, rook, knight, bishop, king, queen, error = 0
+    public enum PieceType
+    {
+        pawn = 1, rook = 2, knight = 3, bishop = 4, king = 5, queen = 6, Debug = 7, error = 0
     }
-    public enum Team {
+    public enum Team
+    {
         black, white, error = 0
     }
     public class Piece
     {
-        Team Team;
-        PieceType Name;
-        bool HasMoved;
+        public Team Team;
+        public PieceType Name;
+        public bool HasMoved;
 
-        public Piece(Team t, PieceType n) {
+        public Piece(Team t, PieceType n)
+        {
             Team = t;
             Name = n;
             HasMoved = false;
         }
+        public Piece(Piece p)
+        {
+            Team = p.Team;
+            Name = p.Name;
+            HasMoved = p.HasMoved;
+        }
 
-        public Team getTeam() {
+        public Team getTeam()
+        {
             return Team;
         }
 
-        public PieceType getName() {
+        public PieceType getName()
+        {
             return Name;
         }
-        public bool getHasMoved() {
+        public string getNameString()
+        {
+            switch (Name)
+            {
+                case PieceType.pawn:
+                    return "Pawn";
+                case PieceType.rook:
+                    return "Rook";
+                case PieceType.knight:
+                    return "Knight";
+                case PieceType.bishop:
+                    return "Bishop";
+                case PieceType.king:
+                    return "King";
+                case PieceType.queen:
+                    return "Queen";
+                default:
+                    return "ERROR";
+            }
+        }
+        public bool getHasMoved()
+        {
             return HasMoved;
         }
-        public void setHasMoved() {
+        public void setHasMoved()
+        {
             HasMoved = true;
         }
-        public Piece copy() {
+        public void setType(String s)
+        {
+            switch (s)
+            {
+                case "rook":
+                    Name = PieceType.rook;
+                    break;
+                case "knight":
+                    Name = PieceType.knight;
+                    break;
+                case "bishop":
+                    Name = PieceType.bishop;
+                    break;
+                default:
+                    Name = PieceType.queen;
+                    break;
+
+            }
+        }
+        public Piece copy()
+        {
             return new Piece(Team, Name);
+        }
+
+        public void setTeam(Team t)
+        {
+            this.Team = t;
+        }
+
+        public void setName(PieceType type)
+        {
+            this.Name = type;
         }
     }
 }

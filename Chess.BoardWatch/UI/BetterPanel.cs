@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Chess.BoardWatch.Models;
 
 namespace Chess.BoardWatch
 {
@@ -27,6 +28,7 @@ namespace Chess.BoardWatch
               System.Windows.Forms.ControlStyles.AllPaintingInWmPaint |
               System.Windows.Forms.ControlStyles.OptimizedDoubleBuffer,
               true);
+            this.DoubleBuffered = true;
             g = this.CreateGraphics();
         }
 
@@ -56,6 +58,19 @@ namespace Chess.BoardWatch
             m.Scale(xscale, yscale);
             return m;
         }
+
+        public void DrawBlobs(List<BlobData> blobs)
+        {
+            Pen left = new Pen(Brushes.Yellow, 5);
+            Pen right = new Pen(Brushes.Green, 5);
+            foreach (var b in blobs)
+            {
+                this.DrawRectangle(Pens.Red, b.Rect);
+                this.DrawLines(left, b.leftedge);
+                this.DrawLines(right, b.rightedge);
+            }
+        }
+
         public void DrawRectangle(Pen p, Rectangle rect)
         {
             RectangleF rf = (rect);

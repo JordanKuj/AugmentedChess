@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Ninject;
 using Chess.BoardWatch.Models;
+using Chess.BoardWatch.UI.Forms;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -15,6 +16,8 @@ namespace Chess.BoardWatch.Tools
             Bind<ICfgTool<MasterCfg>>().To<CfgUtility>();
             Bind<IGlyphTools>().To<GlyphTools>().InSingletonScope();
             Bind<SettingsForm>().To<SettingsForm>();
+            Bind<BoardView>().ToSelf();
+            Bind<BoardTools>().ToSelf().InSingletonScope();
         }
     }
 }

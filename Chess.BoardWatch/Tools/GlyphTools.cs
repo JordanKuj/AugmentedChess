@@ -20,13 +20,27 @@ namespace Chess.BoardWatch
     {
         #region Properties
         private int _minsize;
+        private int _maxSize;
         private float _blobSizeRatio;
+        private ColorFilterSettings _black;
         private ColorFilterSettings _red;
         private ColorFilterSettings _blue;
         private ColorFilterSettings _green;
         private MasterCfg _cfg;
 
-
+        public int MaxSize
+        {
+            get { return _maxSize; }
+            set
+            {
+                _maxSize = value;
+                foreach (var b in blobcounters)
+                {
+                    b.MaxHeight = value;
+                    b.MaxWidth = value;
+                }
+            }
+        }
         public int MinSize
         {
             get { return _minsize; }
@@ -56,6 +70,17 @@ namespace Chess.BoardWatch
         }
         public float Minfullness { get; set; }
         public int Glypdivisions { get; set; }
+
+        public ColorFilterSettings Black
+        {
+            get { return _black; }
+            set
+            {
+                _black = value;
+                SetColorFilter(_black, BlackFilter);
+            }
+        }
+
         public ColorFilterSettings Red
         {
             get { return _red; }
@@ -87,8 +112,9 @@ namespace Chess.BoardWatch
 
 
         public UnmanagedImage _GrayImage;
-        public UnmanagedImage _EdgeGray;
-        public UnmanagedImage _threshGray;
+        public UnmanagedImage _BlackImage;
+        public UnmanagedImage _EdgeBlack;
+        public UnmanagedImage _threshBlack;
         public UnmanagedImage _RImage;
         public UnmanagedImage _GImage;
         public UnmanagedImage _BImage;
@@ -99,9 +125,15 @@ namespace Chess.BoardWatch
         public UnmanagedImage _threshG;
         public UnmanagedImage _threshB;
 
-        public UnmanagedImage GrayImage { get { return _GrayImage; } set { _GrayImage = value; } }
-        public UnmanagedImage EdgeGray { get { return _EdgeGray; } set { _EdgeGray = value; } }
-        public UnmanagedImage threshGray { get { return _threshGray; } set { _threshGray = value; } }
+        public UnmanagedImage GrayImage
+        {
+            get { return _GrayImage; }
+            set { _GrayImage = value; }
+        }
+
+        public UnmanagedImage BlackImage { get { return _BlackImage; } set { _BlackImage = value; } }
+        public UnmanagedImage EdgeBlack { get { return _EdgeBlack; } set { _EdgeBlack = value; } }
+        public UnmanagedImage threshBlack { get { return _threshBlack; } set { _threshBlack = value; } }
         public UnmanagedImage RImage { get { return _RImage; } set { _RImage = value; } }
         public UnmanagedImage GImage { get { return _GImage; } set { _GImage = value; } }
         public UnmanagedImage BImage { get { return _BImage; } set { _BImage = value; } }
@@ -116,7 +148,7 @@ namespace Chess.BoardWatch
         public List<BlobData> Rblobs { get; private set; }
         public List<BlobData> Gblobs { get; private set; }
         public List<BlobData> Bblobs { get; private set; }
-        public List<BlobData> GrayBlobs { get; private set; }
+        public List<BlobData> BlackBlobs { get; private set; }
 
         public MasterCfg MasterCfg
         {
@@ -129,18 +161,22 @@ namespace Chess.BoardWatch
                     b.FilterBlobs = true;
                     b.ObjectsOrder = ObjectsOrder.XY;
                 }
-
+                Black = _cfg.BlackFilter;
                 Red = _cfg.RedFilter;
                 Green = _cfg.GreenFilter;
                 Blue = _cfg.BlueFilter;
                 Minfullness = _cfg.MinFullness;
                 BlobSizeRatio = _cfg.MinBlobShapeRatio;
                 MinSize = _cfg.MinBlobSize;
+                MaxSize = _cfg.MaxBlobSize;
                 thresfilter.ThresholdValue = _cfg.ThreshholdFilterValue;
                 Glypdivisions = _cfg.Glypdivisions;
             }
         }
 
+
+
+        private EuclideanColorFiltering BlackFilter = new EuclideanColorFiltering();
         private EuclideanColorFiltering RedFilter = new EuclideanColorFiltering();
         private EuclideanColorFiltering BlueFilter = new EuclideanColorFiltering();
         private EuclideanColorFiltering GreenFilter = new EuclideanColorFiltering();
@@ -165,7 +201,7 @@ namespace Chess.BoardWatch
             Rblobs = new List<BlobData>();
             Bblobs = new List<BlobData>();
             Gblobs = new List<BlobData>();
-            GrayBlobs = new List<BlobData>();
+            BlackBlobs = new List<BlobData>();
             this.MasterCfg = cfg;
         }
 
@@ -179,12 +215,11 @@ namespace Chess.BoardWatch
             _GrayImage = GetGrascaleImage(unmanagedOrig);
             var tGray = Task.Factory.StartNew(() =>
             {
-                DoEdgeAndThresh(_GrayImage, out _EdgeGray, out _threshGray);
-                var tmpGrayBlobs = GetBlobs(threshGray, blobCounterGray, BlobSizeRatio, Minfullness);
-                GrayBlobs.Clear();
-                GrayBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck));
-                DrawEdges(GrayBlobs, this);
-
+                _BlackImage = BlackFilter.Apply(unmanagedOrig);
+                DoEdgeAndThresh(GetGrascaleImage(_BlackImage), out _EdgeBlack, out _threshBlack);
+                var tmpGrayBlobs = GetBlobs(threshBlack, blobCounterGray, BlobSizeRatio, Minfullness);
+                BlackBlobs.Clear();
+                BlackBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck, this));
             });
             var tRed = Task.Factory.StartNew(() =>
             {
@@ -192,9 +227,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_RImage), out _edgeR, out _threshR);
                 var tmpRblobs = GetBlobs(threshR, blobCounterRed, BlobSizeRatio, Minfullness);
                 Rblobs.Clear();
-                Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck));
-                DrawEdges(Rblobs, this);
-
+                Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck, this));
             });
             var tGrn = Task.Factory.StartNew(() =>
             {
@@ -202,9 +235,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
                 var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
                 Gblobs.Clear();
-                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck));
-                DrawEdges(Gblobs, this);
-
+                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck, this));
             });
             var tBlu = Task.Factory.StartNew(() =>
             {
@@ -212,8 +243,7 @@ namespace Chess.BoardWatch
                 DoEdgeAndThresh(GetGrascaleImage(_BImage), out _edgeB, out _threshB);
                 var tmpBblobs = GetBlobs(threshB, blobCounterBlue, BlobSizeRatio, Minfullness);
                 Bblobs.Clear();
-                Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck));
-                DrawEdges(Bblobs, this);
+                Bblobs.AddRange(GetBlobData(tmpBblobs, blobCounterBlue, shapeCheck, this));
             });
 
 
@@ -229,26 +259,9 @@ namespace Chess.BoardWatch
                 swhigh = sw.ElapsedMilliseconds;
             else if (sw.ElapsedMilliseconds < swlow)
                 swlow = sw.ElapsedMilliseconds;
-            Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
+            //Debug.Print($"ProcessImage high:{swhigh} low:{swlow} avg:{sw.ElapsedMilliseconds}");
         }
         const int QuadSize = 50;
-
-
-        private static void DrawEdges(List<BlobData> blobs, IGlyphTools gt)
-        {
-            Pen left = new Pen(Brushes.Yellow, 5);
-            Pen right = new Pen(Brushes.Green, 5);
-            var c = 0;
-
-            foreach (var b in blobs)
-            {
-                b.GlyphDivisions = gt.Glypdivisions;
-                b.FlatImage = gt.QuadralateralizeImage(gt.GrayImage, b.corners, QuadSize);
-                b.glyph = GlyphTools.GetGlyphData(b.FlatImage, gt.Glypdivisions);
-            }
-        }
-
-
         public static Blob[] GetBlobs(UnmanagedImage img, BlobCounter bc, float BlobSizeRatio, float Minfullness)
         {
             bc.ProcessImage(img);
@@ -264,7 +277,8 @@ namespace Chess.BoardWatch
 
             return filteredBlobs.ToArray();
         }
-        private static IEnumerable<BlobData> GetBlobData(Blob[] blobs, BlobCounter bc, SimpleShapeChecker sc)
+
+        private static IEnumerable<BlobData> GetBlobData(Blob[] blobs, BlobCounter bc, SimpleShapeChecker sc, IGlyphTools gt)
         {
             var bdata = new List<BlobData>();
             foreach (var b in blobs)
@@ -276,15 +290,22 @@ namespace Chess.BoardWatch
                     List<System.Drawing.Point> intleftedge;
                     List<System.Drawing.Point> intrightedge;
                     GetEdges(b, out intleftedge, out intrightedge, bc);
-                    bdata.Add(new BlobData(b, corners, intleftedge, intrightedge));
+                    var bd = new BlobData(b, corners, intleftedge, intrightedge);
+                    bd.GlyphDivisions = gt.Glypdivisions;
+                    bd.FlatImage = gt.QuadralateralizeImage(gt.GrayImage, bd.corners, QuadSize);
+                    bd.glyph = GetGlyphData(bd.FlatImage, gt.Glypdivisions);
+
+                    if (bd.GlyphHasBorder())
+                        bdata.Add(bd);
                 }
             }
+
             return bdata;
         }
         private static void SetColorFilter(ColorFilterSettings c, EuclideanColorFiltering filter)
         {
             filter.FillOutside = true;
-            filter.FillColor = new RGB(0, 0, 0);
+            filter.FillColor = new RGB(255, 255, 255);
             filter.CenterColor = c.GetRgb;
             filter.Radius = c.Radius;
         }

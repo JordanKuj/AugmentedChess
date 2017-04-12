@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.WebAPI.Migrations;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -15,47 +16,21 @@ namespace Chess.WebAPI.Models
         // For more information refer to the documentation:
         // http://msdn.microsoft.com/en-us/data/jj591621.aspx
 
-        public ChessWebAPIContext() : base("ChessWebAPIContext")
+        public ChessWebAPIContext() : base("Server=.\\sqlexpress;Database=ChessDb;Trusted_Connection=True")
         {
             Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            //Database.SetInitializer(new DbApiConfiguration());
+            
+            //Database.Initialize(false);
         }
 
         public System.Data.Entity.DbSet<Chess.WebAPI.Models.Games> Games { get; set; }
 
         public System.Data.Entity.DbSet<Chess.WebAPI.Models.Boardstates> Boardstates { get; set; }
-    }
 
-    public class ChessWebAPIDbInitalizer : DropCreateDatabaseAlways<ChessWebAPIContext>
-    {
-        protected override void Seed(ChessWebAPIContext context)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            for (var x = 0; x < 5; x++)
-            {
-                var date = new DateTime(2000 + x, 1, 1);
-                var g = new Games()
-                {
-                    StartTime = date,
-                    EndTime = date.AddDays(1)
-                };
-                context.Games.Add(g);
-                context.SaveChanges();
-                List<Boardstates> states = new List<Boardstates>();
-
-                for (var y = 0; y < 20; y++)
-                {
-                    var state = new Boardstates()
-                    {
-                        Game = g,
-                        GameId = g.GameId,
-                        State = $"{y + 1}",
-                        Timestamp = date.AddMinutes(y + 1)
-                    };
-                    states.Add(state);
-                }
-                context.Boardstates.AddRange(states);
-            }
-            context.SaveChanges();
-            base.Seed(context);
         }
+
     }
 }

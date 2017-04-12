@@ -8,18 +8,21 @@ namespace Chess.BoardWatch.Models
 {
     public interface IGlyphTools
     {
+        int MaxSize { get; set; }
         int MinSize { get; set; }
         int ThreshFilter { get; set; }
         float BlobSizeRatio { get; set; }
         float Minfullness { get; set; }
         int Glypdivisions { get; set; }
+        ColorFilterSettings Black { get; set; }
         ColorFilterSettings Red { get; set; }
         ColorFilterSettings Blue { get; set; }
         ColorFilterSettings Green { get; set; }
 
         UnmanagedImage GrayImage { get; }
-        UnmanagedImage EdgeGray { get; }
-        UnmanagedImage threshGray { get; }
+        UnmanagedImage BlackImage { get; }
+        UnmanagedImage EdgeBlack { get; }
+        UnmanagedImage threshBlack { get; }
 
         UnmanagedImage RImage { get; }
         UnmanagedImage GImage { get; }
@@ -36,7 +39,7 @@ namespace Chess.BoardWatch.Models
         List<BlobData> Rblobs { get; }
         List<BlobData> Gblobs { get; }
         List<BlobData> Bblobs { get; }
-        List<BlobData> GrayBlobs { get; }
+        List<BlobData> BlackBlobs { get; }
         MasterCfg MasterCfg { set; }
 
         Task ProcessImage(Bitmap img);

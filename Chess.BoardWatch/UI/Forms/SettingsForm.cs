@@ -31,10 +31,15 @@ namespace Chess.BoardWatch
         {
             _gt.MinSize = MinGlyphSize;
         }
+        private void NudMaxSize_ValueChanged(object sender, EventArgs e)
+        {
+            _gt.MaxSize = MaxGlyphSize;
 
+        }
         int Glyphdivs => (int)NudGlyphDivs.Value;
         int ThreshholdVal => (int)nudThresh.Value;
         int MinGlyphSize => (int)nudMinSize.Value;
+        int MaxGlyphSize => (int)NudMaxSize.Value;
         float BlobSizeRatio => trackBar1.Value / 100f;
         float MinFullness => TrackFullness.Value / 100f;
         //int GlyphDivisions => 
@@ -47,12 +52,14 @@ namespace Chess.BoardWatch
         {
             NudGlyphDivs.Value = _gt.Glypdivisions;
             nudMinSize.Value = _gt.MinSize;
+            NudMaxSize.Value = _gt.MaxSize;
             nudThresh.Value = _gt.ThreshFilter;
             trackBar1.Value = (int)(_gt.BlobSizeRatio * 100);
             TrackFullness.Value = (int)(_gt.Minfullness * 100);
             FilterCtrlGreen.Set(_gt.Green);
             FilterCtrlBlue.Set(_gt.Blue);
             FilterCtrlRed.Set(_gt.Red);
+            FilterCtrlBlack.Set(_gt.Black);
         }
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
@@ -80,6 +87,11 @@ namespace Chess.BoardWatch
         {
             _gt.Green = FilterCtrlGreen.Get();
         }
+        private void FilterCtrlBlack_ValueChanged(ColorFilterSettings obj)
+        {
+            _gt.Black = FilterCtrlBlack.Get();
+
+        }
 
         private void SettingsForm_Activated(object sender, EventArgs e)
         {
@@ -97,6 +109,7 @@ namespace Chess.BoardWatch
                 GreenFilter = FilterCtrlGreen.Get(),
                 Glypdivisions = Glyphdivs,
                 MinBlobSize = this.MinGlyphSize,
+                MaxBlobSize = this.MaxGlyphSize,
                 MinFullness = this.MinFullness,
                 MinBlobShapeRatio = this.BlobSizeRatio,
                 ThreshholdFilterValue = this.ThreshholdVal
@@ -113,5 +126,7 @@ namespace Chess.BoardWatch
         {
             _gt.Glypdivisions = Glyphdivs;
         }
+
+
     }
 }

@@ -97,7 +97,7 @@ namespace ChessTest
         {
             return board[x, y];
         }
-        
+
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)
@@ -280,8 +280,8 @@ namespace ChessTest
             Console.WriteLine("Capturing {0} at {1},{2}", getAt(x, y).getName(), x, y);
             return true;
         }
-        
-      public bool validMove(int a, int b, int x, int y)
+
+        public bool validMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
             {

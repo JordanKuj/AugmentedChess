@@ -20,14 +20,14 @@ namespace Chess.BoardWatch
     public partial class Form1 : Form
     {
         public static IKernel kernal;
-        public BoardTools bt = new BoardTools();
+        public readonly BoardTools _bt;//; = new BoardTools();
         VideoCaptureDevice stream;
         //const int GlyphDivs = 5;
-        const int QuadSize = 50;
+        //const int QuadSize = 50;
         //private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
-        readonly IGlyphTools gt;//= new GlyphTools(32, GlyphDivs);
-        Pen left = new Pen(Brushes.Yellow, 5);
-        Pen right = new Pen(Brushes.Green, 5);
+        //Pen left = new Pen(Brushes.Yellow, 5);
+        //Pen right = new Pen(Brushes.Green, 5);
+        private readonly IGlyphTools _gt;
         List<BetterPanel> panelsBnw = new List<BetterPanel>();
         List<BetterPanel> panelsRed = new List<BetterPanel>();
         List<BetterPanel> panelsGrn = new List<BetterPanel>();
@@ -38,7 +38,8 @@ namespace Chess.BoardWatch
         {
             InitializeComponent();
             kernal = new StandardKernel(new Bindings());
-            gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
+            _gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
+            _bt = kernal.Get<BoardTools>();
         }
 
         private static void LoadPanels(List<BetterPanel> panels, FlowLayoutPanel flowpanel)
@@ -77,7 +78,7 @@ namespace Chess.BoardWatch
             var dilg = kernal.Get<SettingsForm>();
             dilg.Show();
 
-            DialogBoardView = new BoardView();
+            DialogBoardView = kernal.Get<BoardView>();
             DialogBoardView.Show();
         }
 
@@ -91,39 +92,41 @@ namespace Chess.BoardWatch
                 ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
         }
 
+
         private async Task ProcessImage(Bitmap origional)
         {
-            await gt.ProcessImage(origional);
+            await _gt.ProcessImage(origional);
+            var state = _bt.UpdateCurrentState(_gt.Rblobs, _gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height));
 
-            DialogBoardView.DrawBoard(origional, bt.SetPieces(gt.Rblobs, gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height)));
-            EdgePanel.DrawImage(gt.EdgeGray);
-            PanelBw.DrawImage(gt.GrayImage);
-            PanelFinal.DrawImage(gt.threshGray);
+            DialogBoardView.DrawBoard(origional, state);
+            EdgePanel.DrawImage(_gt.EdgeBlack);
+            PanelBw.DrawImage(_gt.BlackImage);
+            PanelFinal.DrawImage(_gt.threshBlack);
 
 
 
-            PanelRed.DrawImage(gt.RImage);
-            PanelGreen.DrawImage(gt.GImage);
-            PanelBlue.DrawImage(gt.BImage);
-            PanelRBW.DrawImage(gt.edgeR);
-            PanelGBW.DrawImage(gt.edgeG);
-            PanelBBW.DrawImage(gt.edgeB);
-            PanelFinalR.DrawImage(gt.threshR);
-            PanelFinalG.DrawImage(gt.threshG);
-            PanelFinalB.DrawImage(gt.threshB);
+            PanelRed.DrawImage(_gt.RImage);
+            PanelGreen.DrawImage(_gt.GImage);
+            PanelBlue.DrawImage(_gt.BImage);
+            PanelRBW.DrawImage(_gt.edgeR);
+            PanelGBW.DrawImage(_gt.edgeG);
+            PanelBBW.DrawImage(_gt.edgeB);
+            PanelFinalR.DrawImage(_gt.threshR);
+            PanelFinalG.DrawImage(_gt.threshG);
+            PanelFinalB.DrawImage(_gt.threshB);
 
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
 
-            DrawEdges(gt.GrayBlobs, PanelFinal, panelsBnw);
-            DrawEdges(gt.Rblobs, PanelFinalR, panelsRed);
-            DrawEdges(gt.Gblobs, PanelFinalG, panelsGrn);
-            DrawEdges(gt.Bblobs, PanelFinalB, panelsBlu);
+            DrawEdges(_gt.BlackBlobs, PanelFinal, panelsBnw);
+            DrawEdges(_gt.Rblobs, PanelFinalR, panelsRed);
+            DrawEdges(_gt.Gblobs, PanelFinalG, panelsGrn);
+            DrawEdges(_gt.Bblobs, PanelFinalB, panelsBlu);
 
             //gt.GrayBlobs.Select(x=>x.Blob.Rectangle)
 
-            var whitePieces = gt.Rblobs;
-            var blackPieces = gt.Bblobs;
+            //var whitePieces = gt.Rblobs;
+            //var blackPieces = gt.Bblobs;
 
 
 
@@ -131,16 +134,10 @@ namespace Chess.BoardWatch
 
         private static void DrawEdges(List<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
         {
-            Pen left = new Pen(Brushes.Yellow, 5);
-            Pen right = new Pen(Brushes.Green, 5);
             var c = 0;
-
+            p.DrawBlobs(blobs);
             foreach (var b in blobs)
             {
-                p.DrawRectangle(Pens.Red, b.Rect);
-                p.DrawLines(left, b.leftedge);
-                p.DrawLines(right, b.rightedge);
-
                 if (c < panels.Count)
                 {
                     panels[c].DrawMe(b.glyph, b.GlyphDivisions);

@@ -7,40 +7,87 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ChessTest;
 
 namespace Chess.BoardWatch
 {
     public class BoardTools
     {
-        //TODO:create a way to offset the BoardArea's x y coordinates 
-        //public Rectangle BoardSize
-        //{
-        //    get { return BoardArea; }
-        //    set
-        //    {
-        //        BoardArea = value;
-        //    }
-        //}
+        public List<BoardState> States = new List<BoardState>();
+        public BoardState currentState;
+        public event Action<BoardState, bool> NewBoardState;
+
         private Rectangle BoardArea { get; set; }
         public const int BoardDivisions = 8;
-        public List<Piece> pieces { get; set; }
 
         public BoardTools()
         {
-            pieces = new List<Piece>();
         }
 
-        public BoardState SetPieces(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
+        public Board IsCurrentStateValid()
         {
-            pieces.Clear();
+            if (currentState == null)
+                return null;
+
+            Board laststate = States.LastOrDefault()?.ToBoard();
+            Board current = currentState.ToBoard();
+            if (laststate == null)
+            {
+                laststate = new Board();
+                laststate.fillNewBoard();
+            }
+            if (!State.getDiff(laststate, current))
+            {
+                return null;
+            }
+            var sw = Stopwatch.StartNew();
+            if (State.validState(laststate, current))
+            {
+                Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+                return laststate;
+            }
+            Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+            return null;
+        }
+        public bool AcceptCurrentState()
+        {
+            var valid = IsCurrentStateValid();
+            if (valid != null)
+            {
+                States.Add(valid.ToBoard());
+                return true;
+            }
+            return false;
+        }
+        public BoardState UpdateCurrentState(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
+        {
+            var pieces = new List<GlyphPiece>();
             BoardArea = boardArea;
             SetData(pieces, black, BoardArea, Team.black);
             SetData(pieces, white, BoardArea, Team.white);
 
-            return new BoardState(pieces);
+            var laststate = States.LastOrDefault();
+            Team turn;
+            if (laststate != null)
+                turn = (laststate.Turn == Team.white ? Team.black : Team.white);
+            else
+                turn = Team.black;
+
+            currentState = new BoardState(pieces, turn);
+            if (currentState.Pieces.Any(x => currentState.Pieces.Any(y => y != x && y.X == x.X && y.Y == x.Y)))
+            {
+                //there are 2 pieces in the same spot
+                NewBoardState?.Invoke(currentState, false);
+            }
+            else
+            {
+                var isvalid = IsCurrentStateValid() != null;
+                NewBoardState?.Invoke(currentState, isvalid);
+            }
+            return currentState;
         }
 
-        private static void SetData(List<Piece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
+        private static void SetData(List<GlyphPiece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
         {
             foreach (var b in bd)
             {
@@ -54,16 +101,20 @@ namespace Chess.BoardWatch
                     {
                         Debug.Print("error");
                     }
+                    if (pieces.Any(z => z.X == x && z.Y == y))
+                    {
+                        Debug.Print("error2");
+                    }
                     var ptype = PieceConstants.FindPieceType(b.glyph);
-                    pieces.Add(new Piece(ptype, t, x, y));
+                    pieces.Add(new GlyphPiece(ptype, t, x, y));
                 }
             }
         }
     }
 
-    public class Piece
+    public class GlyphPiece
     {
-        public Piece(PieceType type, Team team, int x, int y)
+        public GlyphPiece(PieceType type, Team team, int x, int y)
         {
             Type = type;
             Team = team;
@@ -80,17 +131,18 @@ namespace Chess.BoardWatch
     public class BoardState
     {
 
-        public List<Piece> Pieces { get; set; }
-        public Team turn;
+        public List<GlyphPiece> Pieces { get; set; }
+        public Team Turn { get; set; }
 
         public BoardState()
         {
-            Pieces = new List<Piece>();
+            Pieces = new List<GlyphPiece>();
         }
 
-        public BoardState(List<Piece> pieces)
+        public BoardState(List<GlyphPiece> pieces, Team turn)
         {
             Pieces = pieces;
+            Turn = turn;
         }
     }
 

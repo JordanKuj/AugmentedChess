@@ -22,67 +22,14 @@ namespace ChessTest
 
         public static bool getDiff(Board state1, Board state2)
         {
-            bool one = false;
-            bool two = false;
             for (int j = 0; j < 8; j++)
-            {
                 for (int i = 0; i < 8; i++)
                 {
-                    one = false;
-                    two = false;
-                    try
-                    {
-                        if (state1.board[i, j].getName() == state2.board[i, j].getName())
-                        {
-                            //Console.WriteLine("{0}{1} SAME", i, j);
-                            continue;
-                        }
-                        Console.WriteLine("Board 1: {0},{1} :: {2}", i, j, state1.board[i, j].getName().ToString());
-
-                        Console.WriteLine("Board 2: {0},{1} :: {2}", i, j, state2.board[i, j].getName().ToString());
-                    }
-                    //one is null
-                    catch
-                    {
-                        try
-                        {
-                            state1.board[i, j].getTeam();
-                        }
-                        catch
-                        {
-                            one = true;
-                        }
-                        try
-                        {
-                            state2.board[i, j].getTeam();
-                        }
-                        catch
-                        {
-                            two = true;
-                        }
-                        if (one && two)
-                        {
-                            continue;
-                        }
-                        else if (one && !two)
-                        {
-                            Console.WriteLine("Board 1: {0},{1} :: NULL", i, j);
-
-                            Console.WriteLine("Board 2: {0},{1} :: {2}", i, j, state2.board[i, j].getName().ToString());
-                        }
-                        else if (!one && two)
-                        {
-                            Console.WriteLine("Board 1: {0},{1} :: {2}", i, j, state1.board[i, j].getName().ToString());
-
-                            Console.WriteLine("Board 2: {0},{1} :: NULL", i, j);
-                        }
-
-                    }
-
-
-
+                    Piece p1 = state1.board[i, j];
+                    Piece p2 = state2.board[i, j];
+                    if (p1?.getName() != p2?.getName() || p1?.getTeam() != p2?.getTeam())
+                        return false;
                 }
-            }
             return true;
         }
 

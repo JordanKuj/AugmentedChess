@@ -10,18 +10,32 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Chess.BoardWatch.Models;
 using Chess.BoardWatch.Properties;
+using ChessTest;
 
 namespace Chess.BoardWatch.UI.Forms
 {
     public partial class BoardView : Form
     {
-        public BoardView()
+        private readonly BoardTools _bt;
+        public BoardView(BoardTools bt)
         {
             InitializeComponent();
-
+            _bt = bt;
+            _bt.NewBoardState += BtOnNewBoardState;
         }
 
-        private List<Piece> pieces;
+        private void BtOnNewBoardState(BoardState boardState, bool isvalid)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
+                return;
+            }
+            BtnAccept.Enabled = isvalid;
+            BtnAccept.BackColor = isvalid ? Color.PaleGreen : Color.PaleVioletRed;
+        }
+
+        private List<GlyphPiece> pieces;
         private Bitmap _background;
         private bool validating;
         public void DrawBoard(Bitmap bacground, BoardState board)
@@ -29,7 +43,7 @@ namespace Chess.BoardWatch.UI.Forms
             if (!validating && board != null)
             {
                 _background = (Bitmap)bacground.Clone();
-                pieces = new List<Piece>(board.Pieces);
+                pieces = new List<GlyphPiece>(board.Pieces);
                 betterPanel1.Invalidate();
             }
 
@@ -37,7 +51,6 @@ namespace Chess.BoardWatch.UI.Forms
 
         private void betterPanel1_Paint(object sender, PaintEventArgs e)
         {
-
             validating = true;
             betterPanel1.SuspendLayout();
             var g = e.Graphics;
@@ -61,7 +74,7 @@ namespace Chess.BoardWatch.UI.Forms
                     var selectedImage = (Image)GetImage(p);
 
                     var rect = new Rectangle(p.X * spaceWidth, p.Y * spaceHeight, spaceWidth, spaceHeight);
-                    Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
+                    //Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
                     g.DrawImage(selectedImage, rect);
                 }
             }
@@ -76,11 +89,11 @@ namespace Chess.BoardWatch.UI.Forms
             validating = false;
         }
 
-        private Bitmap GetImage(Piece p)
+        private Bitmap GetImage(GlyphPiece p)
         {
             switch (p.Type)
             {
-                case PieceType.Pawn:
+                case PieceType.pawn:
                     return p.Team == Team.black ? Resources.black_pawn : Resources.white_pawn;
                 case PieceType.bishop:
                     return p.Team == Team.black ? Resources.black_bishop : Resources.white_bishop;

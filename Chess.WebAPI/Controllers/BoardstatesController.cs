@@ -26,7 +26,6 @@ namespace Chess.WebAPI.Controllers
         {
             var board = from b in db.Boardstates
                         select new BoardstatesDTO(b);
-
             return board;
             //return db.Boardstates.Include(g => g.GameId);
         }
@@ -91,27 +90,7 @@ namespace Chess.WebAPI.Controllers
             return db.Boardstates.Count(e => e.StateId == id) > 0;
         }
 
-        // get board by ids
-        [Route("{id}")]
-        [HttpGet]
-        public BoardstatesDTO GetStateById(int sId)
-        {
-            Boardstates bs;
-            BoardstatesDTO bsDTO;
-            bs = db.Boardstates.SingleOrDefault(x => x.StateId == sId);
-            bsDTO = new BoardstatesDTO(bs);
-            return bsDTO;
-        }
 
-        // get last move/most recently added boardstate
-        [HttpGet]
-        public BoardstatesDTO GetMostRecentState()
-        {
-            BoardstatesDTO bsDTO;
-            Boardstates bs = db.Boardstates.Last();
-            bsDTO = new BoardstatesDTO(bs);
-            return bsDTO;
-        }
 
         // add new state to bs
         [HttpPost]
@@ -132,12 +111,34 @@ namespace Chess.WebAPI.Controllers
 
             db.Boardstates.Add(bs);
             int x = db.SaveChanges();
-
+            //TODO: if checkmate check
             // successful db add
             if (x == 1)
                 return true;
 
             return false;
+        }
+
+        // get board by ids
+        [Route("{id}")]
+        [HttpGet]
+        public BoardstatesDTO GetStateById(int sId)
+        {
+            Boardstates bs;
+            BoardstatesDTO bsDTO;
+            bs = db.Boardstates.SingleOrDefault(x => x.StateId == sId);
+            bsDTO = new BoardstatesDTO(bs);
+            return bsDTO;
+        }
+
+        // get last move/most recently added boardstate
+        [HttpGet]
+        public BoardstatesDTO GetMostRecentState()
+        {
+            BoardstatesDTO bsDTO;
+            Boardstates bs = db.Boardstates.Last();
+            bsDTO = new BoardstatesDTO(bs);
+            return bsDTO;
         }
 
         // predict

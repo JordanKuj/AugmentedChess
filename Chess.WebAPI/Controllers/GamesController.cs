@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Chess.WebAPI.Models;
+using Chess.WebAPI.Tools;
+using ChessTest;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -50,6 +52,49 @@ namespace Chess.WebAPI.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // add new game
+        [HttpPost]
+        public bool AddState(ChessTest.Board b)
+        {
+            Games g = new Games();
+
+            Boardstates lastMove = db.Boardstates.Last();
+            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+            if (State.validState(b, last) == false)
+                return false;
+
+            g.StartTime = DateTime.Now;
+
+            db.Games.Add(g);
+            int x = db.SaveChanges();
+            if (x == 1)
+                return true;
+
+            return false;
+        }
+
+        // get game by ids
+        [Route("{id}")]
+        [HttpGet]
+        public GamesDTO GetGameById(int gId)
+        {
+            Games g;
+            GamesDTO gDTO;
+            g = db.Games.SingleOrDefault(x => x.GameId == gId);
+            gDTO = new GamesDTO(g);
+            return gDTO;
+        }
+
+        // get last game/most recently added game
+        [HttpGet]
+        public GamesDTO GetMostRecentGame()
+        {
+            GamesDTO gDTO;
+            Games g = db.Games.Last();
+            gDTO = new GamesDTO(g);
+            return gDTO;
         }
 
         //private bool GamesExists(int id)

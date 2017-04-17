@@ -28,9 +28,9 @@ namespace Chess.BoardWatch
         //Pen left = new Pen(Brushes.Yellow, 5);
         //Pen right = new Pen(Brushes.Green, 5);
         private readonly IGlyphTools _gt;
-        List<BetterPanel> panelsBnw = new List<BetterPanel>();
+        //List<BetterPanel> panelsBnw = new List<BetterPanel>();
         List<BetterPanel> panelsRed = new List<BetterPanel>();
-        List<BetterPanel> panelsGrn = new List<BetterPanel>();
+        //List<BetterPanel> panelsGrn = new List<BetterPanel>();
         List<BetterPanel> panelsBlu = new List<BetterPanel>();
 
         private BoardView DialogBoardView;
@@ -60,14 +60,14 @@ namespace Chess.BoardWatch
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadPanels(panelsBnw, FlowBnw);
+            //LoadPanels(panelsBnw, FlowBnw);
             LoadPanels(panelsBlu, FlowBlu);
             LoadPanels(panelsRed, FlowRed);
-            LoadPanels(panelsGrn, FlowGrn);
+            //LoadPanels(panelsGrn, FlowGrn);
 
             stream = new VideoCaptureDevice();
             FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[1].MonikerString);
+            stream = new VideoCaptureDevice(devices[0].MonikerString);
             var c = new VideoCapabilities[stream.VideoCapabilities.Length];
             var capabilities = new List<VideoCapabilities>(c);
             stream.VideoCapabilities.CopyTo(c, 0);
@@ -95,32 +95,34 @@ namespace Chess.BoardWatch
 
         private async Task ProcessImage(Bitmap origional)
         {
+            
             await _gt.ProcessImage(origional);
-            var state = _bt.UpdateCurrentState(_gt.Rblobs, _gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height));
+            //var state = _bt.UpdateCurrentState(_gt.Rblobs, _gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height));
+            var state = _bt.UpdateCurrentState(_gt.Bblobs, _gt.Rblobs, new Rectangle(0, 0, origional.Width, origional.Height));
 
             DialogBoardView.DrawBoard(origional, state);
-            EdgePanel.DrawImage(_gt.EdgeBlack);
-            PanelBw.DrawImage(_gt.BlackImage);
-            PanelFinal.DrawImage(_gt.threshBlack);
+            //EdgePanel.DrawImage(_gt.EdgeBlack);
+            //PanelBw.DrawImage(_gt.BlackImage);
+            //PanelFinal.DrawImage(_gt.threshBlack);
 
 
 
             PanelRed.DrawImage(_gt.RImage);
-            PanelGreen.DrawImage(_gt.GImage);
+            //PanelGreen.DrawImage(_gt.GImage);
             PanelBlue.DrawImage(_gt.BImage);
             PanelRBW.DrawImage(_gt.edgeR);
-            PanelGBW.DrawImage(_gt.edgeG);
+            //PanelGBW.DrawImage(_gt.edgeG);
             PanelBBW.DrawImage(_gt.edgeB);
             PanelFinalR.DrawImage(_gt.threshR);
-            PanelFinalG.DrawImage(_gt.threshG);
+            //PanelFinalG.DrawImage(_gt.threshG);
             PanelFinalB.DrawImage(_gt.threshB);
 
 
             //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
 
-            DrawEdges(_gt.BlackBlobs, PanelFinal, panelsBnw);
+            //DrawEdges(_gt.BlackBlobs, PanelFinal, panelsBnw);
             DrawEdges(_gt.Rblobs, PanelFinalR, panelsRed);
-            DrawEdges(_gt.Gblobs, PanelFinalG, panelsGrn);
+            //DrawEdges(_gt.Gblobs, PanelFinalG, panelsGrn);
             DrawEdges(_gt.Bblobs, PanelFinalB, panelsBlu);
 
             //gt.GrayBlobs.Select(x=>x.Blob.Rectangle)
@@ -149,9 +151,9 @@ namespace Chess.BoardWatch
 
 
         //TODO:calculate the average difference of light inside the box and outside the box
-        private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
-        {
-            return 0;
-        }
+        //private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
+        //{
+        //    return 0;
+        //}
     }
 }

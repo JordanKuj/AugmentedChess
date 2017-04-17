@@ -14,6 +14,13 @@ namespace ChessTest
         //{
         //}
 
+        private static bool SeeOutput = false;
+
+        private static void writeLine(string txt)
+        {
+            if (SeeOutput)
+                Console.WriteLine(txt);
+        }
 
         public static bool Comparer()
         {
@@ -48,13 +55,13 @@ namespace ChessTest
                     }
                     else if ((state1.board[i, j] != null && state2.board[i, j] == null) || (state1.board[i, j] == null && state2.board[i, j] != null))
                     {
-                        Console.WriteLine("VS count = {0}", count);
+                        writeLine($"VS count = {count}");
                         locations[count] = new Tuple<int, int>(i, j);
                         count++;
                     }
                     else if (state1.board[i, j].getName() != state2.board[i, j].getName() && state1.board[i, j].getTeam() != state2.board[i, j].getTeam())
                     {
-                        Console.WriteLine("VS count = {0}", count);
+                        writeLine($"VS count = {count}" );
                         locations[count] = new Tuple<int, int>(i, j);
                         count++;
                     }
@@ -64,7 +71,7 @@ namespace ChessTest
 
             if (count == 4)
             {
-                Console.WriteLine("4 differences, checking castling");
+                writeLine("4 differences, checking castling");
                 // Possible castle
                 //white long castle
                 if (locations[0] == new Tuple<int, int>(0, 0) && locations[1] == new Tuple<int, int>(2, 0)
@@ -94,7 +101,7 @@ namespace ChessTest
             }
             else if (count == 2)
             {
-                Console.WriteLine("2 differences standard move");
+                writeLine("2 differences standard move");
                 int x0 = locations[0].Item1;
                 int y0 = locations[0].Item2;
                 int x1 = locations[1].Item1;
@@ -112,7 +119,7 @@ namespace ChessTest
             }
             else
             {
-                Console.WriteLine("Not enough pieces moved");
+                writeLine("Not enough pieces moved");
                 return false;
             }
             return false;

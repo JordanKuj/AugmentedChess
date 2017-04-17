@@ -36,7 +36,14 @@ namespace Chess.BoardWatch
                 laststate = new Board();
                 laststate.fillNewBoard();
             }
-            if (!State.getDiff(laststate, current))
+            //var newboard = new Board();
+            //newboard.fillNewBoard();
+            //if (State.getDiff(current, newboard))
+            //{
+            //    return current;
+            //}
+
+            if (State.getDiff(laststate, current))
             {
                 return null;
             }

@@ -90,8 +90,6 @@ namespace Chess.WebAPI.Controllers
             return db.Boardstates.Count(e => e.StateId == id) > 0;
         }
 
-
-
         // add new state to bs
         [HttpPost]
         public bool AddState(ChessTest.Board b)
@@ -156,7 +154,7 @@ namespace Chess.WebAPI.Controllers
     }
 
 
-    // probablly not needed
+    // probably not needed
     /*// POST: api/Boardstates
     [ResponseType(typeof(Boardstates))]
     public async Task<IHttpActionResult> PostBoardstates(Boardstates boardstates)

@@ -38,7 +38,7 @@ namespace Chess.BoardWatch
             }
             //var newboard = new Board();
             //newboard.fillNewBoard();
-            //if (State.getDiff(current, newboard))
+            //if (State.getDiff( current, newboard))
             //{
             //    return current;
             //}
@@ -82,10 +82,7 @@ namespace Chess.BoardWatch
 
             currentState = new BoardState(pieces, turn);
             if (currentState.Pieces.Any(x => currentState.Pieces.Any(y => y != x && y.X == x.X && y.Y == x.Y)))
-            {
-                //there are 2 pieces in the same spot
                 NewBoardState?.Invoke(currentState, false);
-            }
             else
             {
                 var isvalid = IsCurrentStateValid() != null;

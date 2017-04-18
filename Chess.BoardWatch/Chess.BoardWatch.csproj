@@ -77,6 +77,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\IFactory.cs" />
     <Compile Include="Tools\BoardTools.cs" />
     <Compile Include="Models\BlobData.cs" />
     <Compile Include="Models\IGlyphTools.cs" />
@@ -88,6 +89,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\Bindings.cs" />
+    <Compile Include="Tools\BoardWatchService.cs" />
     <Compile Include="Tools\CfgUtility.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FilterTool.cs" />
@@ -122,6 +124,12 @@
     <Compile Include="UI\Forms\GlyphTestForm.Designer.cs">
       <DependentUpon>GlyphTestForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Forms\MonikerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MonikerSelector.Designer.cs">
+      <DependentUpon>MonikerSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Forms\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +156,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\GlyphTestForm.resx">
       <DependentUpon>GlyphTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MonikerSelector.resx">
+      <DependentUpon>MonikerSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>

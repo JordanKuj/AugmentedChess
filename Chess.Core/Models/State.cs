@@ -42,31 +42,38 @@ namespace ChessTest
 
         public static bool validState(Board state1, Board state2)
         {
-            Tuple<int, int>[] locations = new Tuple<int, int>[10];
+            List<Tuple<int, int>> locations = new List<Tuple<int, int>>();
             int count = 0;
             for (int j = 0; j < 8; j++)
             {
                 for (int i = 0; i < 8; i++)
                 {
 
-                    if (state1.board[i, j] == null && state2.board[i, j] == null)
-                    {
+                    var state1Null = state1.board[i, j] == null;
+                    var state2Null = state2.board[i, j] == null;
+                    var s1 = state1.board[i, j];
+                    var s2 = state2.board[i, j];
+
+                    if (state1Null && state2Null)
                         continue;
-                    }
-                    else if ((state1.board[i, j] != null && state2.board[i, j] == null) || (state1.board[i, j] == null && state2.board[i, j] != null))
+                    else if ((!state1Null && state2Null) || (state1Null && !state2Null))
                     {
                         writeLine($"VS count = {count}");
-                        locations[count] = new Tuple<int, int>(i, j);
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
-                    else if (state1.board[i, j].getName() != state2.board[i, j].getName() && state1.board[i, j].getTeam() != state2.board[i, j].getTeam())
+                    else if (s1.getName() != s2.getName() && s1.getTeam() != s2.getTeam())
                     {
-                        writeLine($"VS count = {count}" );
-                        locations[count] = new Tuple<int, int>(i, j);
+                        writeLine($"VS count = {count}");
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
+                    if (count > 4)
+                        break;
 
                 }
+                if (count > 4)
+                    break;
             }
 
             if (count == 4)

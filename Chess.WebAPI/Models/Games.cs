@@ -48,13 +48,7 @@ namespace Chess.WebAPI.Models
         public virtual Games Game { get; set; }
 
         public Boardstates() { }
-        public Boardstates(BoardstatesDTO bs)
-        {
-            this.StateId = bs.StateId;
-            this.Timestamp = bs.Timestamp;
-            this.State = bs.State;
-            this.GameId = bs.GameId;
-        }
+      
     }
 
     

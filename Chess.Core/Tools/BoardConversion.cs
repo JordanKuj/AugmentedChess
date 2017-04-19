@@ -1,5 +1,4 @@
-﻿using Chess.WebAPI.Controllers;
-using ChessTest;
+﻿using ChessTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;

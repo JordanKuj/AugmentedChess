@@ -248,7 +248,6 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Tools\BoardConversion.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\MovePrediction.cs" />
   </ItemGroup>

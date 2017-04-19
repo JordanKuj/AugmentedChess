@@ -1,4 +1,5 @@
-﻿using Chess.WebAPIClient;
+﻿using Chess.Core.Dtos;
+using Chess.WebAPIClient;
 using ChessTest;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,8 @@ namespace Chess.BoardWatch.Tools
         }
         private async void Initalize()
         {
-            var currentGame = await _wc.GetCurrentGame();
+            //var currentGame = await _wc.GetCurrentGame();
+            GamesDTO currentGame = null;
             if (currentGame == null)
             {
                 currentGame = new GamesDTO();
@@ -32,9 +34,10 @@ namespace Chess.BoardWatch.Tools
                 var b = new Board();
                 b.fillNewBoard();
                 States.Add(b.ToBoard());
-            }else
+            }
+            else
             {
-                _wc.GetCurrentGameState()
+                //_wc.GetCurrentGameState()
             }
         }
 

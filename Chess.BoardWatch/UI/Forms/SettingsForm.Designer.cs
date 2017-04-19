@@ -44,12 +44,18 @@
             this.NudMaxSize = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.BtnSave = new System.Windows.Forms.Button();
-            this.BtnLoad = new System.Windows.Forms.Button();
             this.FilterCtrlRed = new Chess.BoardWatch.ColorUserControl();
             this.FilterCtrlBlue = new Chess.BoardWatch.ColorUserControl();
-            this.FilterCtrlBlack = new Chess.BoardWatch.ColorUserControl();
-            this.FilterCtrlGreen = new Chess.BoardWatch.ColorUserControl();
+            this.BtnSave = new System.Windows.Forms.Button();
+            this.BtnLoad = new System.Windows.Forms.Button();
+            this.betterPanel1 = new Chess.BoardWatch.BetterPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.RedPanel = new Chess.BoardWatch.BetterPanel();
+            this.BluePanel = new Chess.BoardWatch.BetterPanel();
+            this.RadEyeOff = new System.Windows.Forms.RadioButton();
+            this.RadBlueEye = new System.Windows.Forms.RadioButton();
+            this.RadRedEye = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.nudThresh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -58,6 +64,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.NudGlyphDivs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NudMaxSize)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // nudThresh
@@ -256,20 +264,42 @@
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.FilterCtrlRed, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.FilterCtrlBlue, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.FilterCtrlBlack, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.FilterCtrlGreen, 1, 1);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(12, 225);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(653, 248);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(304, 320);
             this.tableLayoutPanel2.TabIndex = 12;
+            // 
+            // FilterCtrlRed
+            // 
+            this.FilterCtrlRed.AutoSize = true;
+            this.FilterCtrlRed.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.FilterCtrlRed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FilterCtrlRed.Location = new System.Drawing.Point(3, 3);
+            this.FilterCtrlRed.Name = "FilterCtrlRed";
+            this.FilterCtrlRed.Size = new System.Drawing.Size(298, 154);
+            this.FilterCtrlRed.TabIndex = 10;
+            this.FilterCtrlRed.Title = "Red Filter";
+            this.FilterCtrlRed.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlRed_ValueChanged);
+            // 
+            // FilterCtrlBlue
+            // 
+            this.FilterCtrlBlue.AutoSize = true;
+            this.FilterCtrlBlue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.FilterCtrlBlue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FilterCtrlBlue.Location = new System.Drawing.Point(3, 163);
+            this.FilterCtrlBlue.Name = "FilterCtrlBlue";
+            this.FilterCtrlBlue.Size = new System.Drawing.Size(298, 154);
+            this.FilterCtrlBlue.TabIndex = 11;
+            this.FilterCtrlBlue.Title = "Blue Filter";
+            this.FilterCtrlBlue.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlBlue_ValueChanged);
             // 
             // BtnSave
             // 
@@ -291,66 +321,114 @@
             this.BtnLoad.UseVisualStyleBackColor = true;
             this.BtnLoad.Click += new System.EventHandler(this.BtnLoad_Click);
             // 
-            // FilterCtrlRed
+            // betterPanel1
             // 
-            this.FilterCtrlRed.AutoSize = true;
-            this.FilterCtrlRed.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FilterCtrlRed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FilterCtrlRed.Location = new System.Drawing.Point(3, 3);
-            this.FilterCtrlRed.Name = "FilterCtrlRed";
-            this.FilterCtrlRed.Size = new System.Drawing.Size(320, 118);
-            this.FilterCtrlRed.TabIndex = 10;
-            this.FilterCtrlRed.Title = "Red Filter";
-            this.FilterCtrlRed.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlRed_ValueChanged);
+            this.betterPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.betterPanel1.Location = new System.Drawing.Point(313, 3);
+            this.betterPanel1.Name = "betterPanel1";
+            this.betterPanel1.Size = new System.Drawing.Size(201, 320);
+            this.betterPanel1.TabIndex = 15;
+            this.betterPanel1.Click += new System.EventHandler(this.betterPanel1_Click);
             // 
-            // FilterCtrlBlue
+            // tableLayoutPanel3
             // 
-            this.FilterCtrlBlue.AutoSize = true;
-            this.FilterCtrlBlue.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FilterCtrlBlue.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FilterCtrlBlue.Location = new System.Drawing.Point(3, 127);
-            this.FilterCtrlBlue.Name = "FilterCtrlBlue";
-            this.FilterCtrlBlue.Size = new System.Drawing.Size(320, 118);
-            this.FilterCtrlBlue.TabIndex = 11;
-            this.FilterCtrlBlue.Title = "Blue Filter";
-            this.FilterCtrlBlue.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlBlue_ValueChanged);
+            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 310F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel3.Controls.Add(this.betterPanel1, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel4, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel2, 0, 0);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(12, 212);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 1;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(725, 326);
+            this.tableLayoutPanel3.TabIndex = 16;
             // 
-            // FilterCtrlBlack
+            // tableLayoutPanel4
             // 
-            this.FilterCtrlBlack.AutoSize = true;
-            this.FilterCtrlBlack.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FilterCtrlBlack.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FilterCtrlBlack.Location = new System.Drawing.Point(329, 3);
-            this.FilterCtrlBlack.Name = "FilterCtrlBlack";
-            this.FilterCtrlBlack.Size = new System.Drawing.Size(321, 118);
-            this.FilterCtrlBlack.TabIndex = 13;
-            this.FilterCtrlBlack.Title = "Black Filter";
-            this.FilterCtrlBlack.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlBlack_ValueChanged);
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.RedPanel, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.BluePanel, 0, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(520, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(202, 320);
+            this.tableLayoutPanel4.TabIndex = 16;
             // 
-            // FilterCtrlGreen
+            // RedPanel
             // 
-            this.FilterCtrlGreen.AutoSize = true;
-            this.FilterCtrlGreen.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FilterCtrlGreen.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FilterCtrlGreen.Location = new System.Drawing.Point(329, 127);
-            this.FilterCtrlGreen.Name = "FilterCtrlGreen";
-            this.FilterCtrlGreen.Size = new System.Drawing.Size(321, 118);
-            this.FilterCtrlGreen.TabIndex = 12;
-            this.FilterCtrlGreen.Title = "Green Filter";
-            this.FilterCtrlGreen.ValueChanged += new System.Action<Chess.BoardWatch.ColorFilterSettings>(this.FilterCtrlGreen_ValueChanged);
+            this.RedPanel.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.RedPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RedPanel.Location = new System.Drawing.Point(3, 3);
+            this.RedPanel.Name = "RedPanel";
+            this.RedPanel.Size = new System.Drawing.Size(196, 154);
+            this.RedPanel.TabIndex = 0;
+            // 
+            // BluePanel
+            // 
+            this.BluePanel.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.BluePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BluePanel.Location = new System.Drawing.Point(3, 163);
+            this.BluePanel.Name = "BluePanel";
+            this.BluePanel.Size = new System.Drawing.Size(196, 154);
+            this.BluePanel.TabIndex = 1;
+            // 
+            // RadEyeOff
+            // 
+            this.RadEyeOff.AutoSize = true;
+            this.RadEyeOff.Location = new System.Drawing.Point(520, 140);
+            this.RadEyeOff.Name = "RadEyeOff";
+            this.RadEyeOff.Size = new System.Drawing.Size(95, 17);
+            this.RadEyeOff.TabIndex = 17;
+            this.RadEyeOff.TabStop = true;
+            this.RadEyeOff.Text = "EyeDropperOff";
+            this.RadEyeOff.UseVisualStyleBackColor = true;
+            this.RadEyeOff.CheckedChanged += new System.EventHandler(this.RadEyeOff_CheckedChanged);
+            // 
+            // RadBlueEye
+            // 
+            this.RadBlueEye.AutoSize = true;
+            this.RadBlueEye.Location = new System.Drawing.Point(520, 186);
+            this.RadBlueEye.Name = "RadBlueEye";
+            this.RadBlueEye.Size = new System.Drawing.Size(108, 17);
+            this.RadBlueEye.TabIndex = 18;
+            this.RadBlueEye.TabStop = true;
+            this.RadBlueEye.Text = "Eye Dropper Blue";
+            this.RadBlueEye.UseVisualStyleBackColor = true;
+            this.RadBlueEye.CheckedChanged += new System.EventHandler(this.RadEyeOff_CheckedChanged);
+            // 
+            // RadRedEye
+            // 
+            this.RadRedEye.AutoSize = true;
+            this.RadRedEye.Location = new System.Drawing.Point(520, 163);
+            this.RadRedEye.Name = "RadRedEye";
+            this.RadRedEye.Size = new System.Drawing.Size(107, 17);
+            this.RadRedEye.TabIndex = 19;
+            this.RadRedEye.TabStop = true;
+            this.RadRedEye.Text = "Eye Dropper Red";
+            this.RadRedEye.UseVisualStyleBackColor = true;
+            this.RadRedEye.CheckedChanged += new System.EventHandler(this.RadEyeOff_CheckedChanged);
             // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 693);
+            this.Controls.Add(this.RadRedEye);
+            this.Controls.Add(this.RadBlueEye);
+            this.Controls.Add(this.RadEyeOff);
+            this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.BtnLoad);
             this.Controls.Add(this.BtnSave);
-            this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "SettingsForm";
             this.Text = "SettingsForm";
-            this.Activated += new System.EventHandler(this.SettingsForm_Activated);
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudThresh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudMinSize)).EndInit();
@@ -362,7 +440,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.NudMaxSize)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -382,13 +463,19 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private ColorUserControl FilterCtrlBlue;
-        private ColorUserControl FilterCtrlGreen;
         private System.Windows.Forms.Button BtnSave;
         private System.Windows.Forms.Button BtnLoad;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown NudGlyphDivs;
         private System.Windows.Forms.NumericUpDown NudMaxSize;
         private System.Windows.Forms.Label label6;
-        private ColorUserControl FilterCtrlBlack;
+        private BetterPanel betterPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private BetterPanel RedPanel;
+        private BetterPanel BluePanel;
+        private System.Windows.Forms.RadioButton RadEyeOff;
+        private System.Windows.Forms.RadioButton RadBlueEye;
+        private System.Windows.Forms.RadioButton RadRedEye;
     }
 }

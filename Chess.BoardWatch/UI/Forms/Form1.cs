@@ -24,7 +24,7 @@ namespace Chess.BoardWatch
         List<BetterPanel> panelsRed = new List<BetterPanel>();
         List<BetterPanel> panelsBlu = new List<BetterPanel>();
 
-        private BoardView DialogBoardView;
+        //private BoardView DialogBoardView;
         public Form1(BoardWatchService bws, IGlyphTools gt, BoardTools bt)
         {
             InitializeComponent();

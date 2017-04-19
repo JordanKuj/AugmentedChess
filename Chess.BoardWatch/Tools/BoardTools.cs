@@ -50,10 +50,10 @@ namespace Chess.BoardWatch
             var sw = Stopwatch.StartNew();
             if (State.validState(laststate, current))
             {
-                Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+                //Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
                 return laststate;
             }
-            Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
+            //Debug.Print("validState = " + sw.ElapsedMilliseconds.ToString());
             return null;
         }
         public bool AcceptCurrentState()

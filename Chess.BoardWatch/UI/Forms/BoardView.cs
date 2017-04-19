@@ -133,6 +133,24 @@ namespace Chess.BoardWatch.UI.Forms
             _background = obj.ToManagedImage(true);
         }
 
+
+        private SettingsForm _settingsForm;
+
+
+        private void BtnSetRedMask_Click(object sender, EventArgs e)
+        {
+            if (_settingsForm != null)
+            {
+                _settingsForm.Dispose();
+                _settingsForm = null;
+            }
+            if (_settingsForm == null)
+                _settingsForm = _settingsFormFactory.GetInstance();
+            _settingsForm.Show();
+        }
+
+
+
         //private void _bws_NewRedFrame(ChannelData obj)
         //{
         //}

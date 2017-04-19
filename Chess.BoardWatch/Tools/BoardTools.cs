@@ -116,6 +116,14 @@ namespace Chess.BoardWatch
         }
     }
 
+
+    public interface IGlyphPiece
+    {
+        PieceType Type { get; }
+        Team Team { get; }
+        int X { get; }
+        int Y { get; }
+    }
     public class GlyphPiece
     {
         public GlyphPiece(PieceType type, Team team, int x, int y)
@@ -132,9 +140,14 @@ namespace Chess.BoardWatch
         public int Y { get; set; }
     }
 
+
+    public interface IBoardState
+    {
+        IEnumerable<IGlyphPiece> Pieces { get; }
+        Team Turn { get; }
+    }
     public class BoardState
     {
-
         public List<GlyphPiece> Pieces { get; set; }
         public Team Turn { get; set; }
 

@@ -93,6 +93,7 @@
     <Compile Include="Tools\CfgUtility.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FilterTool.cs" />
+    <Compile Include="Tools\LocalGameManager.cs" />
     <Compile Include="UI\BetterPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -209,6 +210,10 @@
     <ProjectReference Include="..\Chess.Core\Chess.Core.csproj">
       <Project>{6ce49514-a7d3-4309-8c20-ec4a3acabfbb}</Project>
       <Name>Chess.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Chess.WebAPIClient\Chess.WebAPIClient.csproj">
+      <Project>{A4B015DD-9582-4C06-A3EF-32EBF98D5055}</Project>
+      <Name>Chess.WebAPIClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

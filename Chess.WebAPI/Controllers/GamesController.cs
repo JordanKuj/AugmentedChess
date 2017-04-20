@@ -12,6 +12,8 @@ using System.Web.Http.Description;
 using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
 using ChessTest;
+using Chess.Core.Dtos;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -40,7 +42,7 @@ namespace Chess.WebAPI.Controllers
             else
             {
                 var val = res.FirstOrDefault();
-                return Ok(new GamesDTO(val));
+                return Ok(val.Convert());
             }
         }
 
@@ -83,7 +85,7 @@ namespace Chess.WebAPI.Controllers
             Games g;
             GamesDTO gDTO;
             g = db.Games.SingleOrDefault(x => x.GameId == gId);
-            gDTO = new GamesDTO(g);
+            gDTO = g.Convert();
             return gDTO;
         }
 
@@ -93,7 +95,7 @@ namespace Chess.WebAPI.Controllers
         {
             GamesDTO gDTO;
             Games g = db.Games.Last();
-            gDTO = new GamesDTO(g);
+            gDTO = g.Convert();
             return gDTO;
         }
 

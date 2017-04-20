@@ -14,6 +14,13 @@ namespace ChessTest
         //{
         //}
 
+        private static bool SeeOutput = false;
+
+        private static void writeLine(string txt)
+        {
+            if (SeeOutput)
+                Console.WriteLine(txt);
+        }
 
         public static bool Comparer()
         {
@@ -35,36 +42,43 @@ namespace ChessTest
 
         public static bool validState(Board state1, Board state2)
         {
-            Tuple<int, int>[] locations = new Tuple<int, int>[10];
+            List<Tuple<int, int>> locations = new List<Tuple<int, int>>();
             int count = 0;
             for (int j = 0; j < 8; j++)
             {
                 for (int i = 0; i < 8; i++)
                 {
 
-                    if (state1.board[i, j] == null && state2.board[i, j] == null)
-                    {
+                    var state1Null = state1.board[i, j] == null;
+                    var state2Null = state2.board[i, j] == null;
+                    var s1 = state1.board[i, j];
+                    var s2 = state2.board[i, j];
+
+                    if (state1Null && state2Null)
                         continue;
-                    }
-                    else if ((state1.board[i, j] != null && state2.board[i, j] == null) || (state1.board[i, j] == null && state2.board[i, j] != null))
+                    else if ((!state1Null && state2Null) || (state1Null && !state2Null))
                     {
-                        Console.WriteLine("VS count = {0}", count);
-                        locations[count] = new Tuple<int, int>(i, j);
+                        writeLine($"VS count = {count}");
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
-                    else if (state1.board[i, j].getName() != state2.board[i, j].getName() && state1.board[i, j].getTeam() != state2.board[i, j].getTeam())
+                    else if (s1.getName() != s2.getName() && s1.getTeam() != s2.getTeam())
                     {
-                        Console.WriteLine("VS count = {0}", count);
-                        locations[count] = new Tuple<int, int>(i, j);
+                        writeLine($"VS count = {count}");
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
+                    if (count > 4)
+                        break;
 
                 }
+                if (count > 4)
+                    break;
             }
 
             if (count == 4)
             {
-                Console.WriteLine("4 differences, checking castling");
+                writeLine("4 differences, checking castling");
                 // Possible castle
                 //white long castle
                 if (locations[0] == new Tuple<int, int>(0, 0) && locations[1] == new Tuple<int, int>(2, 0)
@@ -94,7 +108,7 @@ namespace ChessTest
             }
             else if (count == 2)
             {
-                Console.WriteLine("2 differences standard move");
+                writeLine("2 differences standard move");
                 int x0 = locations[0].Item1;
                 int y0 = locations[0].Item2;
                 int x1 = locations[1].Item1;
@@ -112,7 +126,7 @@ namespace ChessTest
             }
             else
             {
-                Console.WriteLine("Not enough pieces moved");
+                writeLine("Not enough pieces moved");
                 return false;
             }
             return false;

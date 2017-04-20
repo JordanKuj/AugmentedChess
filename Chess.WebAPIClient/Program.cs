@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Chess.WebAPI;
 using ChessTest;  // TODO delete
 using static Chess.WebAPI.Tools.MovePrediction;  // TODO delete
-using static Chess.WebAPI.Tools.BoardConversion;
-using static ChessTest.Board;  // TODO delete
+using Chess.Core.Dtos;
 
 namespace Chess.WebAPIClient
 {

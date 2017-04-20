@@ -11,28 +11,61 @@ using System.Windows.Forms;
 using Chess.BoardWatch.Models;
 using Chess.BoardWatch.Properties;
 using ChessTest;
-
+using Chess.BoardWatch.Tools;
+using AForge.Imaging;
+using Chess.BoardWatch.Factories;
 namespace Chess.BoardWatch.UI.Forms
 {
     public partial class BoardView : Form
     {
+        private readonly BoardWatchService _bws;
         private readonly BoardTools _bt;
-        public BoardView(BoardTools bt)
+        private readonly IFactory<SettingsForm> _settingsFormFactory;
+        private readonly IFactory<Form1> _form1Factory;
+
+
+        //private readonly LocalGameManager _lgm;
+        public BoardView(BoardTools bt, BoardWatchService bws, IFactory<SettingsForm> settingsFormFactory, IFactory<Form1> form1Factory)
         {
             InitializeComponent();
             _bt = bt;
+            _bws = bws;
             _bt.NewBoardState += BtOnNewBoardState;
+            _bt.NewBoardStateAccepted += _bt_NewBoardStateAccepted;
+            _settingsFormFactory = settingsFormFactory;
+            _form1Factory = form1Factory;
         }
+
+        private void _bt_NewBoardStateAccepted()
+        {
+            var count = _bt.States.Count - 1;
+            LblMoveCount.Text = count.ToString();
+            //LblPlayerTurn.Text = count % 2 == 0 ? "White" : "Black";
+            LblPlayerTurn.Text = _bt.LastMove.Turn == Team.white ? Team.black.ToString() : Team.white.ToString();
+        }
+
+        private BoardState ValidState;
 
         private void BtOnNewBoardState(BoardState boardState, bool isvalid)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
+                this?.Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
                 return;
+            }
+            if (isvalid)
+            {
+                ValidState = boardState;
+                timer1.Start();
+            }
+            else
+            {
+                ValidState = null;
+                timer1.Stop();
             }
             BtnAccept.Enabled = isvalid;
             BtnAccept.BackColor = isvalid ? Color.PaleGreen : Color.PaleVioletRed;
+            DrawBoard(_background, boardState);
         }
 
         private List<GlyphPiece> pieces;
@@ -46,7 +79,6 @@ namespace Chess.BoardWatch.UI.Forms
                 pieces = new List<GlyphPiece>(board.Pieces);
                 betterPanel1.Invalidate();
             }
-
         }
 
         private void betterPanel1_Paint(object sender, PaintEventArgs e)
@@ -57,9 +89,9 @@ namespace Chess.BoardWatch.UI.Forms
 
             var spaceWidth = (betterPanel1.Width / 8);
             var spaceHeight = (betterPanel1.Height / 8);
-            if (_background != null)
-                g.DrawImage(_background, new Rectangle(0, 0, betterPanel1.Width, betterPanel1.Height));
-            //g.FillRectangle(Brushes.White, 0, 0, betterPanel1.Width, betterPanel1.Height);
+            var b = _background?.Clone() as Bitmap;
+            if (b != null)
+                g.DrawImage(b, new Rectangle(0, 0, betterPanel1.Width, betterPanel1.Height));
             for (var x = 0; x < 9; x++)
             {
                 var x1 = spaceWidth * x;
@@ -71,7 +103,7 @@ namespace Chess.BoardWatch.UI.Forms
             {
                 foreach (var p in pieces)
                 {
-                    var selectedImage = (Image)GetImage(p);
+                    var selectedImage = (System.Drawing.Image)GetImage(p);
 
                     var rect = new Rectangle(p.X * spaceWidth, p.Y * spaceHeight, spaceWidth, spaceHeight);
                     //Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
@@ -112,8 +144,75 @@ namespace Chess.BoardWatch.UI.Forms
             }
         }
 
+        private void BoardView_Load(object sender, EventArgs e)
+        {
+            //_bws.NewBlueData += _bws_NewBlueData;
+            //_bws.NewRedFrame += _bws_NewRedFrame;
+            _bws.NewRawFrame += _bws_NewRawFrame;
+        }
+
+        private void _bws_NewRawFrame(UnmanagedImage obj)
+        {
+            _background = obj.ToManagedImage(true);
+        }
+
+
+        private SettingsForm _settingsForm;
+
+
+        private void BtnSetRedMask_Click(object sender, EventArgs e)
+        {
+            if (_settingsForm != null)
+            {
+                _settingsForm.Dispose();
+                _settingsForm = null;
+            }
+            if (_settingsForm == null)
+                _settingsForm = _settingsFormFactory.GetInstance();
+            _settingsForm.Show();
+        }
+
+        private void BtnAccept_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void AcceptState()
+        {
+            timer1.Stop();
+            _bt.SubmitNewState(ValidState);
+            ValidState = null;
+            AcceptSw.Reset();
+        }
+
+
+        private Stopwatch AcceptSw = new Stopwatch();
+        private const int AcceptTimeout = 5000;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (ValidState != null)
+            {
+                if (!AcceptSw.IsRunning)
+                    AcceptSw.Restart();
+                if (AcceptSw.ElapsedMilliseconds >= AcceptTimeout)
+                    AcceptState();
+
+                BtnAccept.Text = $"Accept {((AcceptTimeout - AcceptSw.ElapsedMilliseconds) / 1000)}";
+            }
+            else
+            {
+                timer1.Stop();
+                AcceptSw.Reset();
+            }
+        }
 
 
 
+        //private void _bws_NewRedFrame(ChannelData obj)
+        //{
+        //}
+
+        //private void _bws_NewBlueData(ChannelData obj)
+        //{
+        //}
     }
 }

@@ -13,6 +13,9 @@ using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
 using ChessTest;
 using static ChessTest.Board;
+using Chess.Core.Dtos;
+using Chess.WebAPI.Tools;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
@@ -25,7 +28,7 @@ namespace Chess.WebAPI.Controllers
         public IQueryable<BoardstatesDTO> GetBoardstates()
         {
             var board = from b in db.Boardstates
-                        select new BoardstatesDTO(b);
+                        select b.ToBoard();
             return board;
             //return db.Boardstates.Include(g => g.GameId);
         }
@@ -34,7 +37,7 @@ namespace Chess.WebAPI.Controllers
         [ResponseType(typeof(Boardstates))]
         public async Task<IHttpActionResult> GetBoardstates(int id)
         {
-            var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO(b)).SingleOrDefaultAsync(b => b.StateId == id);
+            var board = await db.Boardstates.Include(b => b.StateId).Select(b => b.ToBoard()).SingleOrDefaultAsync(b => b.StateId == id);
             Boardstates boardstates = await db.Boardstates.FindAsync(id);
             if (boardstates == null)
             {
@@ -125,7 +128,7 @@ namespace Chess.WebAPI.Controllers
             Boardstates bs;
             BoardstatesDTO bsDTO;
             bs = db.Boardstates.SingleOrDefault(x => x.StateId == sId);
-            bsDTO = new BoardstatesDTO(bs);
+            bsDTO = bs.ToBoard();
             return bsDTO;
         }
 
@@ -135,7 +138,7 @@ namespace Chess.WebAPI.Controllers
         {
             BoardstatesDTO bsDTO;
             Boardstates bs = db.Boardstates.Last();
-            bsDTO = new BoardstatesDTO(bs);
+            bsDTO = bs.ToBoard();
             return bsDTO;
         }
 

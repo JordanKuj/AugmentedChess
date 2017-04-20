@@ -8,6 +8,9 @@ using System.Windows.Forms;
 using System.Drawing;
 using ChessTest;
 using Chess.BoardWatch.Models;
+using Chess.Core.Dtos;
+using Chess.BoardWatch;
+using Chess.Core.Tools;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -35,8 +38,7 @@ namespace Chess.BoardWatch.Tools
             return new Point((int)x, (int)y);
         }
 
-
-        public static Board ToBoard(this BoardState state)
+        private static Board Convert(IBoardState state)
         {
             var b = new Board();
             b.turn = state.Turn;
@@ -50,6 +52,18 @@ namespace Chess.BoardWatch.Tools
                 }
             return b;
         }
+
+        public static Board ToBoard(this BoardState state)
+        {
+            return Convert((IBoardState)state);
+        }
+        public static Board ToBoard(this IBoardState state)
+        {
+            return Convert(state);
+        }
+
+
+
         public static BoardState ToBoard(this Board b)
         {
             var state = new BoardState();
@@ -88,6 +102,13 @@ namespace Chess.BoardWatch.Tools
                 }
             }
             return pass;
+        }
+
+
+        public static BoardState ToGameState(this BoardstatesDTO s)
+        {
+            var b = BoardConversion.MakeBoard(s.State);
+            return b.ToBoard();
         }
 
 

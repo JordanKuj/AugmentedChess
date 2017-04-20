@@ -8,6 +8,9 @@ using System.Windows.Forms;
 using System.Drawing;
 using ChessTest;
 using Chess.BoardWatch.Models;
+using Chess.Core.Dtos;
+using Chess.BoardWatch;
+using Chess.Core.Tools;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -99,6 +102,13 @@ namespace Chess.BoardWatch.Tools
                 }
             }
             return pass;
+        }
+
+
+        public static BoardState ToGameState(this BoardstatesDTO s)
+        {
+            var b = BoardConversion.MakeBoard(s.State);
+            return b.ToBoard();
         }
 
 

@@ -13,6 +13,7 @@ using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
 using ChessTest;
 using Chess.Core.Dtos;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {

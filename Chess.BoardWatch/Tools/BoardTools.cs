@@ -8,20 +8,60 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChessTest;
+using Chess.Core.Dtos;
 
 namespace Chess.BoardWatch
 {
     public class BoardTools
     {
-        public List<BoardState> States = new List<BoardState>();
+        public IList<IBoardState> States => _states.ToList<IBoardState>();
+        public IBoardState LastMove => States.Last();
+        private List<BoardState> _states = new List<BoardState>();
+
         public BoardState currentState;
         public event Action<BoardState, bool> NewBoardState;
+        public event Action NewBoardStateAccepted;
 
         private Rectangle BoardArea { get; set; }
         public const int BoardDivisions = 8;
 
         public BoardTools()
         {
+            Initalize();
+        }
+        private void Initalize()
+        {
+            //var currentGame = await _wc.GetCurrentGame();
+            GamesDTO currentGame = null;
+            if (currentGame == null)
+            {
+                currentGame = new GamesDTO();
+                //await _wc.CreateGame(currentGame);
+                //TODO:Try web api
+                var b = new Board();
+                b.fillNewBoard();
+                var blankboard = b.ToBoard();
+                blankboard.Turn = Team.error;
+                _states.Add(blankboard);
+            }
+            else
+            {
+                //_wc.GetCurrentGameState()
+            }
+        }
+        public bool SubmitNewState(BoardState state)
+        {
+            //if (!TInitalizing.IsCompleted)
+            //    return false;
+
+            if (!State.getDiff(state.ToBoard(), LastMove.ToBoard()))
+                if (State.validState(LastMove.ToBoard(), state.ToBoard()))
+                {
+                    _states.Add(state);
+                    NewBoardStateAccepted?.Invoke();
+                    return true;
+                }
+            return false;
         }
 
         public Board IsCurrentStateValid()
@@ -29,7 +69,7 @@ namespace Chess.BoardWatch
             if (currentState == null)
                 return null;
 
-            Board laststate = States.LastOrDefault()?.ToBoard();
+            Board laststate = _states.LastOrDefault()?.ToBoard();
             Board current = currentState.ToBoard();
             if (laststate == null)
             {
@@ -61,7 +101,7 @@ namespace Chess.BoardWatch
             var valid = IsCurrentStateValid();
             if (valid != null)
             {
-                States.Add(valid.ToBoard());
+                _states.Add(valid.ToBoard());
                 return true;
             }
             return false;
@@ -73,11 +113,10 @@ namespace Chess.BoardWatch
             SetData(pieces, black, BoardArea, Team.black);
             SetData(pieces, white, BoardArea, Team.white);
 
-            var laststate = States.LastOrDefault();
-            Team turn;
-            if (laststate != null)
-                turn = (laststate.Turn == Team.white ? Team.black : Team.white);
-            else
+            Team turn = Team.error;
+            if (LastMove.Turn == Team.error || LastMove.Turn == Team.black)
+                turn = Team.white;
+            else if (LastMove.Turn == Team.white)
                 turn = Team.black;
 
             currentState = new BoardState(pieces, turn);
@@ -124,21 +163,7 @@ namespace Chess.BoardWatch
         int X { get; }
         int Y { get; }
     }
-    public class GlyphPiece
-    {
-        public GlyphPiece(PieceType type, Team team, int x, int y)
-        {
-            Type = type;
-            Team = team;
-            X = x;
-            Y = y;
-        }
 
-        public PieceType Type { get; set; }
-        public Team Team { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
-    }
 
 
     public interface IBoardState
@@ -146,22 +171,7 @@ namespace Chess.BoardWatch
         IEnumerable<IGlyphPiece> Pieces { get; }
         Team Turn { get; }
     }
-    public class BoardState
-    {
-        public List<GlyphPiece> Pieces { get; set; }
-        public Team Turn { get; set; }
 
-        public BoardState()
-        {
-            Pieces = new List<GlyphPiece>();
-        }
-
-        public BoardState(List<GlyphPiece> pieces, Team turn)
-        {
-            Pieces = pieces;
-            Turn = turn;
-        }
-    }
 
 
 

@@ -15,6 +15,7 @@ using ChessTest;
 using static ChessTest.Board;
 using Chess.Core.Dtos;
 using Chess.WebAPI.Tools;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {

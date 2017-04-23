@@ -105,7 +105,7 @@ namespace Chess.BoardWatch.Tools
         }
 
 
-        public static BoardState ToGameState(this BoardstatesDTO s)
+        public static BoardState ToGameState(this BoardstateDTO s)
         {
             var b = BoardConversion.MakeBoard(s.State);
             return b.ToBoard();

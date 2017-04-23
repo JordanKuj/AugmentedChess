@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Chess.Core.Dtos;
 
 namespace Chess.Core.Tools
 {
@@ -34,7 +35,7 @@ namespace Chess.Core.Tools
                 for (int j = 0; j < 8; j++)
                 {
                     //p = b.GetPiece(i,j);
-                    p = b.GetPiece(j,i);
+                    p = b.GetPiece(j, i);
                     // Console.WriteLine("j: " + j.ToString() + ", i: " + i.ToString());  // TODO
 
                     // if there's no piece there
@@ -187,6 +188,23 @@ namespace Chess.Core.Tools
                 }
             }
             return b;
+        }
+
+
+        public static ChessTest.Board ToBoard(Dtos.BoardstateDTO bs)
+        {
+            var res = MakeBoard(bs.State);
+            res.turn = bs.Turn;
+
+            return res;
+        }
+
+        public static Dtos.BoardstateDTO ToBoard(ChessTest.Board bs)
+        {
+            var res = new BoardstateDTO();
+            res.Turn = bs.turn;
+            res.State = MakeString(bs);
+            return res;
         }
     }
 }

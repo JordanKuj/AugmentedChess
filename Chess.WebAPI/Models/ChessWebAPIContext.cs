@@ -20,7 +20,7 @@ namespace Chess.WebAPI.Models
         {
             Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
             //Database.SetInitializer(new DbApiConfiguration());
-            
+
             //Database.Initialize(false);
         }
 

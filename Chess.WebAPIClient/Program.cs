@@ -16,19 +16,20 @@ namespace Chess.WebAPIClient
         {
             var x = new Application();
             Console.WriteLine("Running...");
+            Task.WaitAll(x.Run());
             //Task.WaitAll(x.Run());  // An unhandled exception of type 'System.AggregateException' occurred in mscorlib.dll
             Console.WriteLine("press any key to continue");
             Console.ReadKey();
 
-            ChessTest.Board b = new ChessTest.Board();
-            b.fillNewBoard();
+            //ChessTest.Board b = new ChessTest.Board();
+            //b.fillNewBoard();
             //List<Moveset> moves = predictAll(Team.white);
             //List<Moveset> moves = b.listAllMoves(Team.white);
-            Console.WriteLine("Should be predicting now");
-            List<Move> pm = predict(b, Team.white);
-            printPredict(pm);
+            //Console.WriteLine("Should be predicting now");
+            //List<Move> pm = predict(b, Team.white);
+            //printPredict(pm);
             //foreach (var m in moves)
-                //Console.WriteLine(m.GetMovePiece());
+            //Console.WriteLine(m.GetMovePiece());
             //printAllPredictions(moves);
             /*String s = MakeString(b);
             Console.WriteLine(s);
@@ -71,7 +72,13 @@ namespace Chess.WebAPIClient
 
             var g2 = await client.GetCurrentGame();
 
+
+            var s1 = await client.CreateBoardstate(new BoardstateDTO() { State = "AAAAAAAAAAAA", Timestamp = DateTime.Now });
+
             Console.WriteLine(g2.StartTime);
+
+            var state = await client.GetCurrentGameState();
+            Console.WriteLine($"{state.GameId}:{state.StateId}:{state.Timestamp}");
         }
     }
 }

@@ -5,17 +5,18 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using ChessTest;
 
 namespace Chess.BoardWatch.Models
 {
-    public enum PieceType
-    {
-        Pawn = 1, knight = 2, rook = 3, bishop = 4, queen = 5, king = 6, Debug = 7, none = 0
-    }
-    public enum Team
-    {
-        black, white
-    }
+    //public enum PieceType
+    //{
+    //    Pawn = 1, knight = 2, rook = 3, bishop = 4, queen = 5, king = 6, Debug = 7, none = 0
+    //}
+    //public enum Team
+    //{
+    //    black, white
+    //}
     public enum RotateType { cw, ccw }
 
     public static class PieceConstants
@@ -35,8 +36,8 @@ namespace Chess.BoardWatch.Models
                                                    { 1, 1, 1, 1, 1} };  //pawn
 
         public static int[,] kni = new int[5, 5] { { 1, 1, 1, 1, 1},
-                                                   { 1, 0, 0, 1, 1},
-                                                   { 1, 0, 1, 1, 1},
+                                                   { 1, 1, 0, 0, 1},
+                                                   { 1, 1, 1, 0, 1},
                                                    { 1, 0, 0, 0, 1},
                                                    { 1, 1, 1, 1, 1} };  //knight
 
@@ -65,7 +66,7 @@ namespace Chess.BoardWatch.Models
                                                    { 1, 1, 1, 1, 1} };  //king
 
         public static Dictionary<PieceType, int[,]> PieceLookup = new Dictionary<PieceType, int[,]> {
-            { PieceType.Pawn, pwn },
+            { PieceType.pawn, pwn },
             { PieceType.knight, kni },
             { PieceType.rook, rok },
             { PieceType.bishop, bsh },
@@ -76,21 +77,34 @@ namespace Chess.BoardWatch.Models
 
         public static PieceType FindPieceType(int[,] blobout)
         {
+
+            var outside = new List<int>(new[]
+            {
+                blobout[0,0], blobout[0, 1] , blobout[0, 2] , blobout[0, 3] , blobout[0, 4],
+                blobout[4,0], blobout[4, 1] , blobout[4, 2] , blobout[4, 3] , blobout[4, 4],
+                blobout[1,0], blobout[2, 0] , blobout[3, 0] , blobout[2, 0]  ,
+                blobout[1,4], blobout[2, 4] , blobout[3, 4] , blobout[2, 4]
+
+            });
+            if (outside.Any(x => x == 0))
+                return PieceType.error;
+
+
             foreach (var t in PieceLookup)
                 if (Compare(t.Value, blobout))
                     return t.Key;
-            return PieceType.none;
+            return PieceType.error;
         }
 
 
         public static int[,] Rotate(int[,] tmpboard, RotateType type)
         {
 
-            var newboard = new int[5, 5] { { 1, 1, 1, 1, 1},
-                                           { 1, 0, 0, 0, 1},
-                                           { 1, 0, 0, 0, 1},
-                                           { 1, 0, 0, 0, 1},
-                                           { 1, 1, 1, 1, 1} };
+            var newboard = new int[,] { { 1, 1, 1, 1, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 0, 0, 0, 1},
+                                        { 1, 1, 1, 1, 1} };
             //initializing the outside border so then only the inside 3x3 needs to rotate
 
             int newx = 1;

@@ -6,6 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using ChessTest;
+using Chess.BoardWatch.Models;
+using Chess.Core.Dtos;
+using Chess.BoardWatch;
+using Chess.Core.Tools;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -31,6 +36,79 @@ namespace Chess.BoardWatch.Tools
             var x = (r.Width / 2f) + r.Location.X;
             var y = (r.Height / 2f) + r.Location.Y;
             return new Point((int)x, (int)y);
+        }
+
+        private static Board Convert(IBoardState state)
+        {
+            var b = new Board();
+            b.turn = state.Turn;
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+                {
+                    b.board[x, y] = null;
+                    var piece = state.Pieces.SingleOrDefault(z => z.X == x && z.Y == y);
+                    if (piece != null)
+                        b.board[x, y] = new Piece(piece.Team, piece.Type);
+                }
+            return b;
+        }
+
+        public static Board ToBoard(this BoardState state)
+        {
+            return Convert((IBoardState)state);
+        }
+        public static Board ToBoard(this IBoardState state)
+        {
+            return Convert(state);
+        }
+
+
+
+        public static BoardState ToBoard(this Board b)
+        {
+            var state = new BoardState();
+            state.Turn = b.turn;
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+                {
+                    Piece piece = b.board[x, y];
+                    if (piece != null)
+                        state.Pieces.Add(new GlyphPiece(piece.Name, piece.Team, x, y));
+                }
+            return state;
+        }
+        public static bool GlyphHasBorder(this BlobData bd)
+        {
+            var pass = true;
+            var max = bd.GlyphDivisions - 1;
+            var min = 0;
+            for (var y = 0; y < bd.GlyphDivisions; y++)
+            {
+                if (y == min || y == max)
+                    for (var x = 0; x < bd.GlyphDivisions; x++)
+                    {
+                        //check ceiling and floor
+                        pass &= bd.glyph[y, x] == 1;
+                        if (!pass)
+                            break;
+                    }
+                else
+                {
+                    //check walls
+                    pass &= bd.glyph[y, min] == 1;
+                    pass &= bd.glyph[y, max] == 1;
+                    if (!pass)
+                        break;
+                }
+            }
+            return pass;
+        }
+
+
+        public static BoardState ToGameState(this BoardstatesDTO s)
+        {
+            var b = BoardConversion.MakeBoard(s.State);
+            return b.ToBoard();
         }
 
 

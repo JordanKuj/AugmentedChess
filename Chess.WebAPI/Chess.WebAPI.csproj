@@ -241,8 +241,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AccountBindingModels.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ChessWebAPIContext.cs" />
     <Compile Include="Models\Games.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -250,7 +248,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="Tools\BoardConversion.cs" />
+    <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\MovePrediction.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -28,284 +28,280 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.FlowBnw = new System.Windows.Forms.FlowLayoutPanel();
-            this.FlowRed = new System.Windows.Forms.FlowLayoutPanel();
-            this.FlowGrn = new System.Windows.Forms.FlowLayoutPanel();
-            this.FlowBlu = new System.Windows.Forms.FlowLayoutPanel();
-            this.PanelFinalB = new Chess.BoardWatch.BetterPanel();
-            this.PanelRBW = new Chess.BoardWatch.BetterPanel();
-            this.PanelRed = new Chess.BoardWatch.BetterPanel();
             this.PanelRawVideo = new Chess.BoardWatch.BetterPanel();
-            this.PanelGreen = new Chess.BoardWatch.BetterPanel();
-            this.PanelGBW = new Chess.BoardWatch.BetterPanel();
-            this.PanelFinal = new Chess.BoardWatch.BetterPanel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.PanelBBW = new Chess.BoardWatch.BetterPanel();
             this.PanelBlue = new Chess.BoardWatch.BetterPanel();
-            this.EdgePanel = new Chess.BoardWatch.BetterPanel();
-            this.PanelBw = new Chess.BoardWatch.BetterPanel();
+            this.PanelFinalB = new Chess.BoardWatch.BetterPanel();
+            this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.FlowBlu = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.PanelFinalR = new Chess.BoardWatch.BetterPanel();
-            this.PanelFinalG = new Chess.BoardWatch.BetterPanel();
+            this.PanelRBW = new Chess.BoardWatch.BetterPanel();
+            this.PanelRed = new Chess.BoardWatch.BetterPanel();
+            this.FlowRed = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.tableLayoutPanel10.SuspendLayout();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.flowLayoutPanel4.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel3, 1, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1484, 728);
-            this.tableLayoutPanel1.TabIndex = 1;
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.Controls.Add(this.PanelFinalB, 2, 4);
-            this.tableLayoutPanel2.Controls.Add(this.PanelRBW, 1, 2);
-            this.tableLayoutPanel2.Controls.Add(this.PanelRed, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.PanelRawVideo, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.PanelGreen, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.PanelGBW, 1, 3);
-            this.tableLayoutPanel2.Controls.Add(this.PanelFinal, 2, 1);
-            this.tableLayoutPanel2.Controls.Add(this.PanelBBW, 1, 4);
-            this.tableLayoutPanel2.Controls.Add(this.PanelBlue, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.EdgePanel, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.PanelBw, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.PanelFinalR, 2, 2);
-            this.tableLayoutPanel2.Controls.Add(this.PanelFinalG, 2, 3);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(4, 4);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(622, 720);
-            this.tableLayoutPanel2.TabIndex = 6;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.Controls.Add(this.FlowBnw, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.FlowRed, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.FlowGrn, 0, 3);
-            this.tableLayoutPanel3.Controls.Add(this.FlowBlu, 0, 4);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(633, 4);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 5;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(847, 720);
-            this.tableLayoutPanel3.TabIndex = 7;
-            // 
-            // FlowBnw
-            // 
-            this.FlowBnw.AutoSize = true;
-            this.FlowBnw.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FlowBnw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FlowBnw.Location = new System.Drawing.Point(4, 147);
-            this.FlowBnw.Name = "FlowBnw";
-            this.FlowBnw.Size = new System.Drawing.Size(839, 136);
-            this.FlowBnw.TabIndex = 1;
-            // 
-            // FlowRed
-            // 
-            this.FlowRed.AutoSize = true;
-            this.FlowRed.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FlowRed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FlowRed.Location = new System.Drawing.Point(4, 290);
-            this.FlowRed.Name = "FlowRed";
-            this.FlowRed.Size = new System.Drawing.Size(839, 136);
-            this.FlowRed.TabIndex = 2;
-            // 
-            // FlowGrn
-            // 
-            this.FlowGrn.AutoSize = true;
-            this.FlowGrn.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FlowGrn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FlowGrn.Location = new System.Drawing.Point(4, 433);
-            this.FlowGrn.Name = "FlowGrn";
-            this.FlowGrn.Size = new System.Drawing.Size(839, 136);
-            this.FlowGrn.TabIndex = 3;
-            // 
-            // FlowBlu
-            // 
-            this.FlowBlu.AutoSize = true;
-            this.FlowBlu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.FlowBlu.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.FlowBlu.Location = new System.Drawing.Point(4, 576);
-            this.FlowBlu.Name = "FlowBlu";
-            this.FlowBlu.Size = new System.Drawing.Size(839, 140);
-            this.FlowBlu.TabIndex = 4;
-            // 
-            // PanelFinalB
-            // 
-            this.PanelFinalB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelFinalB.Location = new System.Drawing.Point(417, 579);
-            this.PanelFinalB.Name = "PanelFinalB";
-            this.PanelFinalB.Size = new System.Drawing.Size(202, 138);
-            this.PanelFinalB.TabIndex = 4;
-            // 
-            // PanelRBW
-            // 
-            this.PanelRBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelRBW.Location = new System.Drawing.Point(210, 291);
-            this.PanelRBW.Name = "PanelRBW";
-            this.PanelRBW.Size = new System.Drawing.Size(201, 138);
-            this.PanelRBW.TabIndex = 8;
-            // 
-            // PanelRed
-            // 
-            this.PanelRed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelRed.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PanelRed.Location = new System.Drawing.Point(3, 291);
-            this.PanelRed.Name = "PanelRed";
-            this.PanelRed.Size = new System.Drawing.Size(201, 138);
-            this.PanelRed.TabIndex = 5;
             // 
             // PanelRawVideo
             // 
             this.PanelRawVideo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PanelRawVideo.Location = new System.Drawing.Point(3, 3);
             this.PanelRawVideo.Name = "PanelRawVideo";
-            this.PanelRawVideo.Size = new System.Drawing.Size(201, 138);
+            this.PanelRawVideo.Size = new System.Drawing.Size(178, 237);
             this.PanelRawVideo.TabIndex = 0;
             // 
-            // PanelGreen
+            // tableLayoutPanel1
             // 
-            this.PanelGreen.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelGreen.Location = new System.Drawing.Point(3, 435);
-            this.PanelGreen.Name = "PanelGreen";
-            this.PanelGreen.Size = new System.Drawing.Size(201, 138);
-            this.PanelGreen.TabIndex = 6;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.PanelRawVideo, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tabControl1, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1106, 516);
+            this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // PanelGBW
+            // tabPage4
             // 
-            this.PanelGBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelGBW.Location = new System.Drawing.Point(210, 435);
-            this.PanelGBW.Name = "PanelGBW";
-            this.PanelGBW.Size = new System.Drawing.Size(201, 138);
-            this.PanelGBW.TabIndex = 8;
+            this.tabPage4.Controls.Add(this.tableLayoutPanel10);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(908, 484);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Blue";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // PanelFinal
+            // tableLayoutPanel10
             // 
-            this.PanelFinal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelFinal.Location = new System.Drawing.Point(417, 147);
-            this.PanelFinal.Name = "PanelFinal";
-            this.PanelFinal.Size = new System.Drawing.Size(202, 138);
-            this.PanelFinal.TabIndex = 3;
+            this.tableLayoutPanel10.ColumnCount = 2;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.Controls.Add(this.flowLayoutPanel4, 1, 0);
+            this.tableLayoutPanel10.Controls.Add(this.tableLayoutPanel11, 0, 0);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 1;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(902, 478);
+            this.tableLayoutPanel10.TabIndex = 1;
+            // 
+            // tableLayoutPanel11
+            // 
+            this.tableLayoutPanel11.ColumnCount = 2;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.Controls.Add(this.PanelFinalB, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.PanelBlue, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.PanelBBW, 1, 0);
+            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 2;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(445, 472);
+            this.tableLayoutPanel11.TabIndex = 0;
             // 
             // PanelBBW
             // 
             this.PanelBBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelBBW.Location = new System.Drawing.Point(210, 579);
+            this.PanelBBW.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelBBW.Location = new System.Drawing.Point(225, 3);
             this.PanelBBW.Name = "PanelBBW";
-            this.PanelBBW.Size = new System.Drawing.Size(201, 138);
+            this.PanelBBW.Size = new System.Drawing.Size(217, 230);
             this.PanelBBW.TabIndex = 7;
             // 
             // PanelBlue
             // 
             this.PanelBlue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelBlue.Location = new System.Drawing.Point(3, 579);
+            this.PanelBlue.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelBlue.Location = new System.Drawing.Point(3, 3);
             this.PanelBlue.Name = "PanelBlue";
-            this.PanelBlue.Size = new System.Drawing.Size(201, 138);
+            this.PanelBlue.Size = new System.Drawing.Size(216, 230);
             this.PanelBlue.TabIndex = 9;
             // 
-            // EdgePanel
+            // PanelFinalB
             // 
-            this.EdgePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EdgePanel.Location = new System.Drawing.Point(210, 147);
-            this.EdgePanel.Name = "EdgePanel";
-            this.EdgePanel.Size = new System.Drawing.Size(201, 138);
-            this.EdgePanel.TabIndex = 2;
+            this.PanelFinalB.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelFinalB.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelFinalB.Location = new System.Drawing.Point(3, 239);
+            this.PanelFinalB.Name = "PanelFinalB";
+            this.PanelFinalB.Size = new System.Drawing.Size(216, 230);
+            this.PanelFinalB.TabIndex = 4;
             // 
-            // PanelBw
+            // flowLayoutPanel4
             // 
-            this.PanelBw.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelBw.Location = new System.Drawing.Point(3, 147);
-            this.PanelBw.Name = "PanelBw";
-            this.PanelBw.Size = new System.Drawing.Size(201, 138);
-            this.PanelBw.TabIndex = 1;
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel4.Controls.Add(this.FlowBlu);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(454, 3);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(445, 472);
+            this.flowLayoutPanel4.TabIndex = 2;
+            // 
+            // FlowBlu
+            // 
+            this.FlowBlu.AutoSize = true;
+            this.FlowBlu.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.FlowBlu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FlowBlu.Location = new System.Drawing.Point(3, 3);
+            this.FlowBlu.Name = "FlowBlu";
+            this.FlowBlu.Size = new System.Drawing.Size(0, 0);
+            this.FlowBlu.TabIndex = 4;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.tableLayoutPanel4);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(908, 484);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Red";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.FlowRed, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(902, 478);
+            this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 2;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Controls.Add(this.PanelRed, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.PanelRBW, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.PanelFinalR, 0, 1);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(445, 472);
+            this.tableLayoutPanel5.TabIndex = 0;
             // 
             // PanelFinalR
             // 
             this.PanelFinalR.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelFinalR.Location = new System.Drawing.Point(417, 291);
+            this.PanelFinalR.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelFinalR.Location = new System.Drawing.Point(3, 239);
             this.PanelFinalR.Name = "PanelFinalR";
-            this.PanelFinalR.Size = new System.Drawing.Size(202, 138);
+            this.PanelFinalR.Size = new System.Drawing.Size(216, 230);
             this.PanelFinalR.TabIndex = 10;
             // 
-            // PanelFinalG
+            // PanelRBW
             // 
-            this.PanelFinalG.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.PanelFinalG.Location = new System.Drawing.Point(417, 435);
-            this.PanelFinalG.Name = "PanelFinalG";
-            this.PanelFinalG.Size = new System.Drawing.Size(202, 138);
-            this.PanelFinalG.TabIndex = 11;
+            this.PanelRBW.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelRBW.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelRBW.Location = new System.Drawing.Point(225, 3);
+            this.PanelRBW.Name = "PanelRBW";
+            this.PanelRBW.Size = new System.Drawing.Size(217, 230);
+            this.PanelRBW.TabIndex = 8;
+            // 
+            // PanelRed
+            // 
+            this.PanelRed.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PanelRed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PanelRed.Location = new System.Drawing.Point(3, 3);
+            this.PanelRed.Name = "PanelRed";
+            this.PanelRed.Size = new System.Drawing.Size(216, 230);
+            this.PanelRed.TabIndex = 5;
+            // 
+            // FlowRed
+            // 
+            this.FlowRed.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.FlowRed.Location = new System.Drawing.Point(454, 3);
+            this.FlowRed.Name = "FlowRed";
+            this.FlowRed.Size = new System.Drawing.Size(445, 472);
+            this.FlowRed.TabIndex = 2;
+            // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(187, 3);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(916, 510);
+            this.tabControl1.TabIndex = 2;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1484, 728);
+            this.ClientSize = new System.Drawing.Size(1106, 516);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tableLayoutPanel10.ResumeLayout(false);
+            this.tableLayoutPanel10.PerformLayout();
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.flowLayoutPanel4.ResumeLayout(false);
+            this.flowLayoutPanel4.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private BetterPanel PanelRawVideo;
-        private BetterPanel PanelBw;
-        private BetterPanel EdgePanel;
-        private BetterPanel PanelFinal;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.FlowLayoutPanel FlowRed;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private BetterPanel PanelRed;
+        private BetterPanel PanelRBW;
+        private BetterPanel PanelFinalR;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
+        private System.Windows.Forms.FlowLayoutPanel FlowBlu;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private BetterPanel PanelFinalB;
         private BetterPanel PanelBlue;
         private BetterPanel PanelBBW;
-        private BetterPanel PanelGreen;
-        private BetterPanel PanelGBW;
-        private BetterPanel PanelRBW;
-        private BetterPanel PanelFinalB;
-        private BetterPanel PanelFinalR;
-        private BetterPanel PanelFinalG;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
-        private System.Windows.Forms.FlowLayoutPanel FlowBnw;
-        private System.Windows.Forms.FlowLayoutPanel FlowRed;
-        private System.Windows.Forms.FlowLayoutPanel FlowGrn;
-        private System.Windows.Forms.FlowLayoutPanel FlowBlu;
     }
 }

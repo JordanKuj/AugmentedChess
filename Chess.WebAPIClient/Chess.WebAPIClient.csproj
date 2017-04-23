@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseDTOs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WebClient.cs" />
@@ -61,6 +60,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Chess.Core\Chess.Core.csproj">
+      <Project>{6CE49514-A7D3-4309-8C20-EC4A3ACABFBB}</Project>
+      <Name>Chess.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Chess.WebAPI\Chess.WebAPI.csproj">
       <Project>{1739F6EF-BA5E-4C0E-9430-7E5E1358E66A}</Project>
       <Name>Chess.WebAPI</Name>

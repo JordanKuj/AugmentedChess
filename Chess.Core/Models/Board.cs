@@ -8,12 +8,24 @@ namespace ChessTest
 {
     public class Board
     {
+        //startPosition use to store starting position for capture method
+        public Tuple<int, int> startPosition;
         public Team turn;
         public class Moveset
         {
             public Piece piece;
             public Tuple<int, int> start;
             public List<Tuple<int, int>> end;
+
+            public Tuple<int, int> GetMoveStart()
+            {
+                return start;
+            }
+
+            public List<Tuple<int, int>> GetMoveEnds()
+            {
+                return end;
+            }
         }
         public Piece[,] board;
         /*
@@ -87,7 +99,7 @@ namespace ChessTest
         {
             return board[x, y];
         }
-        
+
         public void printBoard()
         {
             for (int j = 7; j >= 0; j--)
@@ -261,7 +273,7 @@ namespace ChessTest
                 //Console.WriteLine("no piece at end");
                 return true;
             }
-            if (getAt(x, y).getTeam() == turn)
+            if (getAt(x, y).getTeam() == getAt(startPosition.Item1, startPosition.Item2).getTeam())
             {
                 // Console.WriteLine("Cannot capture own team {0} at {1},{2}", getAt(x, y).getName(), x, y);
                 return false;
@@ -270,8 +282,8 @@ namespace ChessTest
             Console.WriteLine("Capturing {0} at {1},{2}", getAt(x, y).getName(), x, y);
             return true;
         }
-        
-      public bool validMove(int a, int b, int x, int y)
+
+        public bool validMove(int a, int b, int x, int y)
         {
             if (a < 0 || b < 0 || x < 0 || y < 0)
             {
@@ -461,6 +473,7 @@ namespace ChessTest
         {
             //Console.WriteLine("Step Through [{0},{1}] [{2},{3}]", a, b, x, y);
             //if move is straight up or down
+            startPosition = new Tuple<int, int>(a,b);
             if (a == x)
             {
                 if (b < y)
@@ -883,8 +896,9 @@ namespace ChessTest
             }
 
             return TeamMoveset;
-        
-  public Piece GetPiece(int x, int y)
+        }
+
+        public Piece GetPiece(int x, int y)
         {
             Piece p;
             p = board[x, y];

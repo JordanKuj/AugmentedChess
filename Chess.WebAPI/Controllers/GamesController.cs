@@ -10,13 +10,16 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Chess.WebAPI.Models;
+using Chess.WebAPI.Tools;
+using ChessTest;
+using Chess.Core.Dtos;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
     public class GamesController : ApiController
     {
         private ChessWebAPIContext db = new ChessWebAPIContext();
-
 
         [HttpPost]
         public HttpResponseMessage Post(GamesDTO g)
@@ -39,10 +42,115 @@ namespace Chess.WebAPI.Controllers
             else
             {
                 var val = res.FirstOrDefault();
-                return Ok(new GamesDTO(val));
+                return Ok(val.Convert());
             }
         }
 
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        // add new game
+        [HttpPost]
+        public bool AddState(ChessTest.Board b)
+        {
+            Games g = new Games();
+
+            Boardstates lastMove = db.Boardstates.Last();
+            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+            if (State.validState(b, last) == false)
+                return false;
+
+            g.StartTime = DateTime.Now;
+
+            db.Games.Add(g);
+            int x = db.SaveChanges();
+            if (x == 1)
+                return true;
+
+            return false;
+        }
+
+        // get game by ids
+        [Route("{id}")]
+        [HttpGet]
+        public GamesDTO GetGameById(int gId)
+        {
+            Games g;
+            GamesDTO gDTO;
+            g = db.Games.SingleOrDefault(x => x.GameId == gId);
+            gDTO = g.Convert();
+            return gDTO;
+        }
+
+        // get last game/most recently added game
+        [HttpGet]
+        public GamesDTO GetMostRecentGame()
+        {
+            GamesDTO gDTO;
+            Games g = db.Games.Last();
+            gDTO = g.Convert();
+            return gDTO;
+        }
+
+        //private bool GamesExists(int id)
+        //{
+        //    return db.Games.Count(e => e.GameId == id) > 0;
+        //}
+
+        //// returns game indicated by id
+        //public GamesDTO GetGameById(int gId)
+        //{
+        //    Games g;
+        //    GamesDTO game;
+        //    g = db.Games.SingleOrDefault(x => x.GameId == gId);
+        //    if (g == null)
+        //        return null;
+        //    game = new GamesDTO(g);
+        //    return game;
+        //}
+
+        //// returns array containing all game ids
+        //public List<int> GetAllGameIds()
+        //{
+        //    var games = db.Games.Include(g => g.GameId).Select(x => x.GameId).ToList();
+        //    return games;
+        //}
+
+        //// returns most recent game (game added to db last)
+        //public GamesDTO GetMostRecentGame()
+        //{
+        //    Games g;
+        //    GamesDTO game;
+        //    g = db.Games.Last();
+        //    game = new GamesDTO(g);
+        //    return game;
+        //}
+
+        //// add new game to db
+        //private void AddNewGame()
+        //{
+        //    Games g = new Games();
+        //    g.StartTime = DateTime.Now;
+
+        //    db.Games.Add(g);
+        //    // check when debugging int x = db.SaveChanges();
+        //    db.SaveChanges();
+        //}
+
+        //// end game
+        //private void EndGame(int gId)
+        //{
+        //    Games g = db.Games.SingleOrDefault(x => x.GameId == gId);
+        //    g.EndTime = DateTime.Now;
+        //    db.SaveChanges();
+        //}
 
         // GET: api/Games
         //public IQueryable<GamesDTO> GetGames()
@@ -113,7 +221,7 @@ namespace Chess.WebAPI.Controllers
         //}
 
         //// probably not needed
-        ///*// POST: api/Games
+        // POST: api/Games
         //[ResponseType(typeof(Games))]
         //public async Task<IHttpActionResult> PostGames(Games games)
         //{
@@ -144,66 +252,5 @@ namespace Chess.WebAPI.Controllers
         //    return Ok(games);
         //}*/
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        //private bool GamesExists(int id)
-        //{
-        //    return db.Games.Count(e => e.GameId == id) > 0;
-        //}
-
-        //// returns game indicated by id
-        //public GamesDTO GetGameById(int gId)
-        //{
-        //    Games g;
-        //    GamesDTO game;
-        //    g = db.Games.SingleOrDefault(x => x.GameId == gId);
-        //    if (g == null)
-        //        return null;
-        //    game = new GamesDTO(g);
-        //    return game;
-        //}
-
-        //// returns array containing all game ids
-        //public List<int> GetAllGameIds()
-        //{
-        //    var games = db.Games.Include(g => g.GameId).Select(x => x.GameId).ToList();
-        //    return games;
-        //}
-
-        //// returns most recent game (game added to db last)
-        //public GamesDTO GetMostRecentGame()
-        //{
-        //    Games g;
-        //    GamesDTO game;
-        //    g = db.Games.Last();
-        //    game = new GamesDTO(g);
-        //    return game;
-        //}
-
-        //// add new game to db
-        //private void AddNewGame()
-        //{
-        //    Games g = new Games();
-        //    g.StartTime = DateTime.Now;
-
-        //    db.Games.Add(g);
-        //    // check when debugging int x = db.SaveChanges();
-        //    db.SaveChanges();
-        //}
-
-        //// end game
-        //private void EndGame(int gId)
-        //{
-        //    Games g = db.Games.SingleOrDefault(x => x.GameId == gId);
-        //    g.EndTime = DateTime.Now;
-        //    db.SaveChanges();
-        //}
     }
 }

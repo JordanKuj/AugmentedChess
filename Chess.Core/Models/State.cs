@@ -14,6 +14,13 @@ namespace ChessTest
         //{
         //}
 
+        private static bool SeeOutput = true;
+
+        private static void writeLine(string txt)
+        {
+            if (SeeOutput)
+                Console.WriteLine(txt);
+        }
 
         public static bool Comparer()
         {
@@ -22,102 +29,56 @@ namespace ChessTest
 
         public static bool getDiff(Board state1, Board state2)
         {
-            bool one = false;
-            bool two = false;
             for (int j = 0; j < 8; j++)
-            {
                 for (int i = 0; i < 8; i++)
                 {
-                    one = false;
-                    two = false;
-                    try
-                    {
-                        if (state1.board[i, j].getName() == state2.board[i, j].getName())
-                        {
-                            //Console.WriteLine("{0}{1} SAME", i, j);
-                            continue;
-                        }
-                        Console.WriteLine("Board 1: {0},{1} :: {2}", i, j, state1.board[i, j].getName().ToString());
-
-                        Console.WriteLine("Board 2: {0},{1} :: {2}", i, j, state2.board[i, j].getName().ToString());
-                    }
-                    //one is null
-                    catch
-                    {
-                        try
-                        {
-                            state1.board[i, j].getTeam();
-                        }
-                        catch
-                        {
-                            one = true;
-                        }
-                        try
-                        {
-                            state2.board[i, j].getTeam();
-                        }
-                        catch
-                        {
-                            two = true;
-                        }
-                        if (one && two)
-                        {
-                            continue;
-                        }
-                        else if (one && !two)
-                        {
-                            Console.WriteLine("Board 1: {0},{1} :: NULL", i, j);
-
-                            Console.WriteLine("Board 2: {0},{1} :: {2}", i, j, state2.board[i, j].getName().ToString());
-                        }
-                        else if (!one && two)
-                        {
-                            Console.WriteLine("Board 1: {0},{1} :: {2}", i, j, state1.board[i, j].getName().ToString());
-
-                            Console.WriteLine("Board 2: {0},{1} :: NULL", i, j);
-                        }
-
-                    }
-
-
-
+                    Piece p1 = state1.board[i, j];
+                    Piece p2 = state2.board[i, j];
+                    if (p1?.getName() != p2?.getName() || p1?.getTeam() != p2?.getTeam())
+                        return false;
                 }
-            }
             return true;
         }
 
         public static bool validState(Board state1, Board state2)
         {
-            Tuple<int, int>[] locations = new Tuple<int, int>[10];
+            List<Tuple<int, int>> locations = new List<Tuple<int, int>>();
             int count = 0;
             for (int j = 0; j < 8; j++)
             {
                 for (int i = 0; i < 8; i++)
                 {
 
-                    if (state1.board[i, j] == null && state2.board[i, j] == null)
-                    {
+                    var state1Null = state1.board[i, j] == null;
+                    var state2Null = state2.board[i, j] == null;
+                    var s1 = state1.board[i, j];
+                    var s2 = state2.board[i, j];
+
+                    if (state1Null && state2Null)
                         continue;
-                    }
-                    else if ((state1.board[i, j] != null && state2.board[i, j] == null) || (state1.board[i, j] == null && state2.board[i, j] != null))
+                    else if ((!state1Null && state2Null) || (state1Null && !state2Null))
                     {
-                        Console.WriteLine("VS count = {0}", count);
-                        locations[count] = new Tuple<int, int>(i, j);
+                        writeLine($"VS count = {count}");
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
-                    else if (state1.board[i, j].getName() != state2.board[i, j].getName() && state1.board[i, j].getTeam() != state2.board[i, j].getTeam())
+                    else if (s1.getTeam() != s2.getTeam())
                     {
-                        Console.WriteLine("VS count = {0}", count);
-                        locations[count] = new Tuple<int, int>(i, j);
+                        writeLine($"VS count = {count}");
+                        locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
+                    if (count > 4)
+                        break;
 
                 }
+                if (count > 4)
+                    break;
             }
 
             if (count == 4)
             {
-                Console.WriteLine("4 differences, checking castling");
+                writeLine("4 differences, checking castling");
                 // Possible castle
                 //white long castle
                 if (locations[0] == new Tuple<int, int>(0, 0) && locations[1] == new Tuple<int, int>(2, 0)
@@ -147,25 +108,35 @@ namespace ChessTest
             }
             else if (count == 2)
             {
-                Console.WriteLine("2 differences standard move");
+                writeLine("2 differences standard move");
                 int x0 = locations[0].Item1;
                 int y0 = locations[0].Item2;
                 int x1 = locations[1].Item1;
                 int y1 = locations[1].Item2;
 
-                if (state1.board[x0, y0] != null)
+                Console.WriteLine($"State1 location 0 ::{state1.board[locations[0].Item1, locations[0].Item2]?.getNameString()}");
+                Console.WriteLine($"State1 location 1 ::{state1.board[locations[1].Item1, locations[1].Item2]?.getNameString()}");
+                Console.WriteLine($"State2 location 0 ::{state2.board[locations[0].Item1, locations[0].Item2]?.getNameString()}");
+                Console.WriteLine($"State2 location 1 ::{state2.board[locations[1].Item1, locations[1].Item2]?.getNameString()}");
+                if (state2.board[locations[0].Item1, locations[0].Item2] == null)
                 {
-                    return state1.validMove(x0, y0, x1, y1);
+                    Console.WriteLine("State 1");
+                    state1.printBoard();
+                    Console.WriteLine("State 2");
+                    state2.printBoard();
+                    Console.WriteLine($"Moving {locations[0].Item1}, {locations[0].Item2 } -> { locations[1].Item1}, { locations[1].Item2 }");
+                    return state1.validMove(locations[0].Item1, locations[0].Item2, locations[1].Item1, locations[1].Item2);
                 }
-                else if (state1.board[x1, y1] != null)
+                else if (state2.board[locations[1].Item1, locations[1].Item2] == null)
                 {
-                    return state1.validMove(x1, y1, x0, y0);
+                    Console.WriteLine($"Moving { locations[1].Item1}, { locations[1].Item2 } -> { locations[0].Item1}, { locations[0].Item2 }");
+                    return state1.validMove(locations[1].Item1, locations[1].Item2, locations[0].Item1, locations[0].Item2);
                 }
-
+                
             }
             else
             {
-                Console.WriteLine("Not enough pieces moved");
+                writeLine("Not enough pieces moved");
                 return false;
             }
             return false;

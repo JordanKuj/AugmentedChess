@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Chess.BoardWatch
 {
@@ -30,7 +31,7 @@ namespace Chess.BoardWatch
             TrackBarRed.Value = s.Red;
             TrackBarGreen.Value = s.Green;
             numericUpDown1.Value = s.Radius;
-            DrawColor();
+
         }
 
         public ColorFilterSettings Get()
@@ -44,23 +45,25 @@ namespace Chess.BoardWatch
             LblGreenVal.Text = Green.ToString();
             LblRedval.Text = Red.ToString();
 
-            DrawColor();
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
             ValueChanged?.Invoke(Get());
             DrawColor();
         }
+
+
 
         public void DrawColor()
         {
-            var g = panel1.CreateGraphics();
-            var b = new SolidBrush(Color.FromArgb(255, Red, Green, Blue));
-            g.FillRectangle(Brushes.White, new Rectangle(0, 0, panel1.Width, panel1.Height));
-            g.FillEllipse(b, new Rectangle(0, 0, Radius / 2, Radius / 2));
-            ValueChanged?.Invoke(Get());
+            panel1.Invalidate();
         }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+            var g = panel1.CreateGraphics();
+            var b = new SolidBrush(Color.FromArgb(255, Red, Green, Blue));
+
+            Debug.WriteLine($"Draw Color: R:{Red} B:{Blue} G:{Green} R:{Radius / 2}");
+            g.FillRectangle(Brushes.White, new Rectangle(0, 0, panel1.Width, panel1.Height));
+            g.FillEllipse(b, new Rectangle(0, 0, Radius / 2, Radius / 2));
+        }
     }
 }

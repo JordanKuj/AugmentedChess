@@ -19,26 +19,17 @@ namespace Chess.BoardWatch
 {
     public partial class Form1 : Form
     {
-        public static IKernel kernal;
-        public BoardTools bt = new BoardTools();
-        VideoCaptureDevice stream;
-        //const int GlyphDivs = 5;
-        const int QuadSize = 50;
-        //private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
-        readonly IGlyphTools gt;//= new GlyphTools(32, GlyphDivs);
-        Pen left = new Pen(Brushes.Yellow, 5);
-        Pen right = new Pen(Brushes.Green, 5);
-        List<BetterPanel> panelsBnw = new List<BetterPanel>();
+        private readonly BoardWatchService _bws;
+        public readonly BoardTools _bt;//; = new BoardTools();
         List<BetterPanel> panelsRed = new List<BetterPanel>();
-        List<BetterPanel> panelsGrn = new List<BetterPanel>();
         List<BetterPanel> panelsBlu = new List<BetterPanel>();
 
-        private BoardView DialogBoardView;
-        public Form1()
+        //private BoardView DialogBoardView;
+        public Form1(BoardWatchService bws, IGlyphTools gt, BoardTools bt)
         {
             InitializeComponent();
-            kernal = new StandardKernel(new Bindings());
-            gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
+            _bws = bws;
+            _bt = bt;
         }
 
         private static void LoadPanels(List<BetterPanel> panels, FlowLayoutPanel flowpanel)
@@ -50,97 +41,50 @@ namespace Chess.BoardWatch
                 p.Width = 105;
                 p.BorderStyle = BorderStyle.FixedSingle;
                 panels.Add(p);
-
                 flowpanel.Controls.Add(p);
             }
-
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadPanels(panelsBnw, FlowBnw);
             LoadPanels(panelsBlu, FlowBlu);
             LoadPanels(panelsRed, FlowRed);
-            LoadPanels(panelsGrn, FlowGrn);
+            _bws.NewBlueData += _bws_NewBlueData;
+            _bws.NewRedFrame += _bws_NewRedFrame;
+            _bws.NewRawFrame += _bws_NewRawFrame;
+        }
 
-            stream = new VideoCaptureDevice();
-            FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[0].MonikerString);
-            var c = new VideoCapabilities[stream.VideoCapabilities.Length];
-            var capabilities = new List<VideoCapabilities>(c);
-            stream.VideoCapabilities.CopyTo(c, 0);
-            var vidres = c[0];
-            stream.VideoResolution = vidres;
-            stream.NewFrame += Stream_NewFrame;
-            stream.Start();
-            var dilg = kernal.Get<SettingsForm>();
-            dilg.Show();
+        private void _bws_NewRawFrame(UnmanagedImage obj)
+        {
+            PanelRawVideo.DrawImage(obj);
+        }
 
-            DialogBoardView = new BoardView();
-            DialogBoardView.Show();
+        private void _bws_NewRedFrame(ChannelData obj)
+        {
+            PanelRed.DrawImage(obj.MaskImage);
+            PanelRBW.DrawImage(obj.EdgeImage);
+            PanelFinalR.DrawImage(obj.ThresImage);
+            DrawEdges(obj.BlobData, PanelFinalR, panelsRed);
+        }
+
+        private void _bws_NewBlueData(ChannelData obj)
+        {
+            PanelBlue.DrawImage(obj.MaskImage);
+            PanelBBW.DrawImage(obj.EdgeImage);
+            PanelFinalB.DrawImage(obj.ThresImage);
+            DrawEdges(obj.BlobData, PanelFinalB, panelsBlu);
         }
 
 
-        Task ProcessingImage;
 
-        private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
+
+        private static void DrawEdges(IList<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
         {
-            PanelRawVideo.DrawImage(eventArgs.Frame);
-            if (ProcessingImage == null || ProcessingImage.IsCompleted)
-                ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
-        }
-
-        private async Task ProcessImage(Bitmap origional)
-        {
-            await gt.ProcessImage(origional);
-
-            DialogBoardView.DrawBoard(origional, bt.SetPieces(gt.Rblobs, gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height)));
-            EdgePanel.DrawImage(gt.EdgeGray);
-            PanelBw.DrawImage(gt.GrayImage);
-            PanelFinal.DrawImage(gt.threshGray);
-
-
-
-            PanelRed.DrawImage(gt.RImage);
-            PanelGreen.DrawImage(gt.GImage);
-            PanelBlue.DrawImage(gt.BImage);
-            PanelRBW.DrawImage(gt.edgeR);
-            PanelGBW.DrawImage(gt.edgeG);
-            PanelBBW.DrawImage(gt.edgeB);
-            PanelFinalR.DrawImage(gt.threshR);
-            PanelFinalG.DrawImage(gt.threshG);
-            PanelFinalB.DrawImage(gt.threshB);
-
-
-            //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
-
-            DrawEdges(gt.GrayBlobs, PanelFinal, panelsBnw);
-            DrawEdges(gt.Rblobs, PanelFinalR, panelsRed);
-            DrawEdges(gt.Gblobs, PanelFinalG, panelsGrn);
-            DrawEdges(gt.Bblobs, PanelFinalB, panelsBlu);
-
-            //gt.GrayBlobs.Select(x=>x.Blob.Rectangle)
-
-            var whitePieces = gt.Rblobs;
-            var blackPieces = gt.Bblobs;
-
-
-
-        }
-
-        private static void DrawEdges(List<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
-        {
-            Pen left = new Pen(Brushes.Yellow, 5);
-            Pen right = new Pen(Brushes.Green, 5);
             var c = 0;
-
+            p.DrawBlobs(blobs);
             foreach (var b in blobs)
             {
-                p.DrawRectangle(Pens.Red, b.Rect);
-                p.DrawLines(left, b.leftedge);
-                p.DrawLines(right, b.rightedge);
-
                 if (c < panels.Count)
                 {
                     panels[c].DrawMe(b.glyph, b.GlyphDivisions);
@@ -151,10 +95,5 @@ namespace Chess.BoardWatch
         }
 
 
-        //TODO:calculate the average difference of light inside the box and outside the box
-        private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
-        {
-            return 0;
-        }
     }
 }

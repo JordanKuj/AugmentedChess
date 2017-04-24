@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
+using Chess.WebAPI.Migrations;
+using Chess.WebAPI.Models;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 
@@ -12,6 +14,9 @@ namespace Chess.WebAPI
     {
         public static void Register(HttpConfiguration config)
         {
+            //System.Data.Entity.Database.SetInitializer(new DbApiConfiguration());
+            //ChessWebAPIContext db = new ChessWebAPIContext();
+            //db.Database.Initialize(true);
             // Web API configuration and services
             // Configure Web API to use only bearer token authentication.
             config.SuppressDefaultHostAuthentication();
@@ -19,6 +24,8 @@ namespace Chess.WebAPI
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+
+
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

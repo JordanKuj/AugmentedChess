@@ -17,10 +17,12 @@ using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
+    [RoutePrefix("Games")]
     public class GamesController : ApiController
     {
-        private ChessWebAPIContext db = new ChessWebAPIContext();
+        private readonly ChessWebAPIContext _db = new ChessWebAPIContext();
 
+        [Route("")]
         [HttpPost]
         public HttpResponseMessage Post(GamesDTO g)
         {
@@ -28,76 +30,75 @@ namespace Chess.WebAPI.Controllers
             g.EndTime = DateTime.Now;
 
             var dbgame = new Games(g);
-            db.Games.Add(dbgame);
-            var cha = db.SaveChanges();
+            _db.Games.Add(dbgame);
+            var cha = _db.SaveChanges();
+            g = dbgame.Convert();
+            var b = new ChessTest.Board();
+            b.fillNewBoard();
 
+            var bs = BoardConversion.ToBoard(b);
+
+            bs.GameId = g.GameId;
+            bs.Turn = Team.error;
+            bs.Timestamp = DateTime.Now;
+            _db.Boardstates.Add(bs.ToBoard());
+
+            _db.SaveChanges();
             return new HttpResponseMessage(HttpStatusCode.Accepted);
         }
+
+        [Route("{id}")]
         [HttpGet]
-        public IHttpActionResult Get()
+        public GamesDTO GetGameById(int gId)
         {
-            var res = db.Games.OrderByDescending(x => x.GameId);
-            if (res == null)
-                return NotFound();
-            else
-            {
-                var val = res.FirstOrDefault();
-                return Ok(val.Convert());
-            }
+            Games g = _db.Games.SingleOrDefault(x => x.GameId == gId);
+            GamesDTO gDto = g.Convert();
+            return gDto;
         }
 
+        // get last game/most recently added game
+        [Route("")]
+        [HttpGet]
+        public GamesDTO GetMostRecentGame()
+        {
+            Games g = _db.Games.ToList().Last();
+            GamesDTO gDto = g.Convert();
+            return gDto;
+        }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }
 
+
         // add new game
-        [HttpPost]
-        public bool AddState(ChessTest.Board b)
-        {
-            Games g = new Games();
+        //[HttpPost]
+        //[Route("")]
+        //public bool AddState(BoardstateDTO b)
+        //{
+        //    //Games g = new Games();
 
-            Boardstates lastMove = db.Boardstates.Last();
-            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
-            if (State.validState(b, last) == false)
-                return false;
+        //    Boardstates lastMove = db.Boardstates.Last();
+        //    ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+        //    if (State.validState(b, last) == false)
+        //        return false;
 
-            g.StartTime = DateTime.Now;
+        //    //g.StartTime = DateTime.Now;
 
-            db.Games.Add(g);
-            int x = db.SaveChanges();
-            if (x == 1)
-                return true;
+        //    //db.Games.Add(g);
+        //    int x = db.SaveChanges();
+        //    if (x == 1)
+        //        return true;
 
-            return false;
-        }
+        //    return false;
+        //}
 
         // get game by ids
-        [Route("{id}")]
-        [HttpGet]
-        public GamesDTO GetGameById(int gId)
-        {
-            Games g;
-            GamesDTO gDTO;
-            g = db.Games.SingleOrDefault(x => x.GameId == gId);
-            gDTO = g.Convert();
-            return gDTO;
-        }
-
-        // get last game/most recently added game
-        [HttpGet]
-        public GamesDTO GetMostRecentGame()
-        {
-            GamesDTO gDTO;
-            Games g = db.Games.Last();
-            gDTO = g.Convert();
-            return gDTO;
-        }
 
         //private bool GamesExists(int id)
         //{
@@ -251,6 +252,18 @@ namespace Chess.WebAPI.Controllers
 
         //    return Ok(games);
         //}*/
-
+        //[Route("")]
+        //[HttpGet]
+        //public IHttpActionResult Get()
+        //{
+        //    var res = db.Games.OrderByDescending(x => x.GameId);
+        //    if (res == null)
+        //        return NotFound();
+        //    else
+        //    {
+        //        var val = res.FirstOrDefault();
+        //        return Ok(val.Convert());
+        //    }
+        //}
     }
 }

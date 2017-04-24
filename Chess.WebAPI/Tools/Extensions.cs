@@ -10,22 +10,24 @@ namespace Chess.WebAPI.Tools
     public static class Extensions
     {
 
-        public static Boardstates ToBoard(this BoardstatesDTO bs)
+        public static Boardstates ToBoard(this BoardstateDTO bs)
         {
             var b = new Boardstates();
             b.StateId = bs.StateId;
             b.Timestamp = bs.Timestamp;
             b.State = bs.State;
             b.GameId = bs.GameId;
+            b.Turn = bs.Turn;
             return b;
         }
-        public static BoardstatesDTO ToBoard(this Boardstates bs)
+        public static BoardstateDTO ToBoard(this Boardstates bs)
         {
-            var b = new BoardstatesDTO();
+            var b = new BoardstateDTO();
             b.StateId = bs.StateId;
             b.Timestamp = bs.Timestamp;
             b.State = bs.State;
             b.GameId = bs.GameId;
+            b.Turn = bs.Turn;
             return b;
         }
 

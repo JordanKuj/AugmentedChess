@@ -51,7 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dtos\BoardstatesDTO.cs" />
+    <Compile Include="Dtos\BoardstateDTO.cs" />
     <Compile Include="Dtos\GamesDTO.cs" />
     <Compile Include="Models\Board.cs" />
     <Compile Include="Models\Piece.cs" />

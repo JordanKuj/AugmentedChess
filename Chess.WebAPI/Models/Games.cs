@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using Chess.Core.Dtos;
+using ChessTest;
 
 namespace Chess.WebAPI.Models
 {
@@ -43,13 +44,14 @@ namespace Chess.WebAPI.Models
 
         // foreign key
         public int GameId { get; set; }
+        public Team Turn { get; set; }
 
         [ForeignKey("GameId")]
         public virtual Games Game { get; set; }
 
         public Boardstates() { }
-      
+
     }
 
-    
+
 }

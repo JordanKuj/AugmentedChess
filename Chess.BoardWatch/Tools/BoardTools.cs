@@ -53,7 +53,10 @@ namespace Chess.BoardWatch
         {
             //if (!TInitalizing.IsCompleted)
             //    return false;
-
+            Console.WriteLine("Current Board State");
+            state.ToBoard().printBoard();
+            Console.WriteLine("Previous Board State");
+            LastMove.ToBoard().printBoard();
             if (!State.getDiff(state.ToBoard(), LastMove.ToBoard()))
                 if (State.validState(LastMove.ToBoard(), state.ToBoard()))
                 {
@@ -108,6 +111,7 @@ namespace Chess.BoardWatch
         }
         public BoardState UpdateCurrentState(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
         {
+            
             var pieces = new List<GlyphPiece>();
             BoardArea = boardArea;
             SetData(pieces, black, BoardArea, Team.black);
@@ -132,6 +136,7 @@ namespace Chess.BoardWatch
 
         private static void SetData(List<GlyphPiece> pieces, IEnumerable<BlobData> bd, Rectangle BoardArea, Team t)
         {
+            //System.Threading.Thread.Sleep(1000);
             foreach (var b in bd)
             {
                 if (BoardArea.Contains(b.Blob.Rectangle.Location))

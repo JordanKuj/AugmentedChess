@@ -14,7 +14,7 @@ namespace ChessTest
         //{
         //}
 
-        private static bool SeeOutput = false;
+        private static bool SeeOutput = true;
 
         private static void writeLine(string txt)
         {
@@ -62,7 +62,7 @@ namespace ChessTest
                         locations.Add(new Tuple<int, int>(i, j));
                         count++;
                     }
-                    else if (s1.getName() != s2.getName() && s1.getTeam() != s2.getTeam())
+                    else if (s1.getTeam() != s2.getTeam())
                     {
                         writeLine($"VS count = {count}");
                         locations.Add(new Tuple<int, int>(i, j));
@@ -114,15 +114,25 @@ namespace ChessTest
                 int x1 = locations[1].Item1;
                 int y1 = locations[1].Item2;
 
-                if (state1.board[x0, y0] != null)
+                Console.WriteLine($"State1 location 0 ::{state1.board[locations[0].Item1, locations[0].Item2]?.getNameString()}");
+                Console.WriteLine($"State1 location 1 ::{state1.board[locations[1].Item1, locations[1].Item2]?.getNameString()}");
+                Console.WriteLine($"State2 location 0 ::{state2.board[locations[0].Item1, locations[0].Item2]?.getNameString()}");
+                Console.WriteLine($"State2 location 1 ::{state2.board[locations[1].Item1, locations[1].Item2]?.getNameString()}");
+                if (state2.board[locations[0].Item1, locations[0].Item2] == null)
                 {
-                    return state1.validMove(x0, y0, x1, y1);
+                    Console.WriteLine("State 1");
+                    state1.printBoard();
+                    Console.WriteLine("State 2");
+                    state2.printBoard();
+                    Console.WriteLine($"Moving {locations[0].Item1}, {locations[0].Item2 } -> { locations[1].Item1}, { locations[1].Item2 }");
+                    return state1.validMove(locations[0].Item1, locations[0].Item2, locations[1].Item1, locations[1].Item2);
                 }
-                else if (state1.board[x1, y1] != null)
+                else if (state2.board[locations[1].Item1, locations[1].Item2] == null)
                 {
-                    return state1.validMove(x1, y1, x0, y0);
+                    Console.WriteLine($"Moving { locations[1].Item1}, { locations[1].Item2 } -> { locations[0].Item1}, { locations[0].Item2 }");
+                    return state1.validMove(locations[1].Item1, locations[1].Item2, locations[0].Item1, locations[0].Item2);
                 }
-
+                
             }
             else
             {

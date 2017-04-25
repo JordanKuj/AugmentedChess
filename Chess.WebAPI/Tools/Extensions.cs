@@ -45,6 +45,11 @@ namespace Chess.WebAPI.Tools
             game.GameId = g.GameId;
             game.StartTime = g.StartTime;
             game.EndTime = g.EndTime;
+            foreach (var item in g.States)
+            {
+                game.States.Add(item.ToBoard());
+            }
+            
             return game;
         }
     }

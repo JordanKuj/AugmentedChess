@@ -53,6 +53,15 @@ namespace Chess.BoardWatch.UI.Forms
                 this?.Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
                 return;
             }
+            if (State.getDiff(_bt.LastMove.ToBoard(), boardState.ToBoard()))
+            {
+                BtnAccept.BackColor = SystemColors.Control;
+                BtnAccept.Enabled = false;
+
+                return;
+            }
+
+
             if (isvalid)
             {
                 ValidState = boardState;

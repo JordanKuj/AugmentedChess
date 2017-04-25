@@ -8,10 +8,15 @@ namespace Chess.Core.Dtos
 {
     public class GamesDTO
     {
-        public GamesDTO() { }
+        public GamesDTO()
+        {
+            States = new List<BoardstateDTO>();
+        }
 
         public int GameId { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        public List<BoardstateDTO> States { get; set; }
     }
 }

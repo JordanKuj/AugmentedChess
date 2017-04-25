@@ -1,0 +1,50 @@
+﻿@model Chess.WebAPI.Models.Boardstates
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Boardstates</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Game.GameId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Game.GameId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Turn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Turn)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.StateId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -19,27 +19,17 @@ namespace Chess.BoardWatch
 {
     public partial class Form1 : Form
     {
-        public static IKernel kernal;
+        private readonly BoardWatchService _bws;
         public readonly BoardTools _bt;//; = new BoardTools();
-        VideoCaptureDevice stream;
-        //const int GlyphDivs = 5;
-        //const int QuadSize = 50;
-        //private readonly int hwsize = (int)((double)QuadSize / (double)GlyphDivs);
-        //Pen left = new Pen(Brushes.Yellow, 5);
-        //Pen right = new Pen(Brushes.Green, 5);
-        private readonly IGlyphTools _gt;
-        List<BetterPanel> panelsBnw = new List<BetterPanel>();
         List<BetterPanel> panelsRed = new List<BetterPanel>();
-        List<BetterPanel> panelsGrn = new List<BetterPanel>();
         List<BetterPanel> panelsBlu = new List<BetterPanel>();
 
-        private BoardView DialogBoardView;
-        public Form1()
+        //private BoardView DialogBoardView;
+        public Form1(BoardWatchService bws, IGlyphTools gt, BoardTools bt)
         {
             InitializeComponent();
-            kernal = new StandardKernel(new Bindings());
-            _gt = kernal.Get<IGlyphTools>();// new GlyphTools(CfgUtil.ReadCfg());
-            _bt = kernal.Get<BoardTools>();
+            _bws = bws;
+            _bt = bt;
         }
 
         private static void LoadPanels(List<BetterPanel> panels, FlowLayoutPanel flowpanel)
@@ -51,88 +41,45 @@ namespace Chess.BoardWatch
                 p.Width = 105;
                 p.BorderStyle = BorderStyle.FixedSingle;
                 panels.Add(p);
-
                 flowpanel.Controls.Add(p);
             }
-
         }
 
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoadPanels(panelsBnw, FlowBnw);
             LoadPanels(panelsBlu, FlowBlu);
             LoadPanels(panelsRed, FlowRed);
-            LoadPanels(panelsGrn, FlowGrn);
-
-            stream = new VideoCaptureDevice();
-            FilterInfoCollection devices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            stream = new VideoCaptureDevice(devices[1].MonikerString);
-            var c = new VideoCapabilities[stream.VideoCapabilities.Length];
-            var capabilities = new List<VideoCapabilities>(c);
-            stream.VideoCapabilities.CopyTo(c, 0);
-            var vidres = c[0];
-            stream.VideoResolution = vidres;
-            stream.NewFrame += Stream_NewFrame;
-            stream.Start();
-            var dilg = kernal.Get<SettingsForm>();
-            dilg.Show();
-
-            DialogBoardView = kernal.Get<BoardView>();
-            DialogBoardView.Show();
+            _bws.NewBlueData += _bws_NewBlueData;
+            _bws.NewRedFrame += _bws_NewRedFrame;
+            _bws.NewRawFrame += _bws_NewRawFrame;
         }
 
-
-        Task ProcessingImage;
-
-        private void Stream_NewFrame(object sender, NewFrameEventArgs eventArgs)
+        private void _bws_NewRawFrame(UnmanagedImage obj)
         {
-            PanelRawVideo.DrawImage(eventArgs.Frame);
-            if (ProcessingImage == null || ProcessingImage.IsCompleted)
-                ProcessingImage = ProcessImage((Bitmap)eventArgs.Frame.Clone());
+            PanelRawVideo.DrawImage(obj);
         }
 
-
-        private async Task ProcessImage(Bitmap origional)
+        private void _bws_NewRedFrame(ChannelData obj)
         {
-            await _gt.ProcessImage(origional);
-            var state = _bt.UpdateCurrentState(_gt.Rblobs, _gt.Bblobs, new Rectangle(0, 0, origional.Width, origional.Height));
-
-            DialogBoardView.DrawBoard(origional, state);
-            EdgePanel.DrawImage(_gt.EdgeBlack);
-            PanelBw.DrawImage(_gt.BlackImage);
-            PanelFinal.DrawImage(_gt.threshBlack);
-
-
-
-            PanelRed.DrawImage(_gt.RImage);
-            PanelGreen.DrawImage(_gt.GImage);
-            PanelBlue.DrawImage(_gt.BImage);
-            PanelRBW.DrawImage(_gt.edgeR);
-            PanelGBW.DrawImage(_gt.edgeG);
-            PanelBBW.DrawImage(_gt.edgeB);
-            PanelFinalR.DrawImage(_gt.threshR);
-            PanelFinalG.DrawImage(_gt.threshG);
-            PanelFinalB.DrawImage(_gt.threshB);
-
-
-            //TODO: the blob counters garbage collect a lot I might only want to do this every x frames
-
-            DrawEdges(_gt.BlackBlobs, PanelFinal, panelsBnw);
-            DrawEdges(_gt.Rblobs, PanelFinalR, panelsRed);
-            DrawEdges(_gt.Gblobs, PanelFinalG, panelsGrn);
-            DrawEdges(_gt.Bblobs, PanelFinalB, panelsBlu);
-
-            //gt.GrayBlobs.Select(x=>x.Blob.Rectangle)
-
-            //var whitePieces = gt.Rblobs;
-            //var blackPieces = gt.Bblobs;
-
-
-
+            PanelRed.DrawImage(obj.MaskImage);
+            PanelRBW.DrawImage(obj.EdgeImage);
+            PanelFinalR.DrawImage(obj.ThresImage);
+            DrawEdges(obj.BlobData, PanelFinalR, panelsRed);
         }
 
-        private static void DrawEdges(List<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
+        private void _bws_NewBlueData(ChannelData obj)
+        {
+            PanelBlue.DrawImage(obj.MaskImage);
+            PanelBBW.DrawImage(obj.EdgeImage);
+            PanelFinalB.DrawImage(obj.ThresImage);
+            DrawEdges(obj.BlobData, PanelFinalB, panelsBlu);
+        }
+
+
+
+
+        private static void DrawEdges(IList<BlobData> blobs, BetterPanel p, List<BetterPanel> panels)
         {
             var c = 0;
             p.DrawBlobs(blobs);
@@ -148,10 +95,5 @@ namespace Chess.BoardWatch
         }
 
 
-        //TODO:calculate the average difference of light inside the box and outside the box
-        private static float BrightnessDiff(List<IntPoint> leftEdgePoints, List<IntPoint> rightEdgePoints, UnmanagedImage image)
-        {
-            return 0;
-        }
     }
 }

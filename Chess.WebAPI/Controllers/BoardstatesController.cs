@@ -13,69 +13,76 @@ using Chess.WebAPI.Models;
 using Chess.WebAPI.Tools;
 using ChessTest;
 using static ChessTest.Board;
+using Chess.Core.Dtos;
+using Chess.Core.Tools;
 
 namespace Chess.WebAPI.Controllers
 {
     [RoutePrefix("Boardstates")]
     public class BoardstatesController : ApiController
     {
-        private ChessWebAPIContext db = null;// new ChessWebAPIContext();
+        private ChessWebAPIContext db = new ChessWebAPIContext();
 
-        // GET: api/Boardstates
-        public IQueryable<BoardstatesDTO> GetBoardstates()
-        {
-            var board = from b in db.Boardstates
-                        select new BoardstatesDTO(b);
-            return board;
-            //return db.Boardstates.Include(g => g.GameId);
-        }
 
-        // GET: api/Boardstates/5
-        [ResponseType(typeof(Boardstates))]
-        public async Task<IHttpActionResult> GetBoardstates(int id)
-        {
-            var board = await db.Boardstates.Include(b => b.StateId).Select(b => new BoardstatesDTO(b)).SingleOrDefaultAsync(b => b.StateId == id);
-            Boardstates boardstates = await db.Boardstates.FindAsync(id);
-            if (boardstates == null)
-            {
-                return NotFound();
-            }
 
-            return Ok(boardstates);
-        }
 
-        // PUT: api/Boardstates/5
-        [Route("{id}")]
+        [Route("")]
         [HttpPost]
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutBoardstates(int id, Boardstates boardstates)
+        public BoardstateDTO PutBoardstates(BoardstateDTO boardstates)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return db.Games.Include(x => x.States).ToList().Last().States.Last().ToBoard();
 
-            if (id != boardstates.StateId)
-                return BadRequest();
+            var lastgame = db.Games.ToList().Last();
+            var bs = boardstates.ToBoard();
+            bs.GameId = lastgame.GameId;
+            db.Boardstates.Add(bs);
 
-            db.Entry(boardstates).State = EntityState.Modified;
+            db.SaveChanges();
 
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BoardstatesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return bs.ToBoard();
         }
+
+        [Route("{id}")]
+        [HttpGet]
+        public List<BoardstateDTO> GetStateByGameId(int gId)
+        {
+            var bs = db.Boardstates.Where(x => x.GameId == gId);
+            var results = new List<BoardstateDTO>();
+
+            foreach (var b in bs)
+                results.Add(b.ToBoard());
+
+            return results;
+        }
+
+        // get last move/most recently added boardstate
+        [Route("")]
+        [HttpGet]
+        public BoardstateDTO GetMostRecentState()
+        {
+            Boardstates bs = db.Boardstates.ToList().LastOrDefault();
+            BoardstateDTO bsDTO = bs.ToBoard();
+            return bsDTO;
+        }
+
+        // predict
+        [Route("Moves")]
+        [HttpGet]
+        public List<Moveset> predictMoves()
+        {
+            Boardstates lastMove = db.Boardstates.Last();
+            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+            List<Moveset> moves = last.listAllMoves(last.turn);
+
+            return moves;
+        }
+
+
+
+
+
 
 
         protected override void Dispose(bool disposing)
@@ -89,74 +96,10 @@ namespace Chess.WebAPI.Controllers
         {
             return db.Boardstates.Count(e => e.StateId == id) > 0;
         }
-
-
-
-        // add new state to bs
-        [HttpPost]
-        public bool AddState(ChessTest.Board b)
-        {
-            Boardstates bs = new Boardstates();
-
-            Boardstates lastMove = db.Boardstates.Last();
-            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
-            if (State.validState(b, last) == false)
-                return false;
-
-            string strB = BoardConversion.MakeString(b);
-            bs.State = strB;
-            bs.StateId = (lastMove.StateId)++;
-            bs.GameId = lastMove.GameId;
-            bs.Timestamp = DateTime.Now;
-
-            db.Boardstates.Add(bs);
-            int x = db.SaveChanges();
-            //TODO: if checkmate check
-            // successful db add
-            if (x == 1)
-                return true;
-
-            return false;
-        }
-
-        // get board by ids
-        [Route("{id}")]
-        [HttpGet]
-        public BoardstatesDTO GetStateById(int sId)
-        {
-            Boardstates bs;
-            BoardstatesDTO bsDTO;
-            bs = db.Boardstates.SingleOrDefault(x => x.StateId == sId);
-            bsDTO = new BoardstatesDTO(bs);
-            return bsDTO;
-        }
-
-        // get last move/most recently added boardstate
-        [HttpGet]
-        public BoardstatesDTO GetMostRecentState()
-        {
-            BoardstatesDTO bsDTO;
-            Boardstates bs = db.Boardstates.Last();
-            bsDTO = new BoardstatesDTO(bs);
-            return bsDTO;
-        }
-
-        // predict
-        [Route("Moves")]
-        [HttpGet]
-        public List<Moveset> predictMoves()
-        {
-            List<Moveset> moves;
-            Boardstates lastMove = db.Boardstates.Last();
-            ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
-            moves = last.listAllMoves(last.turn);
-
-            return moves;
-        }
     }
 
 
-    // probablly not needed
+
     /*// POST: api/Boardstates
     [ResponseType(typeof(Boardstates))]
     public async Task<IHttpActionResult> PostBoardstates(Boardstates boardstates)
@@ -187,4 +130,48 @@ namespace Chess.WebAPI.Controllers
 
         return Ok(boardstates);
     }*/
+    // probably not needed
+    // GET: api/Boardstates
+    //public IQueryable<BoardstateDTO> GetBoardstates()
+    //{
+    //    var board = from b in db.Boardstates
+    //                select b.ToBoard();
+    //    return board;
+    //    //return db.Boardstates.Include(g => g.GameId);
+    //}
+    // add new state to bs
+    //[HttpPost]
+    //public bool AddState(ChessTest.Board b)
+    //{
+    //    Boardstates bs = new Boardstates();
+
+    //    Boardstates lastMove = db.Boardstates.Last();
+    //    ChessTest.Board last = BoardConversion.MakeBoard(lastMove.State);
+    //    if (State.validState(b, last) == false)
+    //        return false;
+
+    //    string strB = BoardConversion.MakeString(b);
+    //    bs.State = strB;
+    //    bs.StateId = (lastMove.StateId)++;
+    //    bs.GameId = lastMove.GameId;
+    //    bs.Timestamp = DateTime.Now;
+
+    //    db.Boardstates.Add(bs);
+    //    int x = db.SaveChanges();
+    //    //TODO: if checkmate check
+    //    // successful db add
+    //    if (x == 1)
+    //        return true;
+
+    //    return false;
+    //}
+
+
+
+
+
+
+
+    // get board by ids
+
 }

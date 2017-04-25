@@ -59,7 +59,7 @@ namespace Chess.BoardWatch
             return m;
         }
 
-        public void DrawBlobs(List<BlobData> blobs)
+        public void DrawBlobs(IList<BlobData> blobs)
         {
             Pen left = new Pen(Brushes.Yellow, 5);
             Pen right = new Pen(Brushes.Green, 5);

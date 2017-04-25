@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Chess.WebAPI.Models.Boardstates>
+@using Chess.Core.Tools;
+@using ChessTest;
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@*<p>
+    @Html.ActionLink("Create New", "Create")
+</p>*@
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Game.GameId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Turn)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Game.GameId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+                @{ Board bs = BoardConversion.MakeBoard(item.State);}
+                <table style="border:5px solid black">
+                    @for (int x = 0; x < 8; x++)
+                    {
+                        <tr>
+                            @for (int y = 0; y < 8; y++)
+                            {
+                                Piece piece = bs.board[y, x];
+                                string dispString = "";
+                                if (piece != null)
+                                {
+                                    dispString = piece.Name.ToString();
+                                    if (piece.Team == Team.black)
+                                    {
+                                        <td style="background:blue"><font color="white">@dispString</font> </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="background:red"><font color="white">@dispString</font> </td>
+                                    }
+                                }
+                                else
+                                {
+                                    <td>"   "</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Turn)
+            </td>
+            @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.StateId }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.StateId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.StateId })
+                </td>*@
+        </tr>
+                    }
+
+</table>

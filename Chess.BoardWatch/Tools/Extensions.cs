@@ -8,6 +8,9 @@ using System.Windows.Forms;
 using System.Drawing;
 using ChessTest;
 using Chess.BoardWatch.Models;
+using Chess.Core.Dtos;
+using Chess.BoardWatch;
+using Chess.Core.Tools;
 
 namespace Chess.BoardWatch.Tools
 {
@@ -35,21 +38,43 @@ namespace Chess.BoardWatch.Tools
             return new Point((int)x, (int)y);
         }
 
-
-        public static Board ToBoard(this BoardState state)
+        private static Board Convert(IBoardState state)
         {
+            if (state == null)
+                return null;
             var b = new Board();
             b.turn = state.Turn;
             for (int y = 0; y < 8; y++)
                 for (int x = 0; x < 8; x++)
                 {
                     b.board[x, y] = null;
-                    var piece = state.Pieces.SingleOrDefault(z => z.X == x && z.Y == y);
+                    var piece = state.Pieces.FirstOrDefault(z => z.X == x && z.Y == y);
+
                     if (piece != null)
                         b.board[x, y] = new Piece(piece.Team, piece.Type);
                 }
             return b;
         }
+
+        public static Board ToBoard(this BoardState state)
+        {
+            return Convert((IBoardState)state);
+        }
+        public static Board ToBoard(this IBoardState state)
+        {
+            return Convert(state);
+        }
+        public static BoardstateDTO ToStateDto(this BoardState bs)
+        {
+            var bsdto = new BoardstateDTO();
+            bsdto.State = BoardConversion.MakeString(bs.ToBoard());
+            bsdto.Timestamp = DateTime.Now;
+            bsdto.Turn = bs.Turn;
+
+            return bsdto;
+        }
+
+
         public static BoardState ToBoard(this Board b)
         {
             var state = new BoardState();
@@ -88,6 +113,13 @@ namespace Chess.BoardWatch.Tools
                 }
             }
             return pass;
+        }
+
+
+        public static BoardState ToGameState(this BoardstateDTO s)
+        {
+            var b = BoardConversion.MakeBoard(s.State);
+            return b.ToBoard();
         }
 
 

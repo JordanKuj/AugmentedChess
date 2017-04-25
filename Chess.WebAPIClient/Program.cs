@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Chess.WebAPI;
 using ChessTest;  // TODO delete
 using static Chess.WebAPI.Tools.MovePrediction;  // TODO delete
-using static Chess.WebAPI.Tools.BoardConversion;
-using static ChessTest.Board;  // TODO delete
+using Chess.Core.Dtos;
 
 namespace Chess.WebAPIClient
 {
@@ -17,19 +16,20 @@ namespace Chess.WebAPIClient
         {
             var x = new Application();
             Console.WriteLine("Running...");
+            Task.WaitAll(x.Run());
             //Task.WaitAll(x.Run());  // An unhandled exception of type 'System.AggregateException' occurred in mscorlib.dll
             Console.WriteLine("press any key to continue");
             Console.ReadKey();
 
-            ChessTest.Board b = new ChessTest.Board();
-            b.fillNewBoard();
+            //ChessTest.Board b = new ChessTest.Board();
+            //b.fillNewBoard();
             //List<Moveset> moves = predictAll(Team.white);
             //List<Moveset> moves = b.listAllMoves(Team.white);
-            Console.WriteLine("Should be predicting now");
-            List<Move> pm = predict(b, Team.white);
-            printPredict(pm);
+            //Console.WriteLine("Should be predicting now");
+            //List<Move> pm = predict(b, Team.white);
+            //printPredict(pm);
             //foreach (var m in moves)
-                //Console.WriteLine(m.GetMovePiece());
+            //Console.WriteLine(m.GetMovePiece());
             //printAllPredictions(moves);
             /*String s = MakeString(b);
             Console.WriteLine(s);
@@ -61,18 +61,24 @@ namespace Chess.WebAPIClient
     {
         public async Task Run()
         {
-            var client = new WebClient();
+            //var client = new WebClient();
 
-            var game = new GamesDTO();
+            //var game = new GamesDTO();
 
-            game.StartTime = DateTime.Now;
+            //game.StartTime = DateTime.Now;
 
-            await client.CreateGame(game);
+            //await client.CreateGame(game);
 
 
-            var g2 = await client.GetCurrentGame();
+            //var g2 = await client.GetCurrentGame();
 
-            Console.WriteLine(g2.StartTime);
+
+            ////var s1 = await client.CreateBoardstate(new BoardstateDTO() { State = "AAAAAAAAAAAA", Timestamp = DateTime.Now });
+
+            //Console.WriteLine(g2.StartTime);
+
+            //var state = await client.GetCurrentGameState();
+            //Console.WriteLine($"{state.GameId}:{state.StateId}:{state.Timestamp}");
         }
     }
 }

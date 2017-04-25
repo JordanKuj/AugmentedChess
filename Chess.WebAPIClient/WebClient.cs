@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Chess.Core.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -39,55 +40,62 @@ namespace Chess.WebAPIClient
         //}
 
         const string API = "api";
-        const string games = "games";
+        const string games = "Games";
         const string boardstates = "Boardstates";
 
 
-        public async Task<GamesDTO> GetCurrentGame()
+        public GamesDTO GetCurrentGame()
         {
             var client = GetNewClient();
             //path = "ap/Games/{id}";  ??
-            HttpResponseMessage resp = await client.GetAsync(PathBuilder(API, games));
+            HttpResponseMessage resp = client.GetAsync(PathBuilder(games)).Result;
             if (resp.IsSuccessStatusCode)
-                return await resp.Content.ReadAsAsync<GamesDTO>();
+                return resp.Content.ReadAsAsync<GamesDTO>().Result;
             return null;
         }
 
-        public async Task<Uri> CreateGame(GamesDTO g)
+        public Uri CreateGame(GamesDTO g)
         {
             var client = GetNewClient();
 
-            HttpResponseMessage resp = await client.PostAsJsonAsync(PathBuilder(API, games), g);
+            HttpResponseMessage resp = client.PostAsJsonAsync(PathBuilder(games), g).Result;
             resp.EnsureSuccessStatusCode();
             return resp.Headers.Location;
         }
 
-        public async Task<GamesDTO> EndGame(GamesDTO g)
+        public GamesDTO EndGame(GamesDTO g)
         {
             var client = GetNewClient();
 
-            HttpResponseMessage resp = await client.PutAsJsonAsync(PathBuilder(API, games, g.GameId.ToString()), g);
+            HttpResponseMessage resp = client.PutAsJsonAsync(PathBuilder(games, g.GameId.ToString()), g).Result;
             resp.EnsureSuccessStatusCode();
 
-            g = await resp.Content.ReadAsAsync<GamesDTO>();
+            g = resp.Content.ReadAsAsync<GamesDTO>().Result;
             return g;
         }
 
-        public async Task<BoardstatesDTO> GetCurrentGameState(int sId)
+        public bool SubmitGameState(BoardstateDTO bs)
         {
             var client = GetNewClient();
-            HttpResponseMessage resp = await client.GetAsync(PathBuilder(API, games, sId.ToString()));
-            if (resp.IsSuccessStatusCode)
-                return await resp.Content.ReadAsAsync<BoardstatesDTO>();
-            return null;
+            HttpResponseMessage resp = client.PostAsJsonAsync(PathBuilder(boardstates), bs).Result;
+            return resp.IsSuccessStatusCode;
         }
 
-        public async Task<Uri> CreateBoardstate(BoardstatesDTO bs)
-        {
-            var client = GetNewClient();
-            HttpResponseMessage resp = await client.PostAsJsonAsync(PathBuilder(API, boardstates), bs);
-            resp.EnsureSuccessStatusCode();
-            return resp.Headers.Location;
-        }
+        //public async Task<BoardstateDTO> GetCurrentGameState()
+        //{
+        //    var client = GetNewClient();
+        //    HttpResponseMessage resp = await client.GetAsync(PathBuilder(boardstates));
+        //    if (resp.IsSuccessStatusCode)
+        //        return await resp.Content.ReadAsAsync<BoardstateDTO>();
+        //    return null;
+        //}
+
+        //public async Task<Uri> CreateBoardstate(BoardstateDTO bs)
+        //{
+        //    var client = GetNewClient();
+        //    HttpResponseMessage resp = await client.PutAsJsonAsync(PathBuilder(boardstates), bs);
+        //    resp.EnsureSuccessStatusCode();
+        //    return resp.Headers.Location;
+        //}
     }
 }

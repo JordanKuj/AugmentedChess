@@ -213,14 +213,14 @@ namespace Chess.BoardWatch
             var sw = Stopwatch.StartNew();
             var unmanagedOrig = UnmanagedImage.FromManagedImage(origional);
             _GrayImage = GetGrascaleImage(unmanagedOrig);
-            var tGray = Task.Factory.StartNew(() =>
-            {
-                _BlackImage = BlackFilter.Apply(unmanagedOrig);
-                DoEdgeAndThresh(GetGrascaleImage(_BlackImage), out _EdgeBlack, out _threshBlack);
-                var tmpGrayBlobs = GetBlobs(threshBlack, blobCounterGray, BlobSizeRatio, Minfullness);
-                BlackBlobs.Clear();
-                BlackBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck, this));
-            });
+            //var tGray = Task.Factory.StartNew(() =>
+            //{
+            //    _BlackImage = BlackFilter.Apply(unmanagedOrig);
+            //    DoEdgeAndThresh(GetGrascaleImage(_BlackImage), out _EdgeBlack, out _threshBlack);
+            //    var tmpGrayBlobs = GetBlobs(threshBlack, blobCounterGray, BlobSizeRatio, Minfullness);
+            //    BlackBlobs.Clear();
+            //    BlackBlobs.AddRange(GetBlobData(tmpGrayBlobs, blobCounterGray, shapeCheck, this));
+            //});
             var tRed = Task.Factory.StartNew(() =>
             {
                 _RImage = RedFilter.Apply(unmanagedOrig);
@@ -229,14 +229,14 @@ namespace Chess.BoardWatch
                 Rblobs.Clear();
                 Rblobs.AddRange(GetBlobData(tmpRblobs, blobCounterRed, shapeCheck, this));
             });
-            var tGrn = Task.Factory.StartNew(() =>
-            {
-                _GImage = GreenFilter.Apply(unmanagedOrig);
-                DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
-                var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
-                Gblobs.Clear();
-                Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck, this));
-            });
+            //var tGrn = Task.Factory.StartNew(() =>
+            //{
+            //    _GImage = GreenFilter.Apply(unmanagedOrig);
+            //    DoEdgeAndThresh(GetGrascaleImage(_GImage), out _edgeG, out _threshG);
+            //    var tmpGblobs = GetBlobs(threshG, blobCounterGreen, BlobSizeRatio, Minfullness);
+            //    Gblobs.Clear();
+            //    Gblobs.AddRange(GetBlobData(tmpGblobs, blobCounterGreen, shapeCheck, this));
+            //});
             var tBlu = Task.Factory.StartNew(() =>
             {
                 _BImage = BlueFilter.Apply(unmanagedOrig);
@@ -248,9 +248,9 @@ namespace Chess.BoardWatch
 
 
 
-            await tGray;
+            //await tGray;
             await tBlu;
-            await tGrn;
+            //await tGrn;
             await tRed;
 
 

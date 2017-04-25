@@ -77,6 +77,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\IFactory.cs" />
+    <Compile Include="Models\BoardState.cs" />
+    <Compile Include="Models\GlyphPiece.cs" />
     <Compile Include="Tools\BoardTools.cs" />
     <Compile Include="Models\BlobData.cs" />
     <Compile Include="Models\IGlyphTools.cs" />
@@ -88,9 +91,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Tools\Bindings.cs" />
+    <Compile Include="Tools\BoardWatchService.cs" />
     <Compile Include="Tools\CfgUtility.cs" />
     <Compile Include="Tools\Extensions.cs" />
     <Compile Include="Tools\FilterTool.cs" />
+    <Compile Include="Tools\LocalGameManager.cs" />
     <Compile Include="UI\BetterPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -122,6 +127,12 @@
     <Compile Include="UI\Forms\GlyphTestForm.Designer.cs">
       <DependentUpon>GlyphTestForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Forms\MonikerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MonikerSelector.Designer.cs">
+      <DependentUpon>MonikerSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Forms\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +159,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\GlyphTestForm.resx">
       <DependentUpon>GlyphTestForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MonikerSelector.resx">
+      <DependentUpon>MonikerSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
@@ -198,6 +212,10 @@
     <ProjectReference Include="..\Chess.Core\Chess.Core.csproj">
       <Project>{6ce49514-a7d3-4309-8c20-ec4a3acabfbb}</Project>
       <Name>Chess.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Chess.WebAPIClient\Chess.WebAPIClient.csproj">
+      <Project>{A4B015DD-9582-4C06-A3EF-32EBF98D5055}</Project>
+      <Name>Chess.WebAPIClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -21,7 +21,7 @@ namespace Chess.WebAPI.Models
         public DateTime StartTime { get; set; }
 
         //[Column(TypeName = "datetime2")]
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
         public virtual ICollection<Boardstates> States { get; set; }
 
@@ -31,6 +31,7 @@ namespace Chess.WebAPI.Models
             this.GameId = g.GameId;
             this.StartTime = g.StartTime;
             this.EndTime = g.EndTime;
+            States = new List<Boardstates>();
         }
     }
 

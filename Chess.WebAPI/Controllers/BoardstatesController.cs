@@ -27,21 +27,21 @@ namespace Chess.WebAPI.Controllers
 
 
         [Route("")]
-        [HttpPut]
-        public async Task<IHttpActionResult> PutBoardstates(BoardstateDTO boardstates)
+        [HttpPost]
+        public BoardstateDTO PutBoardstates(BoardstateDTO boardstates)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return db.Games.Include(x => x.States).ToList().Last().States.Last().ToBoard();
 
             var lastgame = db.Games.ToList().Last();
             var bs = boardstates.ToBoard();
             bs.GameId = lastgame.GameId;
             db.Boardstates.Add(bs);
 
-            await db.SaveChangesAsync();
+            db.SaveChanges();
 
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return bs.ToBoard();
         }
 
         [Route("{id}")]

@@ -14,29 +14,32 @@ namespace Chess.BoardWatch
 {
     public class BoardTools
     {
-        public IList<IBoardState> States => _states.ToList<IBoardState>();
-        public IBoardState LastMove => States.Last();
-        private List<BoardState> _states = new List<BoardState>();
 
-        public BoardState currentState;
         public event Action<BoardState, bool> NewBoardState;
         public event Action NewBoardStateAccepted;
 
-        private Rectangle BoardArea { get; set; }
         public const int BoardDivisions = 8;
+        public IList<IBoardState> States => _states.ToList<IBoardState>();
+        public IBoardState LastMove => States.LastOrDefault();
+        private Rectangle BoardArea { get; set; }
+        private List<BoardState> _states = new List<BoardState>();
 
+        public BoardState currentState;
+        public WebAPIClient.WebClient _wc;
+        private bool Initalized = false;
         public BoardTools()
         {
+            _wc = new WebAPIClient.WebClient();
             Initalize();
         }
         private void Initalize()
         {
-            //var currentGame = await _wc.GetCurrentGame();
-            GamesDTO currentGame = null;
+            GamesDTO currentGame = _wc.GetCurrentGame();
+            //GamesDTO currentGame = null;
             if (currentGame == null)
             {
                 currentGame = new GamesDTO();
-                //await _wc.CreateGame(currentGame);
+                var res = _wc.CreateGame(currentGame);
                 //TODO:Try web api
                 var b = new Board();
                 b.fillNewBoard();
@@ -46,11 +49,24 @@ namespace Chess.BoardWatch
             }
             else
             {
-                //_wc.GetCurrentGameState()
+                foreach (var state in currentGame.States)
+                    _states.Add(state.ToGameState());
             }
+            Initalized = true;
         }
+        public void StartNewGame()
+        {
+            Initalized = false;
+            _states.Clear();
+            currentState = null;
+            var res = _wc.CreateGame(new GamesDTO());
+            Initalize();
+        }
+
         public bool SubmitNewState(BoardState state)
         {
+            if (!Initalized)
+                return false;
             //if (!TInitalizing.IsCompleted)
             //    return false;
             Console.WriteLine("Current Board State");
@@ -60,15 +76,20 @@ namespace Chess.BoardWatch
             if (!State.getDiff(state.ToBoard(), LastMove.ToBoard()))
                 if (State.validState(LastMove.ToBoard(), state.ToBoard()))
                 {
-                    _states.Add(state);
-                    NewBoardStateAccepted?.Invoke();
-                    return true;
+                    if (_wc.SubmitGameState(state.ToStateDto()))
+                    {
+                        _states.Add(state);
+                        NewBoardStateAccepted?.Invoke();
+                        return true;
+                    }
                 }
             return false;
         }
 
         public Board IsCurrentStateValid()
         {
+            if (!Initalized)
+                return null;
             if (currentState == null)
                 return null;
 
@@ -101,6 +122,7 @@ namespace Chess.BoardWatch
         }
         public bool AcceptCurrentState()
         {
+
             var valid = IsCurrentStateValid();
             if (valid != null)
             {
@@ -111,7 +133,8 @@ namespace Chess.BoardWatch
         }
         public BoardState UpdateCurrentState(IEnumerable<BlobData> black, IEnumerable<BlobData> white, Rectangle boardArea)
         {
-            
+            if (!Initalized)
+                return null;
             var pieces = new List<GlyphPiece>();
             BoardArea = boardArea;
             SetData(pieces, black, BoardArea, Team.black);

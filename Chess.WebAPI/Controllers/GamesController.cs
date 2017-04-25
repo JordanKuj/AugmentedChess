@@ -24,27 +24,33 @@ namespace Chess.WebAPI.Controllers
 
         [Route("")]
         [HttpPost]
-        public HttpResponseMessage Post(GamesDTO g)
+        public GamesDTO Post(GamesDTO g)
         {
+            foreach (var game in _db.Games.Where(x => x.EndTime == null).ToList())
+                game.EndTime = DateTime.Now;
+
+            _db.SaveChanges();
+
+
             g.StartTime = DateTime.Now;
-            g.EndTime = DateTime.Now;
 
             var dbgame = new Games(g);
             _db.Games.Add(dbgame);
             var cha = _db.SaveChanges();
-            g = dbgame.Convert();
-            var b = new ChessTest.Board();
+            //g = dbgame.Convert();
+            var b = new Board();
             b.fillNewBoard();
 
-            var bs = BoardConversion.ToBoard(b);
+            BoardstateDTO bs = BoardConversion.ToBoard(b);
 
-            bs.GameId = g.GameId;
+            bs.GameId = dbgame.GameId;
             bs.Turn = Team.error;
             bs.Timestamp = DateTime.Now;
             _db.Boardstates.Add(bs.ToBoard());
 
             _db.SaveChanges();
-            return new HttpResponseMessage(HttpStatusCode.Accepted);
+            var res = _db.Games.Include(x => x.States).ToList().Last().Convert();
+            return res;
         }
 
         [Route("{id}")]
@@ -61,10 +67,14 @@ namespace Chess.WebAPI.Controllers
         [HttpGet]
         public GamesDTO GetMostRecentGame()
         {
-            Games g = _db.Games.Include(x => x.States).ToList().Last();
+            Games g = _db.Games.Include(x => x.States).Where(x => x.EndTime == null).ToList().LastOrDefault();
+            if (g == null)
+                return null;
             GamesDTO gDto = g.Convert();
             return gDto;
         }
+
+
 
         protected override void Dispose(bool disposing)
         {

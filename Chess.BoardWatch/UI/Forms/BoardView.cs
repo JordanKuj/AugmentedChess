@@ -35,6 +35,16 @@ namespace Chess.BoardWatch.UI.Forms
             _settingsFormFactory = settingsFormFactory;
             _form1Factory = form1Factory;
         }
+        private BoardState ValidState;
+        private BoardState mainBoardToDraw;
+        private IBoardState previousBoardToDraw => _bt.LastMove;
+        private Bitmap _background;
+        private bool validating;
+        private bool validating2;
+        private SettingsForm _settingsForm;
+
+        private Stopwatch AcceptSw = new Stopwatch();
+        private const int AcceptTimeout = 5000;
 
         private void _bt_NewBoardStateAccepted()
         {
@@ -42,51 +52,62 @@ namespace Chess.BoardWatch.UI.Forms
             LblMoveCount.Text = count.ToString();
             //LblPlayerTurn.Text = count % 2 == 0 ? "White" : "Black";
             LblPlayerTurn.Text = _bt.LastMove.Turn == Team.white ? Team.black.ToString() : Team.white.ToString();
+            LblPlayerTurn.BackColor = (_bt.LastMove.Turn == Team.white) ? Color.Black : Color.White;
+            LblPlayerTurn.ForeColor = (_bt.LastMove.Turn == Team.white) ? Color.White : Color.Black;
         }
-
-        private BoardState ValidState;
-
+        BoardState newestState;
+        bool isNewestStateValid;
         private void BtOnNewBoardState(BoardState boardState, bool isvalid)
         {
-            if (InvokeRequired)
-            {
-                this?.Invoke(new Action(() => BtOnNewBoardState(boardState, isvalid)));
-                return;
-            }
-            if (State.getDiff(_bt.LastMove.ToBoard(), boardState.ToBoard()))
-            {
-                BtnAccept.BackColor = SystemColors.Control;
-                BtnAccept.Enabled = false;
-
-                return;
-            }
-
-
-            if (isvalid)
-            {
-                ValidState = boardState;
-                timer1.Start();
-            }
-            else
-            {
-                ValidState = null;
-                timer1.Stop();
-            }
-            BtnAccept.Enabled = isvalid;
-            BtnAccept.BackColor = isvalid ? Color.PaleGreen : Color.PaleVioletRed;
-            DrawBoard(_background, boardState);
+            newestState = boardState;
+            isNewestStateValid = isvalid;
         }
 
-        private List<GlyphPiece> pieces;
-        private Bitmap _background;
-        private bool validating;
-        public void DrawBoard(Bitmap bacground, BoardState board)
+        public void DrawBoard(Bitmap background, BoardState board)
         {
             if (!validating && board != null)
             {
-                _background = (Bitmap)bacground.Clone();
-                pieces = new List<GlyphPiece>(board.Pieces);
+                _background = (Bitmap)background.Clone();
+                mainBoardToDraw = board;
                 betterPanel1.Invalidate();
+            }
+        }
+        private void AcceptState()
+        {
+            timer1.Stop();
+            _bt.SubmitNewState(ValidState);
+            ValidState = null;
+            AcceptSw.Reset();
+        }
+
+        public void DrawPreviousState()
+        {
+            if (!validating2)
+            {
+                betterPanel2.Invalidate();
+            }
+        }
+
+        private static void DrawGrid(Graphics g, BetterPanel panel, double spaceWidth, double spaceHeight)
+        {
+            for (var x = 0; x < 9; x++)
+            {
+                var x1 = spaceWidth * x;
+                var y1 = spaceHeight * x;
+                g.DrawLine(Pens.Black, (int)x1, 0, (int)x1, panel.Height);
+                g.DrawLine(Pens.Black, 0, (int)y1, panel.Width, (int)y1);
+            }
+        }
+        private static void DrawGlyphIcons(Graphics g, IBoardState bs, double spaceWidth, double spaceHeight)
+        {
+            if (bs == null)
+                return;
+
+            foreach (var p in bs.Pieces)
+            {
+                var selectedImage = (System.Drawing.Image)GetImage(p);
+                var rect = new Rectangle((int)(p.X * spaceWidth), (int)(p.Y * spaceHeight), (int)spaceWidth, (int)spaceHeight);
+                g.DrawImage(selectedImage, rect);
             }
         }
 
@@ -95,42 +116,78 @@ namespace Chess.BoardWatch.UI.Forms
             validating = true;
             betterPanel1.SuspendLayout();
             var g = e.Graphics;
-
-            var spaceWidth = (betterPanel1.Width / 8);
-            var spaceHeight = (betterPanel1.Height / 8);
+            var width = (betterPanel1.Width - 1);
+            var height = (betterPanel1.Height - 1);
+            var spaceWidth = (width / 8.0);
+            var spaceHeight = (height / 8.0);
             var b = _background?.Clone() as Bitmap;
             if (b != null)
-                g.DrawImage(b, new Rectangle(0, 0, betterPanel1.Width, betterPanel1.Height));
-            for (var x = 0; x < 9; x++)
-            {
-                var x1 = spaceWidth * x;
-                var y1 = spaceHeight * x;
-                g.DrawLine(Pens.Black, x1, 0, x1, betterPanel1.Height);
-                g.DrawLine(Pens.Blue, 0, y1, betterPanel1.Width, y1);
-            }
-            if (pieces != null)
-            {
-                foreach (var p in pieces)
-                {
-                    var selectedImage = (System.Drawing.Image)GetImage(p);
-
-                    var rect = new Rectangle(p.X * spaceWidth, p.Y * spaceHeight, spaceWidth, spaceHeight);
-                    //Debug.Print($"x:{p.X} y:{p.Y} w:{rect.Height} h:{rect.Height}");
-                    g.DrawImage(selectedImage, rect);
-                }
-            }
-
-
-
-
-
+                g.DrawImage(b, new Rectangle(0, 0, width, height));
+            DrawGrid(g, betterPanel1, spaceWidth, spaceHeight);
+            DrawGlyphIcons(g, mainBoardToDraw, spaceWidth, spaceHeight);
             betterPanel1.ResumeLayout();
-
-
             validating = false;
         }
 
-        private Bitmap GetImage(GlyphPiece p)
+        private void betterPanel2_Paint(object sender, PaintEventArgs e)
+        {
+            var panel = (BetterPanel)sender;
+            validating2 = true;
+            panel.SuspendLayout();
+            var g = e.Graphics;
+
+            var spaceWidth = ((panel.Width - 1) / 8.0);
+            var spaceHeight = ((panel.Height - 1) / 8.0);
+            DrawGrid(g, panel, spaceWidth, spaceHeight);
+            DrawGlyphIcons(g, previousBoardToDraw, spaceWidth, spaceHeight);
+            panel.ResumeLayout();
+            validating2 = false;
+        }
+        private void BoardView_Load(object sender, EventArgs e)
+        {
+            //_bws.NewBlueData += _bws_NewBlueData;
+            //_bws.NewRedFrame += _bws_NewRedFrame;
+            _bws.NewRawFrame += _bws_NewRawFrame;
+        }
+
+        private void _bws_NewRawFrame(UnmanagedImage obj)
+        {
+            _background = obj.ToManagedImage(true);
+        }
+        private void BtnSetRedMask_Click(object sender, EventArgs e)
+        {
+            if (_settingsForm != null)
+            {
+                _settingsForm.Dispose();
+                _settingsForm = null;
+            }
+            if (_settingsForm == null)
+                _settingsForm = _settingsFormFactory.GetInstance();
+            _settingsForm.Show();
+        }
+
+        private void BtnAccept_Click(object sender, EventArgs e)
+        {
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (ValidState != null)
+            {
+                if (!AcceptSw.IsRunning)
+                    AcceptSw.Restart();
+                if (AcceptSw.ElapsedMilliseconds >= AcceptTimeout)
+                    AcceptState();
+
+                BtnAccept.Text = $"Accept {((AcceptTimeout - AcceptSw.ElapsedMilliseconds) / 1000)}";
+            }
+            else
+            {
+                timer1.Stop();
+                AcceptSw.Reset();
+            }
+        }
+
+        private static Bitmap GetImage(IGlyphPiece p)
         {
             switch (p.Type)
             {
@@ -153,75 +210,59 @@ namespace Chess.BoardWatch.UI.Forms
             }
         }
 
-        private void BoardView_Load(object sender, EventArgs e)
+        private void BoardView_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //_bws.NewBlueData += _bws_NewBlueData;
-            //_bws.NewRedFrame += _bws_NewRedFrame;
-            _bws.NewRawFrame += _bws_NewRawFrame;
+            _bt.NewBoardState -= BtOnNewBoardState;
+            _bt.NewBoardStateAccepted -= _bt_NewBoardStateAccepted;
         }
 
-        private void _bws_NewRawFrame(UnmanagedImage obj)
+        private void DisplayTimer_Tick(object sender, EventArgs e)
         {
-            _background = obj.ToManagedImage(true);
-        }
 
+            DrawPreviousState();
 
-        private SettingsForm _settingsForm;
+            var count = _bt.States.Count - 1;
+            LblMoveCount.Text = count.ToString();
+            //LblPlayerTurn.Text = count % 2 == 0 ? "White" : "Black";
+            LblPlayerTurn.Text = _bt.LastMove.Turn == Team.white ? Team.black.ToString() : Team.white.ToString();
+            LblPlayerTurn.BackColor = (_bt.LastMove.Turn == Team.white) ? Color.Black : Color.White;
+            LblPlayerTurn.ForeColor = (_bt.LastMove.Turn == Team.white) ? Color.White : Color.Black;
 
-
-        private void BtnSetRedMask_Click(object sender, EventArgs e)
-        {
-            if (_settingsForm != null)
+            if (State.getDiff(_bt.LastMove.ToBoard(), newestState.ToBoard()))
             {
-                _settingsForm.Dispose();
-                _settingsForm = null;
+                BtnAccept.Text = "Please Make A Move";
+                BtnAccept.BackColor = SystemColors.Control;
+                BtnAccept.Enabled = false;
+                DrawBoard(_background, newestState);
+                return;
             }
-            if (_settingsForm == null)
-                _settingsForm = _settingsFormFactory.GetInstance();
-            _settingsForm.Show();
-        }
-
-        private void BtnAccept_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void AcceptState()
-        {
-            timer1.Stop();
-            _bt.SubmitNewState(ValidState);
-            ValidState = null;
-            AcceptSw.Reset();
-        }
 
 
-        private Stopwatch AcceptSw = new Stopwatch();
-        private const int AcceptTimeout = 5000;
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (ValidState != null)
+            if (isNewestStateValid)
             {
-                if (!AcceptSw.IsRunning)
-                    AcceptSw.Restart();
-                if (AcceptSw.ElapsedMilliseconds >= AcceptTimeout)
-                    AcceptState();
-
-                BtnAccept.Text = $"Accept {((AcceptTimeout - AcceptSw.ElapsedMilliseconds) / 1000)}";
+                ValidState = newestState;
+                timer1.Start();
             }
             else
             {
+                BtnAccept.Text = "Please return board to previous state";
+                ValidState = null;
                 timer1.Stop();
-                AcceptSw.Reset();
             }
+            BtnAccept.Enabled = isNewestStateValid;
+            BtnAccept.BackColor = isNewestStateValid ? Color.PaleGreen : Color.PaleVioletRed;
+            DrawBoard(_background, newestState);
         }
 
-
-
-        //private void _bws_NewRedFrame(ChannelData obj)
-        //{
-        //}
-
-        //private void _bws_NewBlueData(ChannelData obj)
-        //{
-        //}
+        private void BtnStartNewGame_Click(object sender, EventArgs e)
+        {
+            _bt.StartNewGame();
+            ValidState = null;
+            newestState = null;
+            validating = false;
+            validating2 = false;
+            AcceptSw.Reset();
+            mainBoardToDraw = null;
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chess.Core.Dtos;
 
 namespace Chess.BoardWatch.Models
 {
@@ -24,5 +25,7 @@ namespace Chess.BoardWatch.Models
             Pieces = pieces;
             Turn = turn;
         }
+
+       
     }
 }

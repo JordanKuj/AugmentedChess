@@ -40,13 +40,16 @@ namespace Chess.BoardWatch.Tools
 
         private static Board Convert(IBoardState state)
         {
+            if (state == null)
+                return null;
             var b = new Board();
             b.turn = state.Turn;
             for (int y = 0; y < 8; y++)
                 for (int x = 0; x < 8; x++)
                 {
                     b.board[x, y] = null;
-                    var piece = state.Pieces.SingleOrDefault(z => z.X == x && z.Y == y);
+                    var piece = state.Pieces.FirstOrDefault(z => z.X == x && z.Y == y);
+
                     if (piece != null)
                         b.board[x, y] = new Piece(piece.Team, piece.Type);
                 }
@@ -61,7 +64,15 @@ namespace Chess.BoardWatch.Tools
         {
             return Convert(state);
         }
+        public static BoardstateDTO ToStateDto(this BoardState bs)
+        {
+            var bsdto = new BoardstateDTO();
+            bsdto.State = BoardConversion.MakeString(bs.ToBoard());
+            bsdto.Timestamp = DateTime.Now;
+            bsdto.Turn = bs.Turn;
 
+            return bsdto;
+        }
 
 
         public static BoardState ToBoard(this Board b)

@@ -29,6 +29,9 @@ namespace ChessTest
 
         public static bool getDiff(Board state1, Board state2)
         {
+            if ((state1 == null && state2 != null || (state1 != null && state2 == null)))
+                return false;
+
             for (int j = 0; j < 8; j++)
                 for (int i = 0; i < 8; i++)
                 {
@@ -132,7 +135,7 @@ namespace ChessTest
                     Console.WriteLine($"Moving { locations[1].Item1}, { locations[1].Item2 } -> { locations[0].Item1}, { locations[0].Item2 }");
                     return state1.validMove(locations[1].Item1, locations[1].Item2, locations[0].Item1, locations[0].Item2);
                 }
-                
+
             }
             else
             {

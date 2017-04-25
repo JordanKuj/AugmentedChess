@@ -61,24 +61,24 @@ namespace Chess.WebAPIClient
     {
         public async Task Run()
         {
-            var client = new WebClient();
+            //var client = new WebClient();
 
-            var game = new GamesDTO();
+            //var game = new GamesDTO();
 
-            game.StartTime = DateTime.Now;
+            //game.StartTime = DateTime.Now;
 
-            await client.CreateGame(game);
-
-
-            var g2 = await client.GetCurrentGame();
+            //await client.CreateGame(game);
 
 
-            var s1 = await client.CreateBoardstate(new BoardstateDTO() { State = "AAAAAAAAAAAA", Timestamp = DateTime.Now });
+            //var g2 = await client.GetCurrentGame();
 
-            Console.WriteLine(g2.StartTime);
 
-            var state = await client.GetCurrentGameState();
-            Console.WriteLine($"{state.GameId}:{state.StateId}:{state.Timestamp}");
+            ////var s1 = await client.CreateBoardstate(new BoardstateDTO() { State = "AAAAAAAAAAAA", Timestamp = DateTime.Now });
+
+            //Console.WriteLine(g2.StartTime);
+
+            //var state = await client.GetCurrentGameState();
+            //Console.WriteLine($"{state.GameId}:{state.StateId}:{state.Timestamp}");
         }
     }
 }
